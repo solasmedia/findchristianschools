@@ -1,0 +1,50 @@
+{
+  "query": "SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_ROWS > 0 ORDER BY TABLE_ROWS DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_ROWS > 0 ORDER BY TABLE_ROWS DESC;",
+  "rows": [
+    {
+      "TABLE_NAME": "funnel_events",
+      "TABLE_ROWS": "67273"
+    },
+    {
+      "TABLE_NAME": "page_views",
+      "TABLE_ROWS": "9464"
+    },
+    {
+      "TABLE_NAME": "schools",
+      "TABLE_ROWS": "8787"
+    },
+    {
+      "TABLE_NAME": "__drizzle_migrations",
+      "TABLE_ROWS": "13"
+    },
+    {
+      "TABLE_NAME": "courseCategories",
+      "TABLE_ROWS": "12"
+    },
+    {
+      "TABLE_NAME": "twofa_sessions",
+      "TABLE_ROWS": "9"
+    },
+    {
+      "TABLE_NAME": "jobs",
+      "TABLE_ROWS": "3"
+    },
+    {
+      "TABLE_NAME": "users",
+      "TABLE_ROWS": "1"
+    },
+    {
+      "TABLE_NAME": "newsletter_subscribers",
+      "TABLE_ROWS": "1"
+    },
+    {
+      "TABLE_NAME": "admin_users",
+      "TABLE_ROWS": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "TABLE_NAME\tTABLE_ROWS\nfunnel_events\t67273\npage_views\t9464\nschools\t8787\n__drizzle_migrations\t13\ncourseCategories\t12\ntwofa_sessions\t9\njobs\t3\nusers\t1\nnewsletter_subscribers\t1\nadmin_users\t1\n",
+  "stderr": "",
+  "execution_time_ms": 282
+}

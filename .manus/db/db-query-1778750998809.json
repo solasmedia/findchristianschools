@@ -1,0 +1,13 @@
+{
+  "query": "SELECT COUNT(*) as admin_count FROM admin_users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT COUNT(*) as admin_count FROM admin_users;",
+  "rows": [
+    {
+      "admin_count": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "admin_count\n1\n",
+  "stderr": "",
+  "execution_time_ms": 267
+}

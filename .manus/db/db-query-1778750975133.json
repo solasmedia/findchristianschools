@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM admin_users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT * FROM admin_users;",
+  "rows": [
+    {
+      "id": "1",
+      "email": "office@findchristianschools.org",
+      "passwordHash": "$2b$10$kCGDBzatbBWp93XZOwYZ5.HtKJM6ufOf/57C6cBUxu0SgLzLy3sma",
+      "name": "Office Admin",
+      "isActive": "1",
+      "createdAt": "2026-05-06 00:14:55",
+      "updatedAt": "2026-05-07 00:34:07"
+    },
+    {
+      "id": "2",
+      "email": "test-admin@findchristianschools.org",
+      "passwordHash": "$2b$10$DQVFqKfYp3omc3CGDpLsROvm5u.QkjXtDyZnh80kv/LpxqTpjGvfS",
+      "name": "Test Admin",
+      "isActive": "1",
+      "createdAt": "2026-05-06 00:17:26",
+      "updatedAt": "2026-05-06 00:17:26"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tpasswordHash\tname\tisActive\tcreatedAt\tupdatedAt\n1\toffice@findchristianschools.org\t$2b$10$kCGDBzatbBWp93XZOwYZ5.HtKJM6ufOf/57C6cBUxu0SgLzLy3sma\tOffice Admin\t1\t2026-05-06 00:14:55\t2026-05-07 00:34:07\n2\ttest-admin@findchristianschools.org\t$2b$10$DQVFqKfYp3omc3CGDpLsROvm5u.QkjXtDyZnh80kv/LpxqTpjGvfS\tTest Admin\t1\t2026-05-06 00:17:26\t2026-05-06 00:17:26\n",
+  "stderr": "",
+  "execution_time_ms": 268
+}

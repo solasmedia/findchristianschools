@@ -1,0 +1,28 @@
+# FindChristianSchools.org - Robots.txt
+# Protects proprietary content and prevents bulk scraping
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-login
+Disallow: /admin-setup
+Disallow: /api/
+Disallow: /search?*query=*
+Crawl-delay: 1
+Request-rate: 1/1s
+
+# Block known scrapers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap
+Sitemap: https://findchristianschools.org/sitemap.xml

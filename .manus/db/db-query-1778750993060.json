@@ -1,0 +1,9 @@
+{
+  "query": "DELETE FROM admin_users WHERE email = 'test-admin@findchristianschools.org';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute DELETE FROM admin_users WHERE email = 'test-admin@findchristianschools.org';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 268
+}

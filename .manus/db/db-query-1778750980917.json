@@ -1,0 +1,80 @@
+{
+  "query": "SELECT * FROM contact_messages LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT * FROM contact_messages LIMIT 5;",
+  "rows": [
+    {
+      "id": "120057",
+      "reason": "general_question",
+      "senderName": "John Doe",
+      "senderEmail": "john@example.com",
+      "senderPhone": "555-1234",
+      "schoolName": "Grace Academy",
+      "message": "I have a question about your services",
+      "status": "responded",
+      "adminNotes": "We will follow up with you soon",
+      "category": "general",
+      "createdAt": "2026-05-09 15:41:30",
+      "updatedAt": "2026-05-09 15:41:30"
+    },
+    {
+      "id": "120058",
+      "reason": "claim_school",
+      "senderName": "Test User",
+      "senderEmail": "test@example.com",
+      "senderPhone": "NULL",
+      "schoolName": "NULL",
+      "message": "Test message for claim_school",
+      "status": "new",
+      "adminNotes": "NULL",
+      "category": "general",
+      "createdAt": "2026-05-09 15:41:30",
+      "updatedAt": "2026-05-09 15:41:30"
+    },
+    {
+      "id": "120059",
+      "reason": "premium_upgrade",
+      "senderName": "Test User",
+      "senderEmail": "test@example.com",
+      "senderPhone": "NULL",
+      "schoolName": "NULL",
+      "message": "Test message for premium_upgrade",
+      "status": "new",
+      "adminNotes": "NULL",
+      "category": "general",
+      "createdAt": "2026-05-09 15:41:30",
+      "updatedAt": "2026-05-09 15:41:30"
+    },
+    {
+      "id": "120060",
+      "reason": "add_school",
+      "senderName": "Test User",
+      "senderEmail": "test@example.com",
+      "senderPhone": "NULL",
+      "schoolName": "NULL",
+      "message": "Test message for add_school",
+      "status": "new",
+      "adminNotes": "NULL",
+      "category": "general",
+      "createdAt": "2026-05-09 15:41:30",
+      "updatedAt": "2026-05-09 15:41:30"
+    },
+    {
+      "id": "120061",
+      "reason": "report_error",
+      "senderName": "Test User",
+      "senderEmail": "test@example.com",
+      "senderPhone": "NULL",
+      "schoolName": "NULL",
+      "message": "Test message for report_error",
+      "status": "new",
+      "adminNotes": "NULL",
+      "category": "general",
+      "createdAt": "2026-05-09 15:41:30",
+      "updatedAt": "2026-05-09 15:41:30"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\treason\tsenderName\tsenderEmail\tsenderPhone\tschoolName\tmessage\tstatus\tadminNotes\tcategory\tcreatedAt\tupdatedAt\n120057\tgeneral_question\tJohn Doe\tjohn@example.com\t555-1234\tGrace Academy\tI have a question about your services\tresponded\tWe will follow up with you soon\tgeneral\t2026-05-09 15:41:30\t2026-05-09 15:41:30\n120058\tclaim_school\tTest User\ttest@example.com\tNULL\tNULL\tTest message for claim_school\tnew\tNULL\tgeneral\t2026-05-09 15:41:30\t2026-05-09 15:41:30\n120059\tpremium_upgrade\tTest User\ttest@example.com\tNULL\tNULL\tTest message for premium_upgrade\tnew\tNULL\tgeneral\t2026-05-09 15:41:30\t2026-05-09 15:41:30\n120060\tadd_school\tTest User\ttest@example.com\tNULL\tNULL\tTest message for add_school\tnew\tNULL\tgeneral\t2026-05-09 15:41:30\t2026-05-09 15:41:30\n120061\treport_error\tTest User\ttest@example.com\tNULL\tNULL\tTest message for report_error\tnew\tNULL\tgeneral\t2026-05-09 15:41:30\t2026-05-09 15:41:30\n",
+  "stderr": "",
+  "execution_time_ms": 266
+}

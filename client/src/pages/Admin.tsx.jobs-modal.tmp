@@ -1,0 +1,83 @@
+      {selectedJob && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-[#002855]">{editingJob ? 'Edit Job' : selectedJob.title}</h2>
+              <button onClick={() => { setSelectedJob(null); setEditingJob(null); }} className="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            <div className="p-6 space-y-4">
+              {editingJob ? (
+                <>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Title</label>
+                    <input type="text" value={editingJob.title || ''} onChange={(e) => setEditingJob({...editingJob, title: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Description</label>
+                    <textarea value={editingJob.description || ''} onChange={(e) => setEditingJob({...editingJob, description: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" rows={4} />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Location</label>
+                      <input type="text" value={editingJob.location || ''} onChange={(e) => setEditingJob({...editingJob, location: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">State</label>
+                      <input type="text" value={editingJob.state || ''} onChange={(e) => setEditingJob({...editingJob, state: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Website</label>
+                    <input type="text" value={editingJob.website || ''} onChange={(e) => setEditingJob({...editingJob, website: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm" placeholder="https://example.com" />
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <Button onClick={() => { update.mutate({ id: selectedJob.id, data: editingJob }); }} className="bg-[#6EBE44] hover:bg-[#5aa838] text-white"><Save className="w-3 h-3 mr-1" /> Save</Button>
+                    <Button onClick={() => setEditingJob(null)} variant="outline">Cancel</Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">School</label>
+                    <p className="text-sm text-gray-600">{selectedJob.schoolName || 'N/A'}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Location</label>
+                      <p className="text-sm text-gray-600">{selectedJob.location || 'N/A'}, {selectedJob.state || 'N/A'}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Posted</label>
+                      <p className="text-sm text-gray-600">{new Date(selectedJob.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Description</label>
+                    <p className="text-sm text-gray-600 whitespace-pre-wrap">{selectedJob.description || 'No description provided'}</p>
+                  </div>
+                  {selectedJob.website && (
+                    <div>
+                      <label className="text-sm font-semibold text-gray-700">Website</label>
+                      <a href={selectedJob.website} target="_blank" rel="noopener noreferrer" className="text-sm text-[#0055A4] hover:underline">{selectedJob.website}</a>
+                    </div>
+                  )}
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Status</label>
+                    <p className={`text-sm font-medium ${selectedJob.isPublished ? 'text-green-600' : 'text-amber-600'}`}>{selectedJob.isPublished ? 'Published' : 'Pending'}</p>
+                  </div>
+                  <div className="flex gap-2 pt-4">
+                    <Button onClick={() => setEditingJob({...selectedJob})} className="bg-[#0055A4] hover:bg-[#003d7a] text-white"><Pencil className="w-3 h-3 mr-1" /> Edit</Button>
+                    {!selectedJob.isPublished && (
+                      <>
+                        <Button onClick={() => { approve.mutate({ id: selectedJob.id }); setSelectedJob(null); }} className="bg-[#6EBE44] hover:bg-[#5aa838] text-white">Approve</Button>
+                        <Button onClick={() => { reject.mutate({ id: selectedJob.id }); setSelectedJob(null); }} variant="outline" className="text-red-600 border-red-200">Reject</Button>
+                      </>
+                    )}
+                    <Button onClick={() => setSelectedJob(null)} variant="outline">Close</Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}

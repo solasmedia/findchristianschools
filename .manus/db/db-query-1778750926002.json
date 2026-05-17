@@ -1,0 +1,460 @@
+{
+  "query": "SELECT id, name, city, state, phone, website, createdAt FROM schools WHERE name LIKE '%test%' OR name LIKE '%example%' OR name LIKE '%demo%' OR name LIKE '%fake%' OR phone IS NULL OR city IS NULL LIMIT 50;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT id, name, city, state, phone, website, createdAt FROM schools WHERE name LIKE '%test%' OR name LIKE '%example%' OR name LIKE '%demo%' OR name LIKE '%fake%' OR phone IS NULL OR city IS NULL LIMIT 50;",
+  "rows": [
+    {
+      "id": "106942",
+      "name": "Whitestone Farms Training Center / Whitestone Hs",
+      "city": "Delta Junction",
+      "state": "AK",
+      "phone": "(907) 895-4938",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:57"
+    },
+    {
+      "id": "107061",
+      "name": "New Testament Baptist School",
+      "city": "Phenix City",
+      "state": "AL",
+      "phone": "(334) 297-0297",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:57"
+    },
+    {
+      "id": "108706",
+      "name": "New Testament Christian Center",
+      "city": "Madison",
+      "state": "FL",
+      "phone": "(850) 973-3877",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "108707",
+      "name": "New Testament Church of God Little Angels Academy",
+      "city": "Miami",
+      "state": "FL",
+      "phone": "(786) 573-0061",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109439",
+      "name": "Hull Protestant Reformed Christian School",
+      "city": "Hull",
+      "state": "IA",
+      "phone": "(712) 439-2490",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109455",
+      "name": "Northwest Iowa Protestant Reformed School",
+      "city": "Doon",
+      "state": "IA",
+      "phone": "(712) 726-3200",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109831",
+      "name": "Aspey Creek School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109842",
+      "name": "Blue Creek School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109846",
+      "name": "Brookside Amish School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109848",
+      "name": "Brookside School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109854",
+      "name": "Canope School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109855",
+      "name": "Canope School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109872",
+      "name": "Clearview Amish School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109893",
+      "name": "Cottonwood Lane School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109894",
+      "name": "Country Corner School",
+      "city": "Monroe",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109895",
+      "name": "Country Echos",
+      "city": "Nappanee",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109898",
+      "name": "Country Valley School",
+      "city": "Monroe",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109915",
+      "name": "Curve Creek School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109921",
+      "name": "East Salem 3rd School",
+      "city": "Salem",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109922",
+      "name": "East Salem Parochial School",
+      "city": "Salem",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109933",
+      "name": "Engle Creek Amish School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109934",
+      "name": "Engle Creek Amish School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109938",
+      "name": "Fairview School",
+      "city": "Monroe",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109967",
+      "name": "Hartford Valley School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109972",
+      "name": "Hickory Grove School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109974",
+      "name": "Hidden Valley School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109992",
+      "name": "Jay Creek School",
+      "city": "Bryant",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "109993",
+      "name": "Jefferson Parochial Amish School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110005",
+      "name": "Lincoln Amish School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110006",
+      "name": "Loblolly School",
+      "city": "Bryant",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110007",
+      "name": "Lone Pine School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110013",
+      "name": "Maple Leaf Amish School",
+      "city": "Decatur",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110026",
+      "name": "Mount Carmel School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110027",
+      "name": "Nature Valley School",
+      "city": "Lagrange",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110051",
+      "name": "Pineview",
+      "city": "Wakarusa",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110052",
+      "name": "Pleasant Mills School",
+      "city": "Decatur",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110054",
+      "name": "Pleasant Valley Amish School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110058",
+      "name": "Pleasant View School",
+      "city": "Orleans",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110062",
+      "name": "Prairie School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110064",
+      "name": "Prairie School Attn:ernest",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110065",
+      "name": "Protestant Reformed/heritage Christian Schools",
+      "city": "Dyer",
+      "state": "IN",
+      "phone": "(219) 558-2660",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110080",
+      "name": "Secluded Acers School",
+      "city": "Waveland",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110088",
+      "name": "South Adams",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110092",
+      "name": "South East Amish School",
+      "city": "Geneva",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110096",
+      "name": "Spring Meadow School",
+      "city": "Bluffton",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110097",
+      "name": "Springhill School",
+      "city": "Monroe",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110120",
+      "name": "Sunny Meadow School",
+      "city": "Bryant",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110123",
+      "name": "Sunnyside Amish School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110124",
+      "name": "Sunnyside School",
+      "city": "Berne",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    },
+    {
+      "id": "110126",
+      "name": "Swiss Valley School",
+      "city": "Monroe",
+      "state": "IN",
+      "phone": "NULL",
+      "website": "NULL",
+      "createdAt": "2026-05-06 16:50:58"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcity\tstate\tphone\twebsite\tcreatedAt\n106942\tWhitestone Farms Training Center / Whitestone Hs\tDelta Junction\tAK\t(907) 895-4938\tNULL\t2026-05-06 16:50:57\n107061\tNew Testament Baptist School\tPhenix City\tAL\t(334) 297-0297\tNULL\t2026-05-06 16:50:57\n108706\tNew Testament Christian Center\tMadison\tFL\t(850) 973-3877\tNULL\t2026-05-06 16:50:58\n108707\tNew Testament Church of God Little Angels Academy\tMiami\tFL\t(786) 573-0061\tNULL\t2026-05-06 16:50:58\n109439\tHull Protestant Reformed Christian School\tHull\tIA\t(712) 439-2490\tNULL\t2026-05-06 16:50:58\n109455\tNorthwest Iowa Protestant Reformed School\tDoon\tIA\t(712) 726-3200\tNULL\t2026-05-06 16:50:58\n109831\tAspey Creek School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109842\tBlue Creek School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109846\tBrookside Amish School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109848\tBrookside School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109854\tCanope School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109855\tCanope School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109872\tClearview Amish School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109893\tCottonwood Lane School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109894\tCountry Corner School\tMonroe\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109895\tCountry Echos\tNappanee\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109898\tCountry Valley School\tMonroe\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109915\tCurve Creek School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109921\tEast Salem 3rd School\tSalem\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109922\tEast Salem Parochial School\tSalem\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109933\tEngle Creek Amish School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109934\tEngle Creek Amish School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109938\tFairview School\tMonroe\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109967\tHartford Valley School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109972\tHickory Grove School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109974\tHidden Valley School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109992\tJay Creek School\tBryant\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n109993\tJefferson Parochial Amish School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110005\tLincoln Amish School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110006\tLoblolly School\tBryant\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110007\tLone Pine School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110013\tMaple Leaf Amish School\tDecatur\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110026\tMount Carmel School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110027\tNature Valley School\tLagrange\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110051\tPineview\tWakarusa\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110052\tPleasant Mills School\tDecatur\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110054\tPleasant Valley Amish School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110058\tPleasant View School\tOrleans\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110062\tPrairie School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110064\tPrairie School Attn:ernest\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110065\tProtestant Reformed/heritage Christian Schools\tDyer\tIN\t(219) 558-2660\tNULL\t2026-05-06 16:50:58\n110080\tSecluded Acers School\tWaveland\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110088\tSouth Adams\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110092\tSouth East Amish School\tGeneva\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110096\tSpring Meadow School\tBluffton\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110097\tSpringhill School\tMonroe\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110120\tSunny Meadow School\tBryant\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110123\tSunnyside Amish School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110124\tSunnyside School\tBerne\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n110126\tSwiss Valley School\tMonroe\tIN\tNULL\tNULL\t2026-05-06 16:50:58\n",
+  "stderr": "",
+  "execution_time_ms": 358
+}

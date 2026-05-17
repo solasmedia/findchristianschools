@@ -1,0 +1,110 @@
+{
+  "query": "SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_ROWS DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT TABLE_NAME, TABLE_ROWS FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_ROWS DESC;",
+  "rows": [
+    {
+      "TABLE_NAME": "funnel_events",
+      "TABLE_ROWS": "67273"
+    },
+    {
+      "TABLE_NAME": "page_views",
+      "TABLE_ROWS": "9464"
+    },
+    {
+      "TABLE_NAME": "schools",
+      "TABLE_ROWS": "8787"
+    },
+    {
+      "TABLE_NAME": "contact_messages",
+      "TABLE_ROWS": "169"
+    },
+    {
+      "TABLE_NAME": "__drizzle_migrations",
+      "TABLE_ROWS": "13"
+    },
+    {
+      "TABLE_NAME": "courseCategories",
+      "TABLE_ROWS": "12"
+    },
+    {
+      "TABLE_NAME": "twofa_sessions",
+      "TABLE_ROWS": "9"
+    },
+    {
+      "TABLE_NAME": "jobs",
+      "TABLE_ROWS": "3"
+    },
+    {
+      "TABLE_NAME": "admin_users",
+      "TABLE_ROWS": "2"
+    },
+    {
+      "TABLE_NAME": "users",
+      "TABLE_ROWS": "1"
+    },
+    {
+      "TABLE_NAME": "newsletter_subscribers",
+      "TABLE_ROWS": "1"
+    },
+    {
+      "TABLE_NAME": "international_schools",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "claim_requests",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "saved_schools",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "saved_searches",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "rate_limit_log",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "classes",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "courses",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "sponsors",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "removal_requests",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "resources",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "impact_metrics",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "events",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "donations",
+      "TABLE_ROWS": "0"
+    },
+    {
+      "TABLE_NAME": "report_listings",
+      "TABLE_ROWS": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "TABLE_NAME\tTABLE_ROWS\nfunnel_events\t67273\npage_views\t9464\nschools\t8787\ncontact_messages\t169\n__drizzle_migrations\t13\ncourseCategories\t12\ntwofa_sessions\t9\njobs\t3\nadmin_users\t2\nusers\t1\nnewsletter_subscribers\t1\ninternational_schools\t0\nclaim_requests\t0\nsaved_schools\t0\nsaved_searches\t0\nrate_limit_log\t0\nclasses\t0\ncourses\t0\nsponsors\t0\nremoval_requests\t0\nresources\t0\nimpact_metrics\t0\nevents\t0\ndonations\t0\nreport_listings\t0\n",
+  "stderr": "",
+  "execution_time_ms": 765
+}

@@ -1,0 +1,13 @@
+{
+  "query": "SELECT COUNT(*) as test_messages FROM contact_messages WHERE senderEmail LIKE '%test%' OR senderEmail LIKE '%example%' OR senderName = 'Test User';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT COUNT(*) as test_messages FROM contact_messages WHERE senderEmail LIKE '%test%' OR senderEmail LIKE '%example%' OR senderName = 'Test User';",
+  "rows": [
+    {
+      "test_messages": "169"
+    }
+  ],
+  "messages": [],
+  "stdout": "test_messages\n169\n",
+  "stderr": "",
+  "execution_time_ms": 260
+}

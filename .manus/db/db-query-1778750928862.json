@@ -1,0 +1,13 @@
+{
+  "query": "SELECT COUNT(*) as incomplete_records FROM schools WHERE phone IS NULL OR website IS NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT COUNT(*) as incomplete_records FROM schools WHERE phone IS NULL OR website IS NULL;",
+  "rows": [
+    {
+      "incomplete_records": "8785"
+    }
+  ],
+  "messages": [],
+  "stdout": "incomplete_records\n8785\n",
+  "stderr": "",
+  "execution_time_ms": 283
+}

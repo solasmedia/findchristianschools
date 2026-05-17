@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, email, message, createdAt FROM contact_messages WHERE email LIKE '%test%' OR email LIKE '%example%' OR message LIKE '%test%' LIMIT 20;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT id, email, message, createdAt FROM contact_messages WHERE email LIKE '%test%' OR email LIKE '%example%' OR message LIKE '%test%' LIMIT 20;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'email' in 'where clause'"
+  ]
+}

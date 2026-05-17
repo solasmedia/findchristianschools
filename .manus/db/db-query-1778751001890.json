@@ -1,0 +1,13 @@
+{
+  "query": "SELECT COUNT(*) as message_count FROM contact_messages;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2zNYcf6YQpJSCGZ.b102af1c7a3d --database CBWTtKkFnCYZ48c6ytqecj --execute SELECT COUNT(*) as message_count FROM contact_messages;",
+  "rows": [
+    {
+      "message_count": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "message_count\n0\n",
+  "stderr": "",
+  "execution_time_ms": 261
+}

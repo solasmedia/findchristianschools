@@ -1,0 +1,11 @@
+import mysql from 'mysql2/promise';
+const conn = await mysql.createConnection(process.env.DATABASE_URL);
+const [result] = await conn.execute('SELECT COUNT(*) as total FROM schools');
+const [unverified] = await conn.execute('SELECT COUNT(*) as count FROM schools WHERE listingStatus = "unverified"');
+const [pending] = await conn.execute('SELECT COUNT(*) as count FROM schools WHERE listingStatus = "pending"');
+const [verified] = await conn.execute('SELECT COUNT(*) as count FROM schools WHERE listingStatus = "verified"');
+console.log('Total schools:', result[0].total);
+console.log('Unverified:', unverified[0].count);
+console.log('Pending:', pending[0].count);
+console.log('Verified:', verified[0].count);
+await conn.end();

@@ -39,7 +39,7 @@ import CurriculumGuide from "./pages/CurriculumGuide";
 import CurriculumComparison from "./pages/CurriculumComparison";
 import LessonPlanning from "./pages/LessonPlanning";
 import LessonPlanner from "./pages/LessonPlanner";
-import CampusWalkthrough from "./pages/CampusWalkthrough";
+import GoAndSee from "./pages/GoAndSee";
 import Submit from "./pages/Submit";
 import Feedback from "./pages/Feedback";
 import { FloatingDonateButton } from "./components/FloatingDonateButton";
@@ -91,7 +91,7 @@ function Router() {
       <Route path="/curriculum-comparison" component={CurriculumComparison} />
       <Route path="/lesson-planning" component={LessonPlanning} />
       <Route path="/lesson-planner" component={LessonPlanner} />
-      <Route path="/campus-walkthrough" component={CampusWalkthrough} />
+      <Route path="/go-and-see" component={GoAndSee} />
       <Route path="/submit" component={Submit} />
       <Route path="/feedback" component={Feedback} />
       {/* Redirect routes for common URL variations */}

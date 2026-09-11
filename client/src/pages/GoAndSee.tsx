@@ -4,19 +4,19 @@ import Footer from "@/components/Footer";
 import {
   Eye, ClipboardList, HelpCircle, Layers, CheckSquare, AlertTriangle, Save, FolderOpen,
   Download, Trash2, Plus, RotateCcw, MapPin, Calendar, User, ChevronRight, ChevronLeft,
-  Shield, BookOpen, Users, Wrench, MessageSquare, Sparkles, X, Lock,
+  Shield, CheckCircle2, Workflow, Users, Leaf, MessageSquare, Sparkles, X, Lock,
 } from "lucide-react";
 
 // ---------- Data model ----------
 
-type Category = "Safety" | "Instruction" | "Culture" | "Facilities" | "Communication" | "Staff";
+type Category = "Safety" | "Quality" | "Process" | "People" | "Environment" | "Communication";
 
 const CATEGORIES: { key: Category; label: string; icon: React.ReactNode; color: string; bg: string }[] = [
   { key: "Safety", label: "Safety", icon: <Shield className="w-3.5 h-3.5" />, color: "#b91c1c", bg: "bg-red-50 border-red-200 text-red-700" },
-  { key: "Instruction", label: "Instruction", icon: <BookOpen className="w-3.5 h-3.5" />, color: "#0055A4", bg: "bg-blue-50 border-blue-200 text-blue-700" },
-  { key: "Culture", label: "Culture", icon: <Users className="w-3.5 h-3.5" />, color: "#6d28d9", bg: "bg-purple-50 border-purple-200 text-purple-700" },
-  { key: "Facilities", label: "Facilities", icon: <Wrench className="w-3.5 h-3.5" />, color: "#0f766e", bg: "bg-teal-50 border-teal-200 text-teal-700" },
-  { key: "Staff", label: "Staff", icon: <Sparkles className="w-3.5 h-3.5" />, color: "#15803d", bg: "bg-green-50 border-green-200 text-green-700" },
+  { key: "Quality", label: "Quality", icon: <CheckCircle2 className="w-3.5 h-3.5" />, color: "#0055A4", bg: "bg-blue-50 border-blue-200 text-blue-700" },
+  { key: "Process", label: "Process", icon: <Workflow className="w-3.5 h-3.5" />, color: "#6d28d9", bg: "bg-purple-50 border-purple-200 text-purple-700" },
+  { key: "People", label: "People", icon: <Users className="w-3.5 h-3.5" />, color: "#15803d", bg: "bg-green-50 border-green-200 text-green-700" },
+  { key: "Environment", label: "Environment", icon: <Leaf className="w-3.5 h-3.5" />, color: "#0f766e", bg: "bg-teal-50 border-teal-200 text-teal-700" },
   { key: "Communication", label: "Comm.", icon: <MessageSquare className="w-3.5 h-3.5" />, color: "#c2410c", bg: "bg-orange-50 border-orange-200 text-orange-700" },
 ];
 
@@ -68,16 +68,16 @@ interface Walkthrough {
   savedAt?: string;
 }
 
-const STORAGE_KEY = "fcs-campus-walkthrough-v1";
-const HISTORY_KEY = "fcs-campus-walkthrough-history-v1";
+const STORAGE_KEY = "fcs-go-and-see-v1";
+const HISTORY_KEY = "fcs-go-and-see-history-v1";
 
 const COMMON_CAUSES = [
-  "Unclear expectations", "Training gap", "Weak handoff between staff",
-  "Too many competing priorities", "Approval or paperwork delay", "Class size or staffing",
+  "Unclear expectations", "Training gap", "Weak handoff between people",
+  "Too many competing priorities", "Approval or paperwork delay", "Staffing or capacity",
   "Facility or layout issue", "Scheduling conflict", "Communication gap", "No clear owner",
 ];
 
-const RISK_FLAGS = ["Student safety", "Compliance / licensing", "Academic quality", "Family experience", "Staff wellbeing", "Reputation"];
+const RISK_FLAGS = ["Safety", "Compliance / legal", "Quality / service", "Customer experience", "People wellbeing", "Reputation"];
 
 const generateId = () => Math.random().toString(36).slice(2, 10);
 
@@ -88,7 +88,7 @@ function todayISO() {
 function blankWalkthrough(): Walkthrough {
   return {
     id: generateId(),
-    title: "Campus Walkthrough",
+    title: "Go and See Walk",
     area: "",
     date: todayISO(),
     observer: "",
@@ -135,7 +135,7 @@ const TABS = [
 
 type TabKey = typeof TABS[number]["key"];
 
-export default function CampusWalkthrough() {
+export default function GoAndSee() {
   const [walk, setWalk] = useState<Walkthrough>(loadCurrent);
   const [history, setHistory] = useState<Walkthrough[]>(loadHistory);
   const [tab, setTab] = useState<TabKey>("guide");
@@ -305,7 +305,7 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
   <strong>Next check date:</strong> ${esc(walk.nextCheckDate) || "—"}
 </div>
 
-<div class="footer">Find Christian Schools&trade; Campus Walkthrough Tool &mdash; findchristianschools.org &mdash; Data for this tool stays on your device</div>
+<div class="footer">Find Christian Schools&trade; Go and See Tool &mdash; findchristianschools.org &mdash; Data for this tool stays on your device</div>
 </body></html>`;
 
     const printWindow = window.open("", "_blank");
@@ -318,7 +318,7 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `campus-walkthrough-${walk.date}.html`;
+      a.download = `go-and-see-${walk.date}.html`;
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -401,19 +401,19 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
             <div className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="bg-white rounded-xl border border-gray-200 p-5">
-                  <h3 className="text-sm font-bold text-[#002855] uppercase tracking-wide mb-2">What a walkthrough is</h3>
+                  <h3 className="text-sm font-bold text-[#002855] uppercase tracking-wide mb-2">What "go and see" means</h3>
                   <p className="text-sm text-gray-600 leading-relaxed">
-                    Stepping into classrooms and common areas, watching how the day actually runs, and listening to the
-                    teachers and staff doing the work — before deciding what needs to change.
+                    Stepping into the place where the work actually happens, watching how it really runs, and listening to
+                    the people doing it — before deciding what needs to change.
                   </p>
-                  <p className="text-sm font-medium text-gray-700 mt-3">Reports tell you what happened. Walking the campus helps you learn why.</p>
+                  <p className="text-sm font-medium text-gray-700 mt-3">Reports tell you what happened. Going and seeing helps you learn why.</p>
                 </div>
                 <div className="bg-white rounded-xl border border-gray-200 p-5">
                   <h3 className="text-sm font-bold text-[#002855] uppercase tracking-wide mb-2">What it isn't</h3>
                   <ul className="space-y-2 text-sm text-gray-600">
-                    <li className="flex items-start gap-2"><X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" /> A surprise evaluation of any one teacher</li>
+                    <li className="flex items-start gap-2"><X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" /> A surprise audit of any one person</li>
                     <li className="flex items-start gap-2"><X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" /> A hunt for someone to blame</li>
-                    <li className="flex items-start gap-2"><X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" /> A walk built only on last month's reports</li>
+                    <li className="flex items-start gap-2"><X className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" /> A walk built only on assumptions or last month's reports</li>
                   </ul>
                 </div>
               </div>
@@ -422,12 +422,12 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
                 <h3 className="text-sm font-bold text-[#002855] uppercase tracking-wide mb-3">What to observe</h3>
                 <div className="grid sm:grid-cols-3 gap-3">
                   {[
-                    { c: CATEGORIES[0], detail: "Unsafe conditions, playground hazards, blocked exits, unaddressed near misses." },
-                    { c: CATEGORIES[1], detail: "Engagement, pacing, unclear directions, students lost or unchallenged." },
-                    { c: CATEGORIES[2], detail: "Tone in the halls, discipline patterns, how students treat one another." },
-                    { c: CATEGORIES[3], detail: "Facility upkeep, noise, cleanliness, classroom setup and supplies." },
-                    { c: CATEGORIES[4], detail: "Teacher workload, morale, training gaps, workarounds staff rely on." },
-                    { c: CATEGORIES[5], detail: "Missing information, unclear expectations, slow approvals or replies." },
+                    { c: CATEGORIES[0], detail: "Unsafe conditions, strain, near misses, exposure." },
+                    { c: CATEGORIES[1], detail: "Defects, rework, missing checks, avoidable errors." },
+                    { c: CATEGORIES[2], detail: "Delays, handoffs, unclear steps, extra motion." },
+                    { c: CATEGORIES[3], detail: "Training gaps, overload, workarounds, fatigue." },
+                    { c: CATEGORIES[4], detail: "Layout, noise, clutter, cleanliness, conditions." },
+                    { c: CATEGORIES[5], detail: "Missing information, unclear expectations, slow approvals." },
                   ].map(({ c, detail }) => (
                     <div key={c.key} className="bg-white rounded-xl border border-gray-200 p-4">
                       <div className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full border mb-2 ${c.bg}`}>
@@ -468,8 +468,8 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
             <div className="space-y-4">
               <div className="bg-white rounded-xl border border-gray-200 p-4 grid sm:grid-cols-3 gap-3">
                 <div>
-                  <label className={labelCls}><MapPin className="w-3 h-3 inline mr-1" />Area / campus</label>
-                  <input type="text" value={walk.area} onChange={(e) => update({ area: e.target.value })} placeholder="e.g., Lower school, Gym" className={inputCls} />
+                  <label className={labelCls}><MapPin className="w-3 h-3 inline mr-1" />Area / location</label>
+                  <input type="text" value={walk.area} onChange={(e) => update({ area: e.target.value })} placeholder="e.g., Front office, Warehouse floor" className={inputCls} />
                 </div>
                 <div>
                   <label className={labelCls}><Calendar className="w-3 h-3 inline mr-1" />Date</label>
@@ -535,7 +535,7 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
                   <div className="grid sm:grid-cols-3 gap-3 mt-3">
                     <div>
                       <label className={labelCls}>Location</label>
-                      <input type="text" value={o.location} onChange={(e) => updateObservation(o.id, { location: e.target.value })} placeholder="Room, hallway, station" className={inputCls} />
+                      <input type="text" value={o.location} onChange={(e) => updateObservation(o.id, { location: e.target.value })} placeholder="Room, station, point in the process" className={inputCls} />
                     </div>
                     <div>
                       <label className={labelCls}>Immediate action needed</label>
@@ -610,9 +610,9 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
                   <h3 className="text-sm font-bold text-red-700 uppercase tracking-wide mb-2 flex items-center gap-1.5"><AlertTriangle className="w-4 h-4" /> Escalate now if you see</h3>
                   <ul className="space-y-1.5 text-xs text-red-700">
                     <li>&bull; An active safety risk or near miss</li>
-                    <li>&bull; A possible child safety or welfare concern</li>
+                    <li>&bull; A possible harm or welfare concern to someone in the space</li>
                     <li>&bull; Compliance, licensing, or legal exposure</li>
-                    <li>&bull; Repeated or severe harm to a student's learning or wellbeing</li>
+                    <li>&bull; Repeated or severe harm to quality, service, or reputation</li>
                   </ul>
                 </div>
 
@@ -769,7 +769,7 @@ ${walk.actionItems.length ? `<table><thead><tr><th>Action</th><th>Owner</th><th>
 
           <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-gray-500 text-center sm:text-left">
-              Find Christian Schools&trade; Campus Walkthrough Tool &mdash; nothing you enter is sent anywhere; it lives only in this browser's local storage.
+              Find Christian Schools&trade; Go and See Tool &mdash; nothing you enter is sent anywhere; it lives only in this browser's local storage.
             </p>
             <button onClick={clearAllData} className="text-xs text-red-400 hover:text-red-600 flex items-center gap-1">
               <Trash2 className="w-3 h-3" /> Clear all data on this device

@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
     children: [
       { href: "/resources", label: "Resource Hub" },
       { href: "/lesson-planning", label: "Lesson Planning" },
-      { href: "/campus-walkthrough", label: "Campus Walkthrough Tool" },
+      { href: "/go-and-see", label: "Go and See Tool" },
       // { href: "/learning-resources", label: "Learning Resources" }, // Hidden for now
       { href: "/contact", label: "Contact Us" },
     ],

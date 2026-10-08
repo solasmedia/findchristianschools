@@ -23,6 +23,32 @@ import {
   sql,
   sum,
 } from "drizzle-orm";
+
+// Zip code radius search - geonames data for nearby zip lookup
+import { zipCoords } from "./data/zipcoords";
+
+function haversineMiles(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 3959;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+export function getZipsWithinRadius(zip: string, miles: number = 25): string[] {
+  const target = zipCoords[zip.slice(0, 5)];
+  if (!target) return [zip.slice(0, 5)];
+  const result: string[] = [];
+  for (const [z, coords] of Object.entrieszipCoords) {
+    if (haversineMiles(target[0], target[1], coords[0], coords[1]) <= miles) {
+      result.push(z);
+    }
+  }
+  return result;
+}
+
 import * as schema from "../drizzle/schema";
 import {
   users,
@@ -220,7 +246,26 @@ export async function searchSchools(params: SearchSchoolsParams) {
     if (clause) conditions.push(clause);
   }
   if (params.city) conditions.push(like(schools.city, `%${params.city}%`));
-  if (params.zip) conditions.push(like(schools.zip, `${params.zip}%`));
+  if (params.zip) {
+    const zip5 = params.zip.slice(0, 5);
+    const radiusMiles = (params as any).radius ?? 25;
+    if (radiusMiles > 0) {
+      const nearbyZips = getZipsWithinRadius(zip5, radiusMiles);
+      if (nearbyZips.length > 1) {
+        // Match schools in any nearby zip (handles both 5-digit and ZIP+4)
+        const zipConditions = nearbyZips.map((z) => like(schools.zip, `${z}%`));
+        const zipOr = or(...zipConditions);
+        if (zipOr) conditions.push(zipOr);
+        (params as any)._radiusApplied = true;
+        (params as any)._searchZip = zip5;
+        (params as any)._radiusMiles = radiusMiles;
+      } else {
+        conditions.push(like(schools.zip, `${zip5}%`));
+      }
+    } else {
+      conditions.push(like(schools.zip, `${zip5}%`));
+    }
+  }
   if (params.programType) conditions.push(eq(schools.programType, params.programType as "traditional" | "online" | "hybrid" | "homeschool_coop" | "boarding"));
   if (params.tuitionType) conditions.push(eq(schools.tuitionType, params.tuitionType as "free" | "tuition_assisted" | "tuition_based"));
   if (params.denominationTag) conditions.push(eq(schools.denominationTag, params.denominationTag));
@@ -269,7 +314,15 @@ export async function searchSchools(params: SearchSchoolsParams) {
   const stateCounts: Record<string, number> = {};
   for (const c of counts) stateCounts[c.stateCode] = Number(c.total);
 
-  return { schools: rows, total, stateCounts, radiusFallback: false };
+  const radiusApplied = (params as any)._radiusApplied === true;
+  return {
+    schools: rows,
+    total,
+    stateCounts,
+    radiusFallback: radiusApplied,
+    searchZip: (params as any)._searchZip,
+    radiusMiles: (params as any)._radiusMiles,
+  };
 }
 
 export async function getSchoolBySlug(slug: string) {

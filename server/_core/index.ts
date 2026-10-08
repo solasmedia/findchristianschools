@@ -30,9 +30,30 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+
 async function startServer() {
   await runMigrations();
   const app = express();
+  // TEMP DEBUG: remove before production
+  app.get("/api/debug/schema", async (_req, res) => {
+    try {
+      const { getDb } = await import("../db");
+      const db = await getDb();
+      if (!db) return res.json({ error: "no db" });
+      const rows: any = await db.execute("SELECT TABLE_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_NAME, ORDINAL_POSITION");
+      const tables: Record<string, string[]> = {};
+      for (const r of rows[0] as any[]) {
+        tables[r.TABLE_NAME] = tables[r.TABLE_NAME] || [];
+        tables[r.TABLE_NAME].push(r.COLUMN_NAME);
+      }
+      const migs: any = await db.execute("SELECT hash FROM __drizzle_migrations ORDER BY created_at");
+      const tableCols: Record<string, number> = {};
+      for (const k of Object.keys(tables)) tableCols[k] = tables[k].length;
+      res.json({ tableCols, migrations: (migs[0] as any[]).map(m => String(m.hash).slice(-10)) });
+    } catch (e) {
+      res.json({ error: String(e).slice(0, 500) });
+    }
+  });
   const server = createServer(app);
   // Stripe webhook needs raw body BEFORE json parsing
   app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), async (req, res) => {

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Search, Shield, BookOpen, Globe, GraduationCap, Heart, Users, MapPin, ChevronRight, ChevronDown, Star, Calendar, Briefcase, BookMarked, PenLine, CalendarDays, HandHeart, Sparkles, DollarSign, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
+import { VISION_DATA_URI } from "@/vision";
 
 const grades = [
   { value: "", label: "All Grades" },
@@ -54,6 +55,9 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#0055A4] overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <img src={VISION_DATA_URI} alt="" className="w-full h-full object-cover" />
+        </div>
         <div className="container relative py-16 lg:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">

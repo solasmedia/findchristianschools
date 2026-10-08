@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Heart, Globe, GraduationCap, Users, BookOpen, TrendingUp, School, MapPin, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { VISION_DATA_URI } from "@/vision";
 
 const supportedMissions = [
   { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
@@ -137,9 +138,7 @@ export default function Mission() {
               </p>
             </div>
             <div className="rounded-xl overflow-hidden relative">
-              <div className="w-full h-64 bg-gradient-to-br from-[#003d7a] via-[#0055A4] to-[#6EBE44] rounded-xl flex items-center justify-center">
-                <Target className="w-12 h-12 text-white/40" />
-              </div>
+              <img src={VISION_DATA_URI} alt="Child pointing up toward heaven" className="w-full h-64 object-cover rounded-xl" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#002855]/80 to-transparent rounded-xl flex items-end p-6">
                 <div className="text-white">
                   <Target className="w-6 h-6 text-[#FFC72C] mb-2" />

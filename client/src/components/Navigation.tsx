@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { LOGO_DATA_URI } from "@/logo";
 import { Menu, X, User, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
@@ -104,7 +105,7 @@ export default function Navigation() {
           <Link href="/" className="flex items-center shrink-0 gap-0">
             <div className="relative flex items-center">
               <img
-                src="/images/logo.jpg"
+                src={LOGO_DATA_URI}
                 alt="Find Christian Schools Logo"
                 className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-12" : "h-16"}`}
                 title="Find Christian Schools™"

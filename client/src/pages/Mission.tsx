@@ -7,12 +7,12 @@ import { Heart, Globe, GraduationCap, Users, BookOpen, TrendingUp, School, MapPi
 import { Button } from "@/components/ui/button";
 
 const supportedMissions = [
-  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon", image: "/manus-storage/IMG_0820_f3685dd9.png" },
-  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon", image: "/manus-storage/IMG_0839_493f50d9.jpeg" },
-  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon", image: "/manus-storage/IMG_0834_82c1db07.jpeg" },
-  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon", image: "/manus-storage/IMG_0844_92d26254.jpeg" },
-  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon", image: "/manus-storage/IMG_0842_a153dbd4.jpeg" },
-  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon", image: "/manus-storage/IMG_0843_28131255.jpeg" },
+  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
+  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
+  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
+  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
+  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
+  { name: "Coming Soon", location: "Coming Soon", focus: "Coming Soon", status: "Coming Soon" },
 ];
 
 function DonateSection({ donationStats }: { donationStats: any }) {
@@ -35,9 +35,6 @@ function DonateSection({ donationStats }: { donationStats: any }) {
 
   return (
     <section className="py-16 bg-gradient-to-r from-[#6EBE44] to-[#4a9e2a] relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10">
-        <img src="/manus-storage/IMG_0839_493f50d9.jpeg" alt="" className="w-full h-full object-cover" />
-      </div>
       <div className="container text-center relative">
         <Heart className="w-10 h-10 text-white mx-auto mb-4" />
         <h2 className="text-2xl lg:text-3xl font-bold text-white mb-3">Support the Mission</h2>
@@ -100,9 +97,6 @@ export default function Mission() {
 
       {/* Hero with Judges 2:10 */}
       <section className="bg-gradient-to-br from-[#003d7a] to-[#0055A4] py-16 lg:py-20 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-15">
-          <img src="/manus-storage/IMG_0820_f3685dd9.png" alt="" className="w-full h-full object-cover" />
-        </div>
         <div className="container relative text-center">
           <Heart className="w-12 h-12 text-[#FFC72C] mx-auto mb-6" />
           <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">Our Mission & Global Impact</h1>
@@ -143,7 +137,9 @@ export default function Mission() {
               </p>
             </div>
             <div className="rounded-xl overflow-hidden relative">
-              <img src="/manus-storage/girl-pointing-up_f923b165.png" alt="Child pointing up toward heaven" className="w-full h-64 object-cover rounded-xl" />
+              <div className="w-full h-64 bg-gradient-to-br from-[#003d7a] via-[#0055A4] to-[#6EBE44] rounded-xl flex items-center justify-center">
+                <Target className="w-12 h-12 text-white/40" />
+              </div>
               <div className="absolute inset-0 bg-gradient-to-t from-[#002855]/80 to-transparent rounded-xl flex items-end p-6">
                 <div className="text-white">
                   <Target className="w-6 h-6 text-[#FFC72C] mb-2" />
@@ -213,9 +209,9 @@ export default function Mission() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {supportedMissions.map((mission, i) => (
               <div key={i} className="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
-                {mission.image && (
-                  <img src={mission.image} alt={mission.name} className="w-full h-40 object-cover" />
-                )}
+                <div className="w-full h-40 bg-gradient-to-br from-[#003d7a] via-[#0055A4] to-[#6EBE44] flex items-center justify-center">
+                  <Globe className="w-10 h-10 text-white/70" />
+                </div>
                 <div className="p-6">
                 <div className="flex items-start justify-between mb-3">
                   <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -265,20 +261,11 @@ export default function Mission() {
       <section className="py-16 bg-white">
         <div className="container">
           <h2 className="text-2xl font-bold text-[#002855] text-center mb-3">From the Field</h2>
-          <p className="text-gray-600 text-center max-w-xl mx-auto mb-8">Real photos from our mission partners around the world.</p>
+          <p className="text-gray-600 text-center max-w-xl mx-auto mb-8">Glimpses of the mission field.</p>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {[
-              "/manus-storage/IMG_0820_f3685dd9.png",
-              "/manus-storage/IMG_0843_28131255.jpeg",
-              "/manus-storage/IMG_0842_a153dbd4.jpeg",
-              "/manus-storage/IMG_0844_92d26254.jpeg",
-              "/manus-storage/IMG_0839_493f50d9.jpeg",
-              "/manus-storage/IMG_0840_367de7f8.jpeg",
-              "/manus-storage/IMG_0835_094a6364.jpeg",
-              "/manus-storage/IMG_0841_8d181ea6.jpeg",
-            ].map((src, i) => (
-              <div key={i} className="aspect-square rounded-lg overflow-hidden">
-                <img src={src} alt="Mission field photo" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+            {[Globe, Heart, BookOpen, Users, GraduationCap, School, MapPin, Target].map((Icon, i) => (
+              <div key={i} className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-[#003d7a] via-[#0055A4] to-[#6EBE44] flex items-center justify-center hover:scale-105 transition-transform duration-300">
+                <Icon className="w-10 h-10 text-white/70" />
               </div>
             ))}
           </div>
@@ -291,13 +278,15 @@ export default function Mission() {
           <h2 className="text-2xl font-bold text-[#002855] text-center mb-10">Impact Stories</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {[
-              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon", image: "/manus-storage/IMG_0844_92d26254.jpeg" },
-              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon", image: "/manus-storage/IMG_0820_f3685dd9.png" },
-              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon", image: "/manus-storage/IMG_0839_493f50d9.jpeg" },
-              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon", image: "/manus-storage/IMG_0843_28131255.jpeg" },
+              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon" },
+              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon" },
+              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon" },
+              { quote: "Coming Soon", author: "Coming Soon", role: "Coming Soon" },
             ].map((story, i) => (
               <div key={i} className="bg-white rounded-xl border border-gray-100 p-6 flex gap-4">
-                <img src={story.image} alt={story.author} className="w-16 h-16 rounded-full object-cover shrink-0" />
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#0055A4] to-[#6EBE44] flex items-center justify-center shrink-0">
+                  <Users className="w-7 h-7 text-white" />
+                </div>
                 <div>
                   <p className="text-sm text-gray-700 italic leading-relaxed mb-3">&ldquo;{story.quote}&rdquo;</p>
                   <p className="text-sm font-semibold text-[#002855]">{story.author}</p>

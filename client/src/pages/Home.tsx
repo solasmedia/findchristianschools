@@ -54,9 +54,6 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#0055A4] overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <img src="/manus-storage/girl-pointing-up_f923b165.png" alt="Child pointing up in a Christian school" className="w-full h-full object-cover" />
-        </div>
         <div className="container relative py-16 lg:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
@@ -284,12 +281,10 @@ export default function Home() {
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
             <div className="relative">
-              <div className="rounded-2xl overflow-hidden shadow-2xl">
-                <img
-                  src="/manus-storage/mission-impact-child_84404f43.png"
-                  alt="Child receiving Christian education through global missions"
-                  className="w-full h-80 lg:h-96 object-cover object-top"
-                />
+              <div className="rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#6EBE44] h-80 lg:h-96 flex flex-col items-center justify-center text-center p-8">
+                <Heart className="w-14 h-14 text-white/80 mb-4" />
+                <p className="text-white font-bold text-xl">Bringing the Gospel</p>
+                <p className="text-blue-200 text-sm mt-2 max-w-xs leading-relaxed">Christian education for children in underserved nations around the world</p>
               </div>
               <div className="absolute -bottom-4 -right-4 bg-[#6EBE44] text-white rounded-xl px-5 py-3 shadow-lg">
                 <p className="text-xs font-medium uppercase tracking-wide">Your Impact</p>

@@ -103,9 +103,12 @@ export default function Navigation() {
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0 gap-0">
             <div className="relative flex items-center">
-              <span className={`font-bold text-[#002855] transition-all duration-300 ${scrolled ? "text-xl" : "text-2xl"}`} title="Find Christian Schools™">
-                Find Christian Schools<span className="text-[#0055A4]">™</span>
-              </span>
+              <img
+                src="/images/logo.jpg"
+                alt="Find Christian Schools Logo"
+                className={`w-auto object-contain transition-all duration-300 ${scrolled ? "h-12" : "h-16"}`}
+                title="Find Christian Schools™"
+              />
             </div>
           </Link>
 

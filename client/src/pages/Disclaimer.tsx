@@ -129,7 +129,7 @@ export default function Disclaimer() {
                 <Mail className="w-5 h-5 text-[#0055A4]" />
                 <div>
                   <p className="font-semibold text-[#002855]">FindChristianSchools.org</p>
-                  <p className="text-sm text-gray-600">Email: support@findchristianschools.org</p>
+                  
                 </div>
               </div>
             </section>

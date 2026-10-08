@@ -294,7 +294,7 @@ export default function AdminLogin() {
 
           {/* Footer Info */}
           <div className="mt-8 text-center text-blue-100 text-xs">
-            <p>For security concerns, contact: security@findchristianschools.org</p>
+            <p>For security concerns, use the contact form</p>
           </div>
         </div>
       </div>

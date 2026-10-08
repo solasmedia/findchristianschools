@@ -25,7 +25,7 @@ export default function LegalContact() {
               <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <Mail className="w-6 h-6 text-[#0055A4]" />
                 <div>
-                  <p className="font-semibold text-[#002855]">privacy@findchristianschools.org</p>
+                  <p className="font-semibold text-[#002855]">Use the contact form</p>
                   <p className="text-sm text-gray-600">Response time: 30 days</p>
                 </div>
               </div>

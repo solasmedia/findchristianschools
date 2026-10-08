@@ -129,10 +129,8 @@ export default function Contact() {
                   <div className="flex items-start gap-3">
                     <Mail className="w-5 h-5 text-[#0055A4] mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-[#002855]">Email</p>
-                      <a href="mailto:info@findchristianschools.org" className="text-sm text-[#0055A4] hover:underline">
-                        info@findchristianschools.org
-                      </a>
+                      <p className="text-sm font-medium text-[#002855]">Send a Message</p>
+                      <p className="text-sm text-gray-600">Use the form below and we'll get back to you.</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

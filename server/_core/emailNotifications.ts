@@ -1,6 +1,6 @@
 import { invokeLLM } from "./llm";
 
-const ADMIN_EMAIL = "dworiordan@icloud.com";
+const ADMIN_EMAIL = "dworiordan@gmail.com";
 const NOTIFICATION_API = process.env.BUILT_IN_FORGE_API_URL;
 const API_KEY = process.env.BUILT_IN_FORGE_API_KEY;
 

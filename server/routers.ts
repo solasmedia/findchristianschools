@@ -1054,11 +1054,15 @@ export const appRouter = router({
         status: 'new',
       });
       
-      // Notify admin of new feedback
-      await notifyOwner({
-        title: 'New Feedback Received',
-        content: `New ${input.feedbackType.replace(/_/g, ' ')}: ${input.message.substring(0, 100)}...${input.name ? ` from ${input.name}` : ''}`,
-      });
+      // Notify admin of new feedback (non-blocking)
+      try {
+        await notifyOwner({
+          title: 'New Feedback Received',
+          content: `New ${input.feedbackType.replace(/_/g, ' ')}: ${input.message.substring(0, 100)}...${input.name ? ` from ${input.name}` : ''}`,
+        });
+      } catch (e) {
+        console.warn('Feedback notification failed:', e);
+      }
       
       return { success: true };
     }),

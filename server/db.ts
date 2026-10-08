@@ -319,7 +319,7 @@ export async function getSchoolCountsByState() {
   const rows = await db
     .select({ stateCode: schools.stateCode, total: count() })
     .from(schools)
-    .where(and(...publicSchoolConditions(), eq(schools.isApproved, true)))
+    .where(and(...publicSchoolConditions()))
     .groupBy(schools.stateCode);
   const counts: Record<string, number> = {};
   for (const r of rows) counts[r.stateCode] = Number(r.total);

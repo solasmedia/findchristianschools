@@ -206,9 +206,6 @@ export default function StateHub() {
 
       {/* Hero */}
       <section className="bg-gradient-to-r from-[#002855] to-[#0055A4] py-12 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <img src="/manus-storage/IMG_0836_e297d476.jpeg" alt="" className="w-full h-full object-cover" />
-        </div>
         <div className="container relative">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2 text-blue-200 text-sm">

@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Heart, Users, BookOpen, Globe, Zap, CheckCircle, Mail, GraduationCap, Calendar } from 'lucide-react';
 import { Link } from 'wouter';
+import { LOGO_DATA_URI } from "@/logo";
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
 
@@ -51,7 +52,7 @@ export default function Welcome() {
       <section className="relative bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#0055A4] text-white py-12 md:py-20 px-4">
         <div className="container max-w-4xl mx-auto text-center">
           <img
-            src="/manus-storage/fcs-logo-org_b0a30a09.png"
+            src={LOGO_DATA_URI}
             alt="Find Christian Schools™ Logo"
             className="h-16 md:h-24 mx-auto mb-4 md:mb-8 drop-shadow-lg"
           />
@@ -71,11 +72,9 @@ export default function Welcome() {
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 items-start">
             {/* Founder Photo */}
             <div className="flex col-span-full md:col-span-1 flex-col items-center">
-              <img
-                src="/manus-storage/david-oriordan-founder_e804f4f4.jpeg"
-                alt="David O'Riordan, Founder and Executive Director"
-                className="w-32 h-32 md:w-full md:max-w-xs rounded-full md:rounded-lg shadow-lg mb-4 md:mb-6 object-cover md:h-80"
-              />
+              <div className="w-32 h-32 md:w-full md:max-w-xs rounded-full md:rounded-lg shadow-lg mb-4 md:mb-6 md:h-80 bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#0055A4] flex items-center justify-center">
+                <span className="text-white font-bold text-3xl md:text-5xl tracking-wide">DO</span>
+              </div>
               <div className="text-center mb-4 md:mb-8">
                 <h3 className="text-sm md:text-lg font-bold text-[#002855]">David O'Riordan</h3>
                 <p className="text-xs md:text-sm text-[#6EBE44] font-semibold">Founder & Executive Director</p>

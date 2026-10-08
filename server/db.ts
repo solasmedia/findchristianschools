@@ -24,8 +24,8 @@ import {
   sum,
 } from "drizzle-orm";
 
-// Zip code radius search - geonames data for nearby zip lookup
-import { zipCoords } from "./data/zipcoords";
+// Zip code radius search - school zip coordinates + runtime geocoding
+import { schoolZips } from "./data/schoolzips";
 
 function haversineMiles(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 3959;
@@ -37,16 +37,32 @@ function haversineMiles(lat1: number, lon1: number, lat2: number, lon2: number):
   return 2 * R * Math.asin(Math.sqrt(a));
 }
 
-export function getZipsWithinRadius(zip: string, miles: number = 25): string[] {
-  const target = zipCoords[zip.slice(0, 5)];
+async function geocodeZip(zip: string): Promise<[number, number] | null> {
+  // Check school zips first
+  const found = schoolZips.find((z) => z[0] === zip);
+  if (found) return [found[1], found[2]];
+  // Fallback to zippopotam API
+  try {
+    const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+    if (res.ok) {
+      const data = await res.json();
+      const p = data.places?.[0];
+      if (p) return [parseFloat(p.latitude), parseFloat(p.longitude)];
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
+export async function getZipsWithinRadius(zip: string, miles: number = 25): Promise<string[]> {
+  const target = await geocodeZip(zip.slice(0, 5));
   if (!target) return [zip.slice(0, 5)];
   const result: string[] = [];
-  for (const [z, coords] of Object.entrieszipCoords) {
-    if (haversineMiles(target[0], target[1], coords[0], coords[1]) <= miles) {
+  for (const [z, lat, lon] of schoolZips) {
+    if (haversineMiles(target[0], target[1], lat, lon) <= miles) {
       result.push(z);
     }
   }
-  return result;
+  return result.length > 0 ? result : [zip.slice(0, 5)];
 }
 
 import * as schema from "../drizzle/schema";
@@ -250,7 +266,7 @@ export async function searchSchools(params: SearchSchoolsParams) {
     const zip5 = params.zip.slice(0, 5);
     const radiusMiles = (params as any).radius ?? 25;
     if (radiusMiles > 0) {
-      const nearbyZips = getZipsWithinRadius(zip5, radiusMiles);
+      const nearbyZips = await getZipsWithinRadius(zip5, radiusMiles);
       if (nearbyZips.length > 1) {
         // Match schools in any nearby zip (handles both 5-digit and ZIP+4)
         const zipConditions = nearbyZips.map((z) => like(schools.zip, `${z}%`));

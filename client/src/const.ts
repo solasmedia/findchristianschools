@@ -7,6 +7,10 @@ export const getLoginUrl = () => {
   const redirectUri = `${window.location.origin}/api/oauth/callback`;
   const state = btoa(redirectUri);
 
+  if (!oauthPortalUrl || !appId) {
+    // OAuth not configured; return a harmless placeholder instead of crashing.
+    return "#login-unavailable";
+  }
   const url = new URL(`${oauthPortalUrl}/app-auth`);
   url.searchParams.set("appId", appId);
   url.searchParams.set("redirectUri", redirectUri);

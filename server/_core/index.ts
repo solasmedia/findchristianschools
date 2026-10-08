@@ -47,9 +47,7 @@ async function startServer() {
         tables[r.TABLE_NAME].push(r.COLUMN_NAME);
       }
       const migs: any = await db.execute("SELECT hash FROM __drizzle_migrations ORDER BY created_at");
-      const tableCols: Record<string, number> = {};
-      for (const k of Object.keys(tables)) tableCols[k] = tables[k].length;
-      res.json({ tableCols, migrations: (migs[0] as any[]).map(m => String(m.hash).slice(-10)) });
+      res.json({ schoolsCols: tables["schools"] || [], jobsCols: tables["jobs"] || [], migCount: (migs[0] as any[]).length });
     } catch (e) {
       res.json({ error: String(e).slice(0, 500) });
     }

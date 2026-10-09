@@ -58,6 +58,14 @@ async function startServer() {
   // SEO: sitemap.xml and robots.txt
   const { registerSeoRoutes } = await import("../seo");
   registerSeoRoutes(app);
+  // FCS Lesson Planner PWA - serve static files with SPA fallback
+  const { default: expressMod } = await import("express");
+  const { default: pathMod } = await import("path");
+  const plannerDistPath = pathMod.resolve(import.meta.dirname, process.env.NODE_ENV === "development" ? "../../public/planner" : "public/planner");
+  app.use("/planner", expressMod.static(plannerDistPath));
+  app.get("/planner/*", (_req, res) => {
+    res.sendFile(pathMod.resolve(plannerDistPath, "index.html"));
+  });
   // tRPC API
   app.use(
     "/api/trpc",

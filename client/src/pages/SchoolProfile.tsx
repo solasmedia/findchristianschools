@@ -136,7 +136,7 @@ export default function SchoolProfile() {
                         <div className="space-y-2">
                           <p className="font-semibold text-[#002855] text-sm">What does "Unverified" mean?</p>
                           <p className="text-xs text-gray-600 leading-relaxed">
-                            This listing was imported from the <strong>NCES Public School Survey 2023–24</strong>, a publicly available government dataset. The school has not yet been contacted or verified by our team.
+                            This listing was imported from the <strong>NCES Public School Survey 2023–24</strong>, a publicly available government dataset. The school has not yet affirmed our Statement of Faith or been verified by our team.
                           </p>
                           <p className="text-xs text-gray-600 leading-relaxed">
                             Information may be outdated. If you represent this school, you can <strong>claim this listing</strong> to update details and request verification.

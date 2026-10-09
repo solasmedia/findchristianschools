@@ -90,6 +90,13 @@ function isAdminRequest(req: Request): boolean {
 
 export function registerAdminImportRoute(app: Express) {
   app.post("/api/admin/import-schools", async (req: Request, res: Response) => {
+    // SECURITY: Bulk import disabled in production. Use secure admin panel for data management.
+    // To enable temporarily, set ALLOW_BULK_IMPORT=true in environment.
+    if (process.env.ALLOW_BULK_IMPORT !== "true") {
+      res.status(403).json({ error: "Bulk import is disabled. Contact administrator." });
+      return;
+    }
+
     if (!isAdminRequest(req)) {
       res.status(401).json({ error: "Admin authentication required" });
       return;

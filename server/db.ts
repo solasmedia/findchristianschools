@@ -248,11 +248,23 @@ export async function searchSchools(params: SearchSchoolsParams) {
 
   if (params.query) {
     const q = `%${params.query}%`;
+    // Split into words for more forgiving matching (handles partial typos)
+    const words = params.query.trim().split(/\s+/).filter(w => w.length > 2);
+    const wordClauses = words.map(w => {
+      const wq = `%${w}%`;
+      return or(
+        like(schools.name, wq),
+        like(schools.city, wq),
+        like(schools.state, wq),
+      );
+    });
     const clause = or(
       like(schools.name, q),
       like(schools.city, q),
       like(schools.state, q),
       like(schools.zip, q),
+      // Match if any significant word matches (typo tolerance)
+      ...(wordClauses.length > 1 ? [or(...wordClauses)] : []),
     );
     if (clause) conditions.push(clause);
   }

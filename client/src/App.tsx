@@ -14,6 +14,7 @@ import Events from "./pages/Events";
 import Mission from "./pages/Mission";
 import Membership from "./pages/Membership";
 import StateHub from "./pages/StateHub";
+import CityHub from "./pages/CityHub";
 import StatesIndex from "./pages/States";
 import International from "./pages/International";
 import SubmitSchool from "./pages/SubmitSchool";
@@ -65,6 +66,7 @@ function Router() {
       <Route path="/membership" component={Membership} />
       <Route path="/states" component={StatesIndex} />
       <Route path="/state/:code" component={StateHub} />
+      <Route path="/city/:code/:city" component={CityHub} />
       <Route path="/international" component={International} />
       <Route path="/submit-school" component={SubmitSchool} />
       <Route path="/submit-international" component={SubmitInternational} />

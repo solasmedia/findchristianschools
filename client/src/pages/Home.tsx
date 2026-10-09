@@ -43,7 +43,15 @@ export default function Home() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (searchQuery) params.set("query", searchQuery);
+    if (searchQuery) {
+      // If input looks like a 5-digit ZIP, use zip param for radius search
+      const trimmed = searchQuery.trim();
+      if (/^\d{5}(-\d{4})?$/.test(trimmed)) {
+        params.set("zip", trimmed.slice(0, 5));
+      } else {
+        params.set("query", searchQuery);
+      }
+    }
     if (gradeLevel) params.set("gradeLevel", gradeLevel);
     if (programType) params.set("programType", programType);
     navigate(`/search?${params.toString()}`);

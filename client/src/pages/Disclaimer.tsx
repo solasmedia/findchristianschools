@@ -115,7 +115,10 @@ export default function Disclaimer() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">Statement of Faith Compliance</h2>
               <p className="text-gray-700 leading-relaxed">
-                All schools listed on FindChristianSchools.org are required to affirm and uphold our Statement of Faith, which reflects core, mainstream Christian beliefs including the authority of Scripture, the Trinity, the deity and resurrection of Jesus Christ, salvation by grace through faith, the sanctity of life, and biblical marriage as defined between one biological man and one biological woman.
+                Schools marked as <strong>Verified</strong> have affirmed and uphold our Statement of Faith, which reflects core, mainstream Christian beliefs including the authority of Scripture, the Trinity, the deity and resurrection of Jesus Christ, salvation by grace through faith, the sanctity of life, and biblical marriage as defined between one biological man and one biological woman.
+              </p>
+              <p className="text-gray-700 leading-relaxed">
+                Schools marked as <strong>Unverified Listing</strong> are included from public directory data and have not yet affirmed our Statement of Faith. We encourage these schools to claim their listing and complete verification. If you represent a school, you can start this process by claiming your listing.
               </p>
               <p className="text-gray-700 leading-relaxed">
                 Any school that is found to violate or no longer uphold the Statement of Faith may be withdrawn from the FindChristianSchools.org directory at any time, without prior notice. By listing a school on this platform, the submitter acknowledges and accepts this policy. FindChristianSchools.org reserves sole discretion in determining compliance with the Statement of Faith.

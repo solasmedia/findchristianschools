@@ -614,7 +614,7 @@ export const appRouter = router({
 
   // ============ SCHOOL SUBMISSION ============
   submission: router({
-    submitSchool: protectedProcedure.input(z.object({
+    submitSchool: publicProcedure.input(z.object({
       name: z.string().min(1), address: z.string().min(1), city: z.string().min(1),
       state: z.string().min(1), stateCode: z.string().length(2), zip: z.string().min(1),
       phone: z.string().optional(), website: z.string().optional(), email: z.string().optional(),
@@ -645,7 +645,7 @@ export const appRouter = router({
       listingType: z.enum(["free", "donate", "premium"]).optional().default("free"),
       donationAmount: z.number().optional(),
     })).mutation(async ({ ctx, input }) => {
-      const key = getRateLimitKey('submission', ctx.user.id);
+      const key = getRateLimitKey('submission', undefined, ctx.req.ip);
       if (!checkRateLimit(key, RATE_LIMITS.submission)) {
         throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many submissions. Please try again in an hour.' });
       }
@@ -699,7 +699,7 @@ export const appRouter = router({
         // Set listing status to pending and mark as claimed
         updateFields.listingStatus = 'pending';
         updateFields.schoolClaimed = true;
-        updateFields.ownerId = ctx.user.id;
+        if (ctx.user?.id) updateFields.ownerId = ctx.user.id;
         updateFields.dateLastUpdated = new Date();
         if (googleBusinessProfileUrl) updateFields.googleBusinessProfileUrl = googleBusinessProfileUrl;
         if (einOrStateRegNumber) updateFields.einOrStateRegNumber = einOrStateRegNumber;
@@ -713,7 +713,7 @@ export const appRouter = router({
         // Notify owner
         await notifyOwner({
           title: `School Claimed: ${existingSchool.name}`,
-          content: `An existing school has been claimed and updated.\n\nSchool: ${existingSchool.name}\nCity: ${existingSchool.city}, ${existingSchool.state}\nClaimed by: ${ctx.user.name || ctx.user.email || 'Unknown'}\nStatus changed to: Pending\n\nPlease review and approve in the Admin Dashboard.`,
+          content: `An existing school has been claimed and updated.\n\nSchool: ${existingSchool.name}\nCity: ${existingSchool.city}, ${existingSchool.state}\nClaimed by: ${ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || 'Unknown'}\nStatus changed to: Pending\n\nPlease review and approve in the Admin Dashboard.`,
         }).catch(() => {});
 
         return { success: true, slug: existingSchool.slug, matched: true };
@@ -721,7 +721,7 @@ export const appRouter = router({
         // Create new school
         const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         await createSchool({
-          ...schoolData, slug, ownerId: ctx.user.id, isApproved: false, isPremium: listingType === 'premium', featured: false,
+          ...schoolData, slug, ownerId: ctx.user?.id, isApproved: false, isPremium: listingType === 'premium', featured: false,
           latitude: input.latitude?.toString(), longitude: input.longitude?.toString(),
           googleBusinessProfileUrl: googleBusinessProfileUrl || undefined,
           einOrStateRegNumber: einOrStateRegNumber || undefined,
@@ -733,7 +733,7 @@ export const appRouter = router({
         // Notify owner of new school submission
         await notifyOwner({
           title: `New School Submitted: ${input.name}`,
-          content: `A new school has been submitted for review.\n\nSchool: ${input.name}\nCity: ${input.city}, ${input.state}\nSubmitted by: ${ctx.user.name || ctx.user.email || 'Unknown'}\nStatement of Faith: ${input.statementOfFaith.substring(0, 100)}...\n\nPlease review in the Admin Dashboard.`,
+          content: `A new school has been submitted for review.\n\nSchool: ${input.name}\nCity: ${input.city}, ${input.state}\nSubmitted by: ${ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || 'Unknown'}\nStatement of Faith: ${input.statementOfFaith.substring(0, 100)}...\n\nPlease review in the Admin Dashboard.`,
         }).catch(() => {});
         return { success: true, slug, matched: false };
       }
@@ -775,7 +775,7 @@ export const appRouter = router({
       gradeLevel: z.string().optional(), limit: z.number().optional(), offset: z.number().optional(),
     })).query(({ input }) => searchInternationalSchools(input)),
     getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => getInternationalSchoolBySlug(input.slug)),
-    submit: protectedProcedure.input(z.object({
+    submit: publicProcedure.input(z.object({
       name: z.string().min(1), country: z.string().min(1), countryCode: z.string().min(2).max(3),
       city: z.string().min(1), region: z.string().optional(), address: z.string().optional(),
       phone: z.string().optional(), website: z.string().optional(), email: z.string().optional(),
@@ -795,12 +795,12 @@ export const appRouter = router({
     })).mutation(async ({ ctx, input }) => {
       const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       await createInternationalSchool({
-        ...input, slug, ownerId: ctx.user.id, isApproved: false, isPremium: false, featured: false,
+        ...input, slug, ownerId: ctx.user?.id, isApproved: false, isPremium: false, featured: false,
         programType: input.programType || 'day_school', curriculumType: input.curriculumType || 'other',
       });
       await notifyOwner({
         title: `New International School Submitted: ${input.name}`,
-        content: `A new international school has been submitted for review.\n\nSchool: ${input.name}\nCountry: ${input.country}\nCity: ${input.city}\nDenomination: ${input.denomination || 'Not specified'}\nSubmitted by: ${ctx.user.name || ctx.user.email || 'Unknown'}\n\nPlease review in the Admin Dashboard.`,
+        content: `A new international school has been submitted for review.\n\nSchool: ${input.name}\nCountry: ${input.country}\nCity: ${input.city}\nDenomination: ${input.denomination || 'Not specified'}\nSubmitted by: ${ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || 'Unknown'}\n\nPlease review in the Admin Dashboard.`,
       }).catch(() => {});
       return { success: true, slug };
     }),

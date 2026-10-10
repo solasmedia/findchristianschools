@@ -108,6 +108,7 @@ export default function SubmitSchool() {
           googleBusinessProfileUrl: form.googleBusinessProfileUrl || undefined,
           einOrStateRegNumber: form.einOrStateRegNumber || undefined,
           certifiedAccurate: agreedToAccuracy,
+          sofAttested: agreedToFaith,
           listingType: 'free',
         });
         // Note: Logo and gallery uploads will be handled after school creation
@@ -136,6 +137,7 @@ export default function SubmitSchool() {
           googleBusinessProfileUrl: form.googleBusinessProfileUrl || undefined,
           einOrStateRegNumber: form.einOrStateRegNumber || undefined,
           certifiedAccurate: agreedToAccuracy,
+          sofAttested: agreedToFaith,
           listingType,
           donationAmount: listingType === 'donate' ? donationAmount : undefined,
         });
@@ -671,7 +673,7 @@ export default function SubmitSchool() {
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input type="checkbox" checked={agreedToFaith} onChange={e => setAgreedToFaith(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-300" required />
                   <span className="text-sm text-gray-700">
-                    I confirm that my school agrees with the <a href="#" onClick={e => { e.preventDefault(); setShowFaithModal(true); }} className="text-[#0055A4] hover:underline font-medium">Statement of Faith</a> and affirms the Christian values outlined. I understand that listings violating the Statement of Faith may be withdrawn without prior notice.
+                    I affirm that this organization aligns with the <a href="/statement-of-faith" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline font-medium">Find Christian Schools Statement of Faith</a>. I understand that listings violating the Statement of Faith may be withdrawn without prior notice.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 cursor-pointer">
@@ -703,7 +705,7 @@ export default function SubmitSchool() {
                   required
                 />
                 <span className="text-sm text-gray-700">
-                  I confirm that my school agrees with the <a href="#" onClick={e => { e.preventDefault(); setShowFaithModal(true); }} className="text-[#0055A4] hover:underline font-medium">Statement of Faith</a> and affirms the Christian values outlined above.
+                  I affirm that this organization aligns with the <a href="/statement-of-faith" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline font-medium">Find Christian Schools Statement of Faith</a>.
                 </span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">

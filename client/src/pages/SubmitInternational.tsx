@@ -28,6 +28,7 @@ export default function SubmitInternational() {
   const { user, loading } = useAuth();
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [sofAttested, setSofAttested] = useState(false);
   const [form, setForm] = useState<any>({
     name: "", country: "", countryCode: "", city: "", region: "", address: "",
     phone: "", website: "", email: "", description: "", missionStatement: "",
@@ -69,8 +70,12 @@ export default function SubmitInternational() {
       toast.error("Please fill in all required fields including Statement of Faith.");
       return;
     }
+    if (!sofAttested) {
+      toast.error("Please affirm that your organization aligns with our Statement of Faith.");
+      return;
+    }
     const countryCode = form.countryCode || form.country.substring(0, 2).toUpperCase();
-    submit.mutate({ ...form, countryCode, enrollment: form.enrollment ? Number(form.enrollment) : undefined, yearFounded: form.yearFounded ? Number(form.yearFounded) : undefined });
+    submit.mutate({ ...form, countryCode, sofAttested, enrollment: form.enrollment ? Number(form.enrollment) : undefined, yearFounded: form.yearFounded ? Number(form.yearFounded) : undefined });
   };
 
   return (
@@ -192,9 +197,17 @@ export default function SubmitInternational() {
             {step < STEPS.length - 1 ? (
               <Button onClick={() => setStep(s => s + 1)} className="bg-[#0055A4] hover:bg-[#002855] text-white">Next</Button>
             ) : (
-              <Button onClick={handleSubmit} className="bg-[#6EBE44] hover:bg-[#5da838] text-white" disabled={submit.isPending}>
-                {submit.isPending ? "Submitting..." : "Submit School"}
-              </Button>
+              <div className="flex flex-col items-end gap-3">
+                <label className="flex items-start gap-2 cursor-pointer max-w-md">
+                  <input type="checkbox" checked={sofAttested} onChange={e => setSofAttested(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-300" />
+                  <span className="text-sm text-gray-700">
+                    I affirm that this organization aligns with the <a href="/statement-of-faith" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline font-medium">Find Christian Schools Statement of Faith</a>.
+                  </span>
+                </label>
+                <Button onClick={handleSubmit} className="bg-[#6EBE44] hover:bg-[#5da838] text-white" disabled={submit.isPending}>
+                  {submit.isPending ? "Submitting..." : "Submit School"}
+                </Button>
+              </div>
             )}
           </div>
         </div>

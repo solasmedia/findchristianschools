@@ -152,7 +152,7 @@ export default function TermsOfService() {
               <p className="text-gray-700 text-sm mt-2">Please include: (1) your contact information, (2) description of the copyrighted work, (3) URL of the infringing content, (4) statement under penalty of perjury that you own the copyright, and (5) your signature.</p>
             </div>
             <p className="text-gray-700">
-              FindChristianSchools.org will investigate and remove infringing content upon receipt of a valid DMCA notice. Repeat infringers will have their accounts terminated.
+              FindChristianSchools.org will investigate and remove infringing content upon receipt of a valid DMCA notice. Repeat infringers will have their accounts terminated. For the full procedure, including counter-notifications, see our <a href="/dmca" className="text-[#0055A4] hover:underline font-medium">DMCA Copyright Policy</a>.
             </p>
           </section>
 

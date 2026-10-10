@@ -44,6 +44,7 @@ const EMPLOYMENT_TYPES = [
 
 export default function Jobs() {
   const [showForm, setShowForm] = useState(false);
+  const [sofAttested, setSofAttested] = useState(false);
   const [searchState, setSearchState] = useState("");
   const [searchZip, setSearchZip] = useState("");
   const [searchType, setSearchType] = useState("");
@@ -61,6 +62,7 @@ export default function Jobs() {
     onSuccess: () => {
       toast.success("Job posted! It will appear after admin approval.");
       setShowForm(false);
+      setSofAttested(false);
     },
     onError: (e) => toast.error(e.message),
   });
@@ -82,6 +84,10 @@ export default function Jobs() {
       toast.error("Please fill in all required fields.");
       return;
     }
+    if (!sofAttested) {
+      toast.error("Please affirm that your organization aligns with our Statement of Faith.");
+      return;
+    }
     const stateObj = US_STATES.find(s => s.code === form.stateCode);
     submitMutation.mutate({
       ...form,
@@ -91,6 +97,7 @@ export default function Jobs() {
       yearsExperience: form.yearsExperience ? Number(form.yearsExperience) : undefined,
       applicationDeadline: form.applicationDeadline || undefined,
       startDate: form.startDate || undefined,
+      sofAttested,
     });
   };
 
@@ -288,6 +295,11 @@ export default function Jobs() {
                           </Button>
                         </a>
                       )}
+                      <div className="flex gap-3 mt-1">
+                        <a href={`/contact?report=job-${job.id}`} className="text-[11px] text-gray-400 hover:text-[#0055A4] hover:underline">
+                          Report inaccurate info / Request removal
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -303,6 +315,12 @@ export default function Jobs() {
               </Button>
             </div>
           )}
+          {/* Non-endorsement disclaimer */}
+          <div className="mt-6 bg-gray-50 rounded-xl border border-gray-100 p-4">
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Inclusion in this directory does not constitute endorsement. We do not endorse, guarantee, or warrant the services, beliefs, or practices of listed organizations. Please verify all information directly with the organization.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -415,6 +433,13 @@ export default function Jobs() {
                   </div>
                 </div>
               </fieldset>
+
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" checked={sofAttested} onChange={e => setSofAttested(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-300" required />
+                <span className="text-sm text-gray-700">
+                  I affirm that this organization aligns with the <a href="/statement-of-faith" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline font-medium">Find Christian Schools Statement of Faith</a>.
+                </span>
+              </label>
 
               <Button type="submit" disabled={submitMutation.isPending} className="w-full bg-[#6EBE44] hover:bg-[#5aa838] text-white border-0 py-3">
                 {submitMutation.isPending ? "Submitting..." : "Submit Job Posting"}

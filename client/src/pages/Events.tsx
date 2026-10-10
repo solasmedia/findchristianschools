@@ -60,6 +60,7 @@ export default function Events() {
   const [category, setCategory] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [sofAttested, setSofAttested] = useState(false);
   const [form, setForm] = useState<PostEventForm>(emptyForm);
 
   const month = currentMonth.getMonth() + 1;
@@ -68,7 +69,7 @@ export default function Events() {
   const { data, isLoading } = trpc.events.list.useQuery({ category: category || undefined, month, year, limit: 50 });
 
   const submitMutation = trpc.events.submit.useMutation({
-    onSuccess: () => { setSubmitted(true); setForm(emptyForm); },
+    onSuccess: () => { setSubmitted(true); setForm(emptyForm); setSofAttested(false); },
     onError: (err) => { toast.error(err.message || "Submission failed. Please try again."); },
   });
 
@@ -76,6 +77,10 @@ export default function Events() {
     e.preventDefault();
     if (!form.title || !form.startDate) {
       toast.error("Please fill in the event title and start date.");
+      return;
+    }
+    if (!sofAttested) {
+      toast.error("Please affirm that your organization aligns with our Statement of Faith.");
       return;
     }
     submitMutation.mutate({
@@ -90,6 +95,7 @@ export default function Events() {
       website: form.website || undefined,
       submitterName: form.submitterName || undefined,
       contactEmail: form.contactEmail || undefined,
+      sofAttested,
     });
   };
 
@@ -216,6 +222,9 @@ export default function Events() {
                           </a>
                         )}
                         <ShareButton title={event.title} url={`/events?id=${event.id}`} />
+                        <a href={`/contact?report=event-${event.id}`} className="text-[11px] text-gray-400 hover:text-[#0055A4] hover:underline">
+                          Report / Request removal
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -234,6 +243,12 @@ export default function Events() {
               )}
             </div>
           )}
+          {/* Non-endorsement disclaimer */}
+          <div className="mt-6 bg-gray-50 rounded-xl border border-gray-100 p-4">
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Inclusion in this directory does not constitute endorsement. We do not endorse, guarantee, or warrant the services, beliefs, or practices of listed organizations. Please verify all information directly with the organization.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -313,6 +328,12 @@ export default function Events() {
                 </div>
               </div>
               <p className="text-xs text-gray-400">Events are reviewed before publishing, usually within 1–2 business days.</p>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" checked={sofAttested} onChange={e => setSofAttested(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-300" required />
+                <span className="text-sm text-gray-700">
+                  I affirm that this organization aligns with the <a href="/statement-of-faith" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline font-medium">Find Christian Schools Statement of Faith</a>.
+                </span>
+              </label>
               <div className="flex gap-3 pt-2">
                 <Button type="button" variant="outline" className="flex-1" onClick={() => setShowForm(false)}>Cancel</Button>
                 <Button type="submit" className="flex-1 bg-[#6EBE44] hover:bg-[#5aa836] text-white" disabled={submitMutation.isPending}>

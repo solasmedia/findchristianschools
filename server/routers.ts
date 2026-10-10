@@ -33,6 +33,8 @@ import {
   submitEvent,
   getPendingEvents, getAllEventsAdmin,
   getSchoolCountsByState,
+  searchColleges, getCollegeBySlug, getCollegesByState, getCollegeCountsByState,
+  searchRaces, getRaceBySlug, getRaceCountsByState,
 } from "./db";
 import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
@@ -412,6 +414,37 @@ export const appRouter = router({
     delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => deleteSchool(input.id)),
   }),
 
+  // ============ COLLEGES ============
+  colleges: router({
+    search: publicProcedure.input(z.object({
+      query: z.string().optional(),
+      state: z.string().optional(),
+      city: z.string().optional(),
+      zip: z.string().optional(),
+      denomination: z.string().optional(),
+      limit: z.number().optional(),
+      offset: z.number().optional(),
+    })).query(({ input }) => searchColleges(input)),
+    getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => getCollegeBySlug(input.slug)),
+    getByState: publicProcedure.input(z.object({ stateCode: z.string() })).query(({ input }) => getCollegesByState(input.stateCode)),
+    countsByState: publicProcedure.query(() => getCollegeCountsByState()),
+  }),
+
+  // ============ RACES ============
+  races: router({
+    search: publicProcedure.input(z.object({
+      query: z.string().optional(),
+      state: z.string().optional(),
+      city: z.string().optional(),
+      zip: z.string().optional(),
+      upcoming: z.boolean().optional(),
+      limit: z.number().optional(),
+      offset: z.number().optional(),
+    })).query(({ input }) => searchRaces(input)),
+    getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => getRaceBySlug(input.slug)),
+    countsByState: publicProcedure.query(() => getRaceCountsByState()),
+  }),
+
   // ============ RESOURCES ============
   resources: router({
     list: publicProcedure.input(z.object({
@@ -456,11 +489,18 @@ export const appRouter = router({
       faithRequirement: z.string().optional(), subjectArea: z.string().optional(), gradeLevel: z.string().optional(),
       applicationEmail: z.string().optional(), applicationUrl: z.string().optional(),
       applicationDeadline: z.string().optional(), startDate: z.string().optional(),
+      sofAttested: z.boolean().default(false),
     })).mutation(async ({ input }) => {
+      if (!input.sofAttested) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'You must affirm that the organization aligns with our Statement of Faith before submitting.' });
+      }
+      const { sofAttested, ...jobData } = input;
       const result = await submitJob({
-        ...input,
+        ...jobData,
         applicationDeadline: input.applicationDeadline ? new Date(input.applicationDeadline) : undefined,
         startDate: input.startDate ? new Date(input.startDate) : undefined,
+        sofAttested: true,
+        sofAttestedAt: new Date(),
       });
       await notifyJobPosted({
         title: input.title,
@@ -523,12 +563,21 @@ export const appRouter = router({
       website: z.string().url().optional().or(z.literal('')),
       submitterName: z.string().max(255).optional(),
       contactEmail: z.string().email().optional(),
+      sofAttested: z.boolean().default(false),
     })).mutation(async ({ ctx, input }) => {
       const key = getRateLimitKey('event_submit', undefined, ctx.req.ip);
       if (!checkRateLimit(key, { maxRequests: 3, windowMs: 60 * 60 * 1000 })) {
         throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many event submissions. Please try again later.' });
       }
-      const result = await submitEvent(input);
+      if (!input.sofAttested) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'You must affirm that the organization aligns with our Statement of Faith before submitting.' });
+      }
+      const { sofAttested, ...eventData } = input;
+      const result = await submitEvent({
+        ...eventData,
+        sofAttested: true,
+        sofAttestedAt: new Date(),
+      });
       await notifyEventPosted({
         title: input.title,
         date: input.startDate?.toLocaleDateString(),
@@ -641,6 +690,8 @@ export const appRouter = router({
       googleBusinessProfileUrl: z.string().url().optional().or(z.literal('')),
       einOrStateRegNumber: z.string().optional(),
       certifiedAccurate: z.boolean().default(false),
+      // Statement of Faith attestation (required)
+      sofAttested: z.boolean().default(false),
       // Payment fields
       listingType: z.enum(["free", "donate", "premium"]).optional().default("free"),
       donationAmount: z.number().optional(),
@@ -653,7 +704,10 @@ export const appRouter = router({
       if (!input.certifiedAccurate) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'You must certify that the information is accurate before submitting.' });
       }
-      const { claimSlug, googleBusinessProfileUrl, einOrStateRegNumber, certifiedAccurate, listingType, donationAmount, ...schoolData } = input;
+      if (!input.sofAttested) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'You must affirm that the organization aligns with our Statement of Faith before submitting.' });
+      }
+      const { claimSlug, googleBusinessProfileUrl, einOrStateRegNumber, certifiedAccurate, listingType, donationAmount, sofAttested, ...schoolData } = input;
       const dbConn = await import("./db").then(m => m.getDb());
       if (!dbConn) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       const { schools: schoolsTable } = await import("../drizzle/schema");
@@ -707,6 +761,9 @@ export const appRouter = router({
         updateFields.listingType = listingType || 'free';
         if (donationAmount) updateFields.donationAmount = donationAmount;
         if (listingType === 'premium') updateFields.isPremium = true;
+        // Statement of Faith attestation
+        updateFields.sofAttested = true;
+        updateFields.sofAttestedAt = new Date();
 
         await dbConn.update(schoolsTable).set(updateFields).where(eq(schoolsTable.id, existingSchool.id));
 
@@ -726,6 +783,8 @@ export const appRouter = router({
           googleBusinessProfileUrl: googleBusinessProfileUrl || undefined,
           einOrStateRegNumber: einOrStateRegNumber || undefined,
           certifiedAccurate,
+          sofAttested: true,
+          sofAttestedAt: new Date(),
           listingStatus: 'community_submitted',
           listingType: listingType || 'free',
           donationAmount: donationAmount || undefined,
@@ -792,11 +851,17 @@ export const appRouter = router({
       hasBoarding: z.boolean().optional(), hasSports: z.boolean().optional(),
       hasArts: z.boolean().optional(), hasESL: z.boolean().optional(),
       contactName: z.string().optional(), contactTitle: z.string().optional(), contactEmail: z.string().optional(),
+      sofAttested: z.boolean().default(false),
     })).mutation(async ({ ctx, input }) => {
+      if (!input.sofAttested) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'You must affirm that the organization aligns with our Statement of Faith before submitting.' });
+      }
+      const { sofAttested, ...rest } = input;
       const slug = input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       await createInternationalSchool({
-        ...input, slug, ownerId: ctx.user?.id, isApproved: false, isPremium: false, featured: false,
+        ...rest, slug, ownerId: ctx.user?.id, isApproved: false, isPremium: false, featured: false,
         programType: input.programType || 'day_school', curriculumType: input.curriculumType || 'other',
+        sofAttested: true, sofAttestedAt: new Date(),
       });
       await notifyOwner({
         title: `New International School Submitted: ${input.name}`,

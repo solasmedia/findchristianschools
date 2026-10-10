@@ -15,7 +15,11 @@ Sitemap: ${SITE_URL}/sitemap.xml`
     );
   });
 
-  // sitemap.xml - dynamic, includes all public schools
+  // sitemap.xml - dynamic, includes all public listings
+  // NOTE: Uses the same "public" filters as the search endpoints:
+  // schools exclude removed + Catholic/Mormon (per SoF policy).
+  // isApproved is NOT used for schools because public search doesn't filter on it
+  // and it defaults to false, which would hide nearly all schools from Google.
   app.get("/sitemap.xml", async (_req: Request, res: Response) => {
     try {
       const { getDb } = await import("./db");
@@ -24,23 +28,78 @@ Sitemap: ${SITE_URL}/sitemap.xml`
         res.status(500).send("Database unavailable");
         return;
       }
-      const { schools } = await import("../drizzle/schema");
-      const { eq, and, ne } = await import("drizzle-orm");
+      const { schools, colleges, races } = await import("../drizzle/schema");
+      const { and, ne, notLike, or, isNull, eq } = await import("drizzle-orm");
 
-      // Get all public, non-removed schools (just slug for sitemap)
-      const rows = await db
+      // --- Schools: match publicSchoolConditions() in db.ts ---
+      const schoolRows = await db
         .select({ slug: schools.slug })
         .from(schools)
-        .where(and(ne(schools.listingStatus, "removed"), eq(schools.isApproved, true)))
-        .limit(50000);
+        .where(
+          and(
+            ne(schools.listingStatus, "removed"),
+            notLike(schools.name, "%Catholic%"),
+            or(ne(schools.denomination, "Catholic"), isNull(schools.denomination)),
+            notLike(schools.name, "%Mormon%"),
+            notLike(schools.name, "%Latter-day Saints%"),
+            notLike(schools.name, "%LDS%"),
+            or(notLike(schools.denomination, "%Mormon%"), isNull(schools.denomination)),
+            or(notLike(schools.denomination, "%Latter-day Saints%"), isNull(schools.denomination)),
+            or(ne(schools.denomination, "LDS"), isNull(schools.denomination)),
+          )
+        )
+        .limit(45000);
 
-      const urls = rows
+      const schoolUrls = schoolRows
         .filter(r => r.slug)
         .map(r => `  <url><loc>${SITE_URL}/school/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
         .join("\n");
 
+      // --- Colleges: match publicCollegeConditions() in db.ts ---
+      let collegeUrls = "";
+      try {
+        const collegeRows = await db
+          .select({ slug: colleges.slug })
+          .from(colleges)
+          .where(
+            and(
+              ne(colleges.listingStatus, "removed"),
+              eq(colleges.isApproved, true),
+              notLike(colleges.name, "%Catholic%"),
+              notLike(colleges.denomination, "%Catholic%"),
+              notLike(colleges.name, "%Mormon%"),
+              notLike(colleges.name, "%Latter-day Saints%"),
+              notLike(colleges.denomination, "%Mormon%"),
+              notLike(colleges.denomination, "%Latter-day Saints%"),
+            )
+          )
+          .limit(5000);
+        collegeUrls = collegeRows
+          .filter(r => r.slug)
+          .map(r => `  <url><loc>${SITE_URL}/college/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+          .join("\n");
+      } catch {
+        // colleges table may not exist yet if migration hasn't run
+      }
+
+      // --- Races: match publicRaceConditions() in db.ts ---
+      let raceUrls = "";
+      try {
+        const raceRows = await db
+          .select({ slug: races.slug })
+          .from(races)
+          .where(and(ne(races.listingStatus, "removed"), eq(races.isApproved, true)))
+          .limit(5000);
+        raceUrls = raceRows
+          .filter(r => r.slug)
+          .map(r => `  <url><loc>${SITE_URL}/race/${r.slug}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
+          .join("\n");
+      } catch {
+        // races table may not exist yet if migration hasn't run
+      }
+
       // Static pages
-      const staticPages = ["", "/search", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/states"]
+      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
         .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>${p === "" ? "1.0" : "0.5"}</priority></url>`)
         .join("\n");
 
@@ -48,10 +107,9 @@ Sitemap: ${SITE_URL}/sitemap.xml`
       const cityRows = await db
         .select({ city: schools.city, stateCode: schools.stateCode })
         .from(schools)
-        .where(and(ne(schools.listingStatus, "removed"), eq(schools.isApproved, true)))
+        .where(ne(schools.listingStatus, "removed"))
         .limit(50000);
 
-      // Group by city+state, count, take top 200
       const cityCounts = new Map<string, { city: string; stateCode: string; count: number }>();
       for (const r of cityRows) {
         if (!r.city || !r.stateCode) continue;
@@ -60,7 +118,7 @@ Sitemap: ${SITE_URL}/sitemap.xml`
         if (existing) existing.count++;
         else cityCounts.set(key, { city: r.city, stateCode: r.stateCode, count: 1 });
       }
-      const topCities = [...cityCounts.values()]
+      const topCities = Array.from(cityCounts.values())
         .sort((a, b) => b.count - a.count)
         .slice(0, 200);
 
@@ -75,7 +133,9 @@ Sitemap: ${SITE_URL}/sitemap.xml`
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticPages}
 ${cityUrls}
-${urls}
+${schoolUrls}
+${collegeUrls}
+${raceUrls}
 </urlset>`;
 
       res.header("Content-Type", "application/xml");

@@ -87,6 +87,8 @@ import {
   contactMessages,
   pageViews,
   funnelEvents,
+  colleges,
+  races,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -145,12 +147,25 @@ export function stateToCode(state: string): string {
   return STATE_NAME_TO_CODE[trimmed.toLowerCase()] ?? trimmed;
 }
 
-// Public directory listings never show removed listings or Catholic schools.
+// Public directory listings never show removed listings, Catholic schools,
+// or LDS/Mormon schools (per Statement of Faith alignment policy).
 function publicSchoolConditions() {
   return [
     ne(schools.listingStatus, "removed"),
     notLike(schools.name, "%Catholic%"),
     or(ne(schools.denomination, "Catholic"), isNull(schools.denomination)),
+    notLike(schools.name, "%Mormon%"),
+    notLike(schools.name, "%Latter-day Saints%"),
+    notLike(schools.name, "%LDS%"),
+    or(
+      notLike(schools.denomination, "%Mormon%"),
+      isNull(schools.denomination)
+    ),
+    or(
+      notLike(schools.denomination, "%Latter-day Saints%"),
+      isNull(schools.denomination)
+    ),
+    or(ne(schools.denomination, "LDS"), isNull(schools.denomination)),
   ];
 }
 
@@ -404,6 +419,169 @@ export async function getSchoolCountsByState() {
     .groupBy(schools.stateCode);
   const counts: Record<string, number> = {};
   for (const r of rows) counts[r.stateCode] = Number(r.total);
+  return counts;
+}
+
+// ---------------------------------------------------------------------------
+// Colleges (IPEDS-imported)
+// ---------------------------------------------------------------------------
+
+function publicCollegeConditions() {
+  return [
+    ne(colleges.listingStatus, "removed"),
+    eq(colleges.isApproved, true),
+    notLike(colleges.name, "%Catholic%"),
+    notLike(colleges.denomination, "%Catholic%"),
+    notLike(colleges.name, "%Mormon%"),
+    notLike(colleges.name, "%Latter-day Saints%"),
+    notLike(colleges.denomination, "%Mormon%"),
+    notLike(colleges.denomination, "%Latter-day Saints%"),
+  ];
+}
+
+export async function searchColleges(params: {
+  query?: string;
+  state?: string;
+  city?: string;
+  zip?: string;
+  denomination?: string;
+  limit?: number;
+  offset?: number;
+}) {
+  const db = await conn();
+  const conditions = [...publicCollegeConditions()];
+
+  if (params.query) {
+    const q = `%${params.query}%`;
+    conditions.push(
+      or(
+        like(colleges.name, q),
+        like(colleges.city, q),
+        like(colleges.state, q),
+        like(colleges.denomination, q),
+      )!,
+    );
+  }
+  if (params.state) {
+    const code = stateToCode(params.state);
+    conditions.push(or(eq(colleges.state, params.state), eq(colleges.stateCode, code))!);
+  }
+  if (params.city) conditions.push(like(colleges.city, `%${params.city}%`));
+  if (params.zip) conditions.push(eq(colleges.zip, params.zip.slice(0, 5)));
+  if (params.denomination) conditions.push(like(colleges.denomination, `%${params.denomination}%`));
+
+  const limit = Math.min(params.limit ?? 50, 200);
+  const offset = params.offset ?? 0;
+  return db
+    .select()
+    .from(colleges)
+    .where(and(...conditions))
+    .orderBy(asc(colleges.name))
+    .limit(limit)
+    .offset(offset);
+}
+
+export async function getCollegeBySlug(slug: string) {
+  const db = await conn();
+  const rows = await db.select().from(colleges).where(eq(colleges.slug, slug)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function getCollegesByState(stateCode: string) {
+  const db = await conn();
+  const code = stateToCode(stateCode);
+  return db
+    .select()
+    .from(colleges)
+    .where(and(...publicCollegeConditions(), eq(colleges.stateCode, code)))
+    .orderBy(asc(colleges.name));
+}
+
+export async function getCollegeCountsByState() {
+  const db = await conn();
+  const rows = await db
+    .select({ stateCode: colleges.stateCode, total: count() })
+    .from(colleges)
+    .where(and(...publicCollegeConditions()))
+    .groupBy(colleges.stateCode);
+  const counts: Record<string, number> = {};
+  for (const r of rows) counts[r.stateCode] = Number(r.total);
+  return counts;
+}
+
+// ---------------------------------------------------------------------------
+// Races (RunSignup-imported)
+// ---------------------------------------------------------------------------
+
+function publicRaceConditions() {
+  return [
+    ne(races.listingStatus, "removed"),
+    eq(races.isApproved, true),
+  ];
+}
+
+export async function searchRaces(params: {
+  query?: string;
+  state?: string;
+  city?: string;
+  zip?: string;
+  upcoming?: boolean;
+  limit?: number;
+  offset?: number;
+}) {
+  const db = await conn();
+  const conditions = [...publicRaceConditions()];
+
+  if (params.query) {
+    const q = `%${params.query}%`;
+    conditions.push(
+      or(
+        like(races.name, q),
+        like(races.city, q),
+        like(races.state, q),
+      )!,
+    );
+  }
+  if (params.state) {
+    const code = stateToCode(params.state);
+    conditions.push(or(eq(races.state, params.state), eq(races.stateCode, code))!);
+  }
+  if (params.city) conditions.push(like(races.city, `%${params.city}%`));
+  if (params.zip) conditions.push(eq(races.zip, params.zip.slice(0, 5)));
+  if (params.upcoming) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    conditions.push(gte(races.raceDate, today));
+  }
+
+  const limit = Math.min(params.limit ?? 50, 200);
+  const offset = params.offset ?? 0;
+  return db
+    .select()
+    .from(races)
+    .where(and(...conditions))
+    .orderBy(asc(races.raceDate), asc(races.name))
+    .limit(limit)
+    .offset(offset);
+}
+
+export async function getRaceBySlug(slug: string) {
+  const db = await conn();
+  const rows = await db.select().from(races).where(eq(races.slug, slug)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function getRaceCountsByState() {
+  const db = await conn();
+  const rows = await db
+    .select({ stateCode: races.stateCode, total: count() })
+    .from(races)
+    .where(and(...publicRaceConditions()))
+    .groupBy(races.stateCode);
+  const counts: Record<string, number> = {};
+  for (const r of rows) {
+    if (r.stateCode) counts[r.stateCode] = Number(r.total);
+  }
   return counts;
 }
 

@@ -1,0 +1,45 @@
+# Find Christian Schools — llms.txt
+
+> A searchable directory of Christian schools, colleges, races, jobs, and events.
+> Every listing aligns with a Christian Statement of Faith.
+
+## About
+
+Find Christian Schools (findchristianschools.com) is a directory helping families
+find faith-based education. It lists 9,000+ Christian schools across all 50 US
+states, plus Christian colleges, Christian running races, Christian education
+job openings, and Christian education events.
+
+All organizations listed affirm the site's Statement of Faith. Inclusion in the
+directory does not constitute endorsement.
+
+## Key URLs
+
+- Homepage / search: https://www.findchristianschools.com/
+- Browse by state: https://www.findchristianschools.com/states
+- School detail pages: https://www.findchristianschools.com/school/{slug}
+- City landing pages: https://www.findchristianschools.com/city/{STATE}/{city-slug}
+- Christian colleges: https://www.findchristianschools.com/colleges
+- College detail pages: https://www.findchristianschools.com/college/{slug}
+- Christian races: https://www.findchristianschools.com/races
+- Race detail pages: https://www.findchristianschools.com/race/{slug}
+- Christian education jobs: https://www.findchristianschools.com/jobs
+- Christian education events: https://www.findchristianschools.com/events
+- Submit a school: https://www.findchristianschools.com/submit-school
+- Statement of Faith: https://www.findchristianschools.com/statement-of-faith
+- Sitemap: https://www.findchristianschools.com/sitemap.xml
+
+## Data sources
+
+- School listings: compiled from public records; sources attributed on each listing.
+- College listings: U.S. Department of Education IPEDS institutional data (public use).
+- Race listings: RunSignup public API (facts only: name, date, location, signup link).
+
+## Listing management
+
+Organizations may claim, correct, or request removal of their listing via the
+"Claim this listing" and "Report inaccurate info" links on every detail page.
+
+## Contact
+
+https://www.findchristianschools.com/contact

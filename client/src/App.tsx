@@ -11,6 +11,10 @@ import SchoolProfile from "./pages/SchoolProfile";
 import Resources from "./pages/Resources";
 import Jobs from "./pages/Jobs";
 import Events from "./pages/Events";
+import Colleges from "./pages/Colleges";
+import CollegeProfile from "./pages/CollegeProfile";
+import Races from "./pages/Races";
+import RaceProfile from "./pages/RaceProfile";
 import Mission from "./pages/Mission";
 import Membership from "./pages/Membership";
 import StateHub from "./pages/StateHub";
@@ -33,6 +37,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import LegalContact from "./pages/LegalContact";
 import Disclaimer from "./pages/Disclaimer";
+import Dmca from "./pages/Dmca";
+import StatementOfFaith from "./pages/StatementOfFaith";
 import SignUp from "./pages/SignUp";
 import Contact from "./pages/Contact";
 import ListCourse from "./pages/ListCourse";
@@ -85,6 +91,12 @@ function Router() {
       <Route path="/terms" component={TermsOfService} />
       <Route path="/legal-contact" component={LegalContact} />
       <Route path="/disclaimer" component={Disclaimer} />
+      <Route path="/dmca" component={Dmca} />
+      <Route path="/statement-of-faith" component={StatementOfFaith} />
+      <Route path="/colleges" component={Colleges} />
+      <Route path="/college/:slug" component={CollegeProfile} />
+      <Route path="/races" component={Races} />
+      <Route path="/race/:slug" component={RaceProfile} />
       <Route path="/signup" component={SignUp} />
       <Route path="/contact" component={Contact} />
       <Route path="/list-course" component={ListCourse} />

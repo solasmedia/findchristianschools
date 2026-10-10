@@ -49,6 +49,8 @@ export default function Footer() {
             <h4 className="text-sm font-semibold uppercase tracking-wider text-[#6EBE44] mb-4">Resources</h4>
             <ul className="space-y-2">
               <li><Link href="/resources" className="text-sm text-blue-200 hover:text-white transition-colors">Homeschool Resources</Link></li>
+              <li><Link href="/colleges" className="text-sm text-blue-200 hover:text-white transition-colors">Christian Colleges</Link></li>
+              <li><Link href="/races" className="text-sm text-blue-200 hover:text-white transition-colors">Christian Races</Link></li>
               <li><Link href="/jobs" className="text-sm text-blue-200 hover:text-white transition-colors">Job Board</Link></li>
               <li><Link href="/events" className="text-sm text-blue-200 hover:text-white transition-colors">Events</Link></li>
               <li><Link href="/mission" className="text-sm text-blue-200 hover:text-white transition-colors">Our Mission</Link></li>
@@ -68,7 +70,9 @@ export default function Footer() {
               <li><Link href="/terms-of-service" className="text-sm text-blue-200 hover:text-white transition-colors">Terms of Service</Link></li>
               <li><Link href="/privacy" className="text-sm text-blue-200 hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/legal-contact" className="text-sm text-blue-200 hover:text-white transition-colors">Legal Contact</Link></li>
+              <li><Link href="/statement-of-faith" className="text-sm text-blue-200 hover:text-white transition-colors">Statement of Faith</Link></li>
               <li><Link href="/disclaimer" className="text-sm text-blue-200 hover:text-white transition-colors">Disclaimer</Link></li>
+              <li><Link href="/dmca" className="text-sm text-blue-200 hover:text-white transition-colors">DMCA / Copyright</Link></li>
             </ul>
           </div>
         </div>
@@ -96,6 +100,16 @@ export default function Footer() {
               Unauthorized copying prohibited.
             </p>
           </div>
+        </div>
+
+        {/* Site-wide non-endorsement disclosure */}
+        <div className="mt-6 pt-6 border-t border-blue-800">
+          <p className="text-xs text-blue-300 leading-relaxed">
+            Inclusion in this directory does not constitute endorsement. We do
+            not endorse, guarantee, or warrant the services, beliefs, or
+            practices of listed organizations. Please verify all information
+            directly with the organization.
+          </p>
         </div>
       </div>
     </footer>

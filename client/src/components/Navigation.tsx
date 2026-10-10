@@ -19,7 +19,7 @@ const navItems: NavItem[] = [
   { href: "/jobs", label: "Jobs" },
   { href: "/events", label: "Events" },
   { href: "/curriculum-comparison", label: "Curriculum" },
-  { href: "/lesson-planner", label: "Lesson Plan Builder" },
+  { href: "/planner", label: "Lesson Plan Builder" },
   {
     href: "/resources",
     label: "Resources",

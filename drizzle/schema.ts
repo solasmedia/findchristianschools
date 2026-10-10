@@ -107,6 +107,9 @@ export const schools = mysqlTable("schools", {
   prescreenFlags: text("prescreenFlags"), // JSON array of flag strings
   dateLastUpdated: timestamp("dateLastUpdated").defaultNow().onUpdateNow(),
   county: varchar("county", { length: 128 }),
+  // Statement of Faith attestation
+  sofAttested: boolean("sofAttested").default(false).notNull(),
+  sofAttestedAt: timestamp("sofAttestedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -174,6 +177,9 @@ export const jobs = mysqlTable("jobs", {
   isActive: boolean("isActive").default(true).notNull(),
   isArchived: boolean("isArchived").default(false).notNull(),
   archivedAt: timestamp("archivedAt"),
+  // Statement of Faith attestation
+  sofAttested: boolean("sofAttested").default(false).notNull(),
+  sofAttestedAt: timestamp("sofAttestedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   expiresAt: timestamp("expiresAt"),
 });
@@ -199,6 +205,9 @@ export const events = mysqlTable("events", {
   isPublished: boolean("isPublished").default(false).notNull(), // Only show on site if approved & published
   submitterName: varchar("submitterName", { length: 255 }),
   contactEmail: varchar("contactEmail", { length: 320 }),
+  // Statement of Faith attestation
+  sofAttested: boolean("sofAttested").default(false).notNull(),
+  sofAttestedAt: timestamp("sofAttestedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -338,6 +347,9 @@ export const internationalSchools = mysqlTable("international_schools", {
   ownerId: int("ownerId"),
   latitude: decimal("latitude", { precision: 10, scale: 7 }),
   longitude: decimal("longitude", { precision: 10, scale: 7 }),
+  // Statement of Faith attestation
+  sofAttested: boolean("sofAttested").default(false).notNull(),
+  sofAttestedAt: timestamp("sofAttestedAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -551,3 +563,60 @@ export const feedback = mysqlTable("feedback", {
 });
 export type Feedback = typeof feedback.$inferSelect;
 export type InsertFeedback = typeof feedback.$inferInsert;
+
+// ============ COLLEGES (IPEDS import) ============
+export const colleges = mysqlTable("colleges", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  city: varchar("city", { length: 128 }).notNull(),
+  state: varchar("state", { length: 64 }).notNull(),
+  stateCode: varchar("stateCode", { length: 2 }).notNull(),
+  zip: varchar("zip", { length: 10 }),
+  address: varchar("address", { length: 512 }),
+  phone: varchar("phone", { length: 20 }),
+  website: varchar("website", { length: 512 }),
+  denomination: varchar("denomination", { length: 128 }),
+  ipedsUnitId: varchar("ipedsUnitId", { length: 16 }),
+  enrollment: int("enrollment"),
+  latitude: decimal("latitude", { precision: 10, scale: 7 }),
+  longitude: decimal("longitude", { precision: 10, scale: 7 }),
+  source: varchar("source", { length: 64 }).default("ipeds").notNull(),
+  sourceUrl: varchar("sourceUrl", { length: 512 }),
+  importDate: timestamp("importDate"),
+  listingStatus: mysqlEnum("listingStatus", ["verified", "unverified", "pending", "claimed", "removed", "suspended", "community_submitted"]).default("unverified").notNull(),
+  isApproved: boolean("isApproved").default(true).notNull(),
+  featured: boolean("featured").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type College = typeof colleges.$inferSelect;
+export type InsertCollege = typeof colleges.$inferInsert;
+
+// ============ RACES (RunSignup import) ============
+export const races = mysqlTable("races", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  raceDate: date("raceDate"),
+  city: varchar("city", { length: 128 }),
+  state: varchar("state", { length: 64 }),
+  stateCode: varchar("stateCode", { length: 2 }),
+  zip: varchar("zip", { length: 10 }),
+  distances: varchar("distances", { length: 512 }),
+  summary: text("summary"), // Brief factual summary only, never copied descriptions
+  signupUrl: varchar("signupUrl", { length: 512 }),
+  runsignupId: varchar("runsignupId", { length: 64 }),
+  source: varchar("source", { length: 64 }).default("runsignup").notNull(),
+  sourceUrl: varchar("sourceUrl", { length: 512 }),
+  importDate: timestamp("importDate"),
+  listingStatus: mysqlEnum("listingStatus", ["verified", "unverified", "pending", "claimed", "removed", "suspended", "community_submitted"]).default("unverified").notNull(),
+  isApproved: boolean("isApproved").default(true).notNull(),
+  featured: boolean("featured").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Race = typeof races.$inferSelect;
+export type InsertRace = typeof races.$inferInsert;

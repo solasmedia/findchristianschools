@@ -125,7 +125,7 @@ export async function createResourceCheckout(params: {
           currency: "usd",
           product_data: {
             name: params.resourceTitle,
-            description: `Premium teaching resource from FindChristianSchools.org — "${params.postTitle}"`,
+            description: `Premium teaching resource from FindChristianSchools.com — "${params.postTitle}"`,
           },
           unit_amount: params.priceCents,
         },

@@ -9,6 +9,18 @@ export function registerStorageProxy(app: Express) {
       return;
     }
 
+    // Prevent path traversal attacks (e.g., ../../../etc/passwd)
+    if (key.includes("..") || key.includes("\\") || key.startsWith("/")) {
+      res.status(400).send("Invalid storage key");
+      return;
+    }
+
+    // Only allow safe characters in storage keys
+    if (!/^[a-zA-Z0-9\-_./]+$/.test(key)) {
+      res.status(400).send("Invalid storage key");
+      return;
+    }
+
     if (!ENV.forgeApiUrl || !ENV.forgeApiKey) {
       res.status(500).send("Storage proxy not configured");
       return;

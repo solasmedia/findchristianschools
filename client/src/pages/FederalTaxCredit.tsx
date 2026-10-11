@@ -148,14 +148,14 @@ export default function FederalTaxCredit() {
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#002855] text-white flex items-center justify-center font-bold text-sm">1</div>
               <div>
                 <p className="font-semibold text-gray-900">Donors give to a Scholarship Granting Organization (SGO)</p>
-                <p className="text-gray-600 text-sm mt-1">Any individual taxpayer can donate up to <strong>$1,700 per year</strong> to a qualified SGO. Married couples filing jointly can donate up to <strong>$3,400</strong>.</p>
+                <p className="text-gray-600 text-sm mt-1">Any individual taxpayer can donate up to <strong>$1,700 per year</strong> to a qualified SGO. Married couples filing jointly can donate up to <strong>$3,400</strong> <em>(per October 2026 proposed regulations — not yet final)</em>.</p>
               </div>
             </div>
             <div className="flex gap-4">
               <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#002855] text-white flex items-center justify-center font-bold text-sm">2</div>
               <div>
                 <p className="font-semibold text-gray-900">Donors get a dollar-for-dollar tax credit</p>
-                <p className="text-gray-600 text-sm mt-1">This is a <strong>credit, not a deduction</strong>. A $1,700 donation reduces your federal tax bill by exactly $1,700. It costs the donor nothing out of pocket.</p>
+                <p className="text-gray-600 text-sm mt-1">This is a <strong>nonrefundable credit, not a deduction</strong>. A $1,700 donation reduces your federal tax bill by up to $1,700 (limited by your actual tax liability). Unused credits can generally be carried forward for up to five years. <em>Note: $1,700 is the donor's tax credit limit — not the scholarship amount a student receives.</em></p>
               </div>
             </div>
             <div className="flex gap-4">

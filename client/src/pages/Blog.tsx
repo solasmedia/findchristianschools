@@ -45,8 +45,8 @@ export default function Blog() {
   const rest = posts.filter((p: any) => p !== featured);
 
   useEffect(() => {
-    document.title = "Teacher Resource Blog | FindChristianSchools.org";
-    return () => { document.title = "FindChristianSchools.org | Faith · Education · Future"; };
+    document.title = "Teacher Resource Blog | FindChristianSchools.com";
+    return () => { document.title = "FindChristianSchools.com | Faith · Education · Future"; };
   }, []);
 
   return (

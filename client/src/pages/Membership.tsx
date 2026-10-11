@@ -227,7 +227,7 @@ export default function Membership() {
             <div className="text-center">
               <div className="w-16 h-16 rounded-full bg-[#6EBE44] text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4 shadow-md">3</div>
               <h3 className="font-bold text-[#002855] mb-2">Go Live &amp; Reach More Families</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">Your school goes live on FindChristianSchools.org, connecting you with thousands of families actively searching for faith-based education across America.</p>
+              <p className="text-sm text-gray-600 leading-relaxed">Your school goes live on FindChristianSchools.com, connecting you with thousands of families actively searching for faith-based education across America.</p>
             </div>
           </div>
           <div className="text-center mt-10">
@@ -249,7 +249,7 @@ export default function Membership() {
               <div>
                 <h2 className="text-xl font-bold text-[#002855] mb-3">Statement of Faith Requirement</h2>
                 <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                  All schools listed on FindChristianSchools.org — both free and premium — must provide a 
+                  All schools listed on FindChristianSchools.com — both free and premium — must provide a 
                   Statement of Faith as part of their listing application. This is a non-negotiable requirement 
                   that ensures every family using our platform can trust that listed schools share core 
                   Christian beliefs.

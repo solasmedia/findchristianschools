@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useRoute } from "wouter";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import FlashcardBuilder from "@/components/FlashcardBuilder";
 import { SeoHead } from "@/components/SeoHead";
 import { JsonLd } from "@/components/SeoJsonLd";
 import {
@@ -213,6 +214,18 @@ export default function TravelEdDestination() {
                 © FindChristianSchools.com — Free for family and classroom use
               </p>
             </div>
+          </section>
+
+          {/* Flashcards */}
+          <section className="mb-10">
+            <FlashcardBuilder
+              initialCards={[
+                { front: `Where is ${dest.name}?`, back: dest.location || dest.name },
+                { front: `Why is ${dest.name} significant?`, back: dest.studyGuide?.title || "See the study guide above" },
+              ]}
+              title={`${dest.name} Flashcards`}
+              subtitle="Quiz yourself before your visit"
+            />
           </section>
 
           {/* Related */}

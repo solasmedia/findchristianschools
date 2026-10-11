@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import FlashcardBuilder, { versesToFlashcards } from "@/components/FlashcardBuilder";
 import { Printer, Check, ChevronDown, BookMarked, PenLine, Search, Copy } from "lucide-react";
 import { MEMORY_VERSES, VERSE_THEMES, type MemoryVerse } from "@/data/memoryVerses";
 import { buildVerseSheet, type VerseActivity } from "@/lib/worksheetEngine";
@@ -215,6 +216,13 @@ export default function BibleVerseMaker() {
                 })),
               }),
             }}
+          />
+        </div>
+        <div className="container max-w-2xl px-4 pb-10">
+          <FlashcardBuilder
+            initialCards={versesToFlashcards(MEMORY_VERSES.slice(0, 10).map(v => ({ reference: v.reference, text: v.text })))}
+            title="Bible Verse Memory Flashcards"
+            subtitle="Reference on front, verse on back"
           />
         </div>
       </section>

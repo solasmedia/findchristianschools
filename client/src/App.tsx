@@ -105,7 +105,7 @@ function Router() {
       <Route path="/profile" component={Profile} />
       <Route path="/compare" component={Compare} />
       <Route path="/save-to-home-screen" component={SaveToHomeScreen} />
-      <Route path="/welcome" component={Welcome} />
+      {/* <Route path="/welcome" component={Welcome} /> - Hidden until founder reveal */}
       <Route path="/learning-resources" component={LearningResources} />
       <Route path="/admin-login" component={AdminLogin} />
       <Route path="/admin-setup" component={AdminSetup} />

@@ -55,8 +55,7 @@ export default function Footer() {
               <li><Link href="/events" className="text-sm text-blue-200 hover:text-white transition-colors">Events</Link></li>
               <li><Link href="/mission" className="text-sm text-blue-200 hover:text-white transition-colors">Our Mission</Link></li>
               <li><Link href="/sponsor" className="text-sm text-blue-200 hover:text-white transition-colors">Become a Sponsor</Link></li>
-              <li><Link href="/welcome" className="text-sm text-blue-200 hover:text-white transition-colors">Welcome</Link></li>
-            </ul>
+                          </ul>
           </div>
 
           {/* Support */}

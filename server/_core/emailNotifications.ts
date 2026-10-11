@@ -42,7 +42,7 @@ export async function notifySchoolListing(school: any) {
     <p><strong>${school.name}</strong></p>
     <p><strong>Location:</strong> ${school.city}, ${school.stateCode}</p>
     <p><strong>Contact:</strong> ${school.contactEmail || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">Review in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
   return sendEmail(recipients, "New School Listing: " + school.name, html);
@@ -57,7 +57,7 @@ export async function notifyClaimRequest(school: any, claimData: any) {
     <p><strong>${school.name}</strong></p>
     <p><strong>Claimed by:</strong> ${claimData.contactName || "N/A"}</p>
     <p><strong>Email:</strong> ${claimData.contactEmail || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">Review in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
   return sendEmail(recipients, "Claim Request: " + school.name, html);
@@ -72,7 +72,7 @@ export async function notifyRemovalRequest(school: any, removalData: any) {
     <p><strong>${school.name}</strong></p>
     <p><strong>Reason:</strong> ${removalData.reason || "Not provided"}</p>
     <p><strong>Requested by:</strong> ${removalData.contactName || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">Review in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
   return sendEmail(recipients, "Removal Request: " + school.name, html);
@@ -86,7 +86,7 @@ export async function notifyContactForm(contactData: any) {
     <p><strong>Phone:</strong> ${contactData.phone || "N/A"}</p>
     <p><strong>Message:</strong></p>
     <p>${(contactData.message || "").replace(/\n/g, "<br>")}</p>
-    <p><a href="https://findchristianschools.org/admin">View in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">View in Admin Panel</a></p>
   `;
 
   return sendEmail(ADMIN_EMAIL, "Contact Form: " + contactData.name, html);
@@ -101,7 +101,7 @@ export async function notifyPremiumPurchase(school: any, amount: number) {
     <p><strong>${school.name}</strong></p>
     <p><strong>Amount:</strong> $${amount}</p>
     <p><strong>Expires:</strong> ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString()}</p>
-    <p><a href="https://findchristianschools.org/admin">View in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">View in Admin Panel</a></p>
   `;
 
   return sendEmail(recipients, "Premium Listing: " + school.name, html);
@@ -114,7 +114,7 @@ export async function notifyDonation(donationData: any, amount: number) {
     <p><strong>Type:</strong> ${donationData.type === "monthly" ? "Monthly Recurring" : "One-time"}</p>
     <p><strong>Donor Email:</strong> ${donationData.email || "Anonymous"}</p>
     <p><strong>Message:</strong> ${donationData.message || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">View in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">View in Admin Panel</a></p>
   `;
 
   return sendEmail(ADMIN_EMAIL, "New Donation: $" + amount, html);
@@ -126,7 +126,7 @@ export async function notifyJobPosted(job: any) {
     <p><strong>Title:</strong> ${job.title}</p>
     <p><strong>School:</strong> ${job.schoolName || "N/A"}</p>
     <p><strong>Posted by:</strong> ${job.contactEmail || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">Review in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
   return sendEmail(ADMIN_EMAIL, "New Job Posting: " + job.title, html);
@@ -138,7 +138,7 @@ export async function notifyEventPosted(event: any) {
     <p><strong>Title:</strong> ${event.title}</p>
     <p><strong>Date:</strong> ${event.date || "N/A"}</p>
     <p><strong>Posted by:</strong> ${event.contactEmail || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">Review in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
   return sendEmail(ADMIN_EMAIL, "New Event: " + event.title, html);
@@ -150,7 +150,7 @@ export async function notifyCoursePosted(course: any) {
     <p><strong>Title:</strong> ${course.title}</p>
     <p><strong>Provider:</strong> ${course.provider || "N/A"}</p>
     <p><strong>Posted by:</strong> ${course.contactEmail || "N/A"}</p>
-    <p><a href="https://findchristianschools.org/admin">Review in Admin Panel</a></p>
+    <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
   return sendEmail(ADMIN_EMAIL, "New Course: " + course.title, html);

@@ -23,6 +23,7 @@ import NewsArticle from "./pages/NewsArticle";
 import TravelEd from "./pages/TravelEd";
 import ClassicalSchools from "./pages/ClassicalSchools";
 import BookClub from "./pages/BookClub";
+import Videos from "./pages/Videos";
 import TravelEdDestination from "./pages/TravelEdDestination";
 import FederalTaxCredit from "./pages/FederalTaxCredit";
 import Mission from "./pages/Mission";
@@ -126,6 +127,7 @@ function Router() {
       <Route path="/traveled" component={TravelEd} />
       <Route path="/classical-christian-schools" component={ClassicalSchools} />
       <Route path="/book-club" component={BookClub} />
+      <Route path="/videos" component={Videos} />
       <Route path="/traveled/:slug" component={TravelEdDestination} />
       <Route path="/federal-tax-credit" component={FederalTaxCredit} />
       <Route path="/signup" component={SignUp} />

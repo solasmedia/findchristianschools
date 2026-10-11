@@ -16,17 +16,23 @@ type NavItem = {
 const navItems: NavItem[] = [
   { href: "/search", label: "Find a School" },
   { href: "/colleges", label: "Colleges" },
-  { href: "/races", label: "Races" },
   { href: "/states", label: "States" },
   { href: "/jobs", label: "Jobs" },
-  { href: "/events", label: "Events" },
-  { href: "/curriculum-comparison", label: "Curriculum" },
+  {
+    href: "/events",
+    label: "Events",
+    children: [
+      { href: "/events", label: "All Events" },
+      { href: "/races", label: "Christian Races" },
+    ],
+  },
   { href: "/planner", label: "Lesson Plan Builder" },
   {
     href: "/resources",
     label: "Resources",
     children: [
       { href: "/resources", label: "Resource Hub" },
+      { href: "/curriculum-comparison", label: "Curriculum Comparison" },
       { href: "/lesson-planning", label: "Lesson Planning" },
       // { href: "/learning-resources", label: "Learning Resources" }, // Hidden for now
       { href: "/contact", label: "Contact Us" },

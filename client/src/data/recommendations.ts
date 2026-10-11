@@ -1,7 +1,7 @@
 // Recommended books and teaching products for the FindChristianSchools.com affiliate store.
 // Amazon affiliate tag: configured via NEXT_PUBLIC_AMAZON_TAG or defaults below.
 
-export const AMAZON_TAG = "findchristians-20";
+export const AMAZON_TAG = "findchristian-20";
 
 export function amazonUrl(asin: string): string {
   return `https://www.amazon.com/dp/${asin}?tag=${AMAZON_TAG}`;

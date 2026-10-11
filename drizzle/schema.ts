@@ -454,7 +454,8 @@ export type InsertClass = typeof classes.$inferInsert;
 // Claim requests table - for schools imported from external data that want to be claimed by their owners
 export const claimRequests = mysqlTable("claim_requests", {
   id: int("id").autoincrement().primaryKey(),
-  schoolId: int("schoolId").notNull(),
+  schoolId: int("schoolId"),
+  collegeId: int("collegeId"),
   claimantName: varchar("claimantName", { length: 255 }).notNull(),
   claimantEmail: varchar("claimantEmail", { length: 320 }).notNull(),
   claimantPhone: varchar("claimantPhone", { length: 20 }),
@@ -587,6 +588,11 @@ export const colleges = mysqlTable("colleges", {
   listingStatus: mysqlEnum("listingStatus", ["verified", "unverified", "pending", "claimed", "removed", "suspended", "community_submitted"]).default("unverified").notNull(),
   isApproved: boolean("isApproved").default(true).notNull(),
   featured: boolean("featured").default(false).notNull(),
+  isPremium: boolean("isPremium").default(false).notNull(),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  premiumExpiresAt: timestamp("premiumExpiresAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

@@ -1,7 +1,7 @@
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { User } from "../../drizzle/schema";
 import { sdk } from "./sdk";
-import { parse as parseCookieHeader } from "cookie";
+import { getAdminIdFromRequest } from "./adminSession";
 
 export type TrpcContext = {
   req: CreateExpressContextOptions["req"];
@@ -21,25 +21,18 @@ export async function createContext(
     user = null;
   }
 
-  // Check for admin session cookie (parse from raw header since cookie-parser is not used)
+  // Check for admin session cookie (HMAC-signed — prevents forgery)
   if (!user) {
-    const cookieHeader = opts.req.headers.cookie;
-    if (cookieHeader) {
-      const cookies = parseCookieHeader(cookieHeader);
-      const adminSessionId = cookies.admin_session;
-      if (adminSessionId) {
-        const adminId = parseInt(adminSessionId);
-        if (!isNaN(adminId)) {
-          // Create a temporary admin user object for admin-only procedures
-          user = {
-            id: adminId,
-            email: 'admin@findchristianschools.com',
-            role: 'admin',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          } as User;
-        }
-      }
+    const adminId = getAdminIdFromRequest(opts.req);
+    if (adminId) {
+      // Create a temporary admin user object for admin-only procedures
+      user = {
+        id: adminId,
+        email: 'admin@findchristianschools.com',
+        role: 'admin',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as User;
     }
   }
 

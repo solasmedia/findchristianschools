@@ -27,6 +27,8 @@ const STATIC_ROUTES = new Set([
   "/tools", "/tools/worksheet-generator", "/tools/math-worksheet-generator",
   "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator",
   "/tools/reading-worksheet-generator", "/tools/bible-verse-maker",
+  "/tools/vocabulary-worksheet-generator", "/tools/flashcards",
+  "/teacher-resources", "/federal-tax-credit",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",

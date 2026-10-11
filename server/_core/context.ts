@@ -33,7 +33,7 @@ export async function createContext(
           // Create a temporary admin user object for admin-only procedures
           user = {
             id: adminId,
-            email: 'admin@findchristianschools.org',
+            email: 'admin@findchristianschools.com',
             role: 'admin',
             createdAt: new Date(),
             updatedAt: new Date(),

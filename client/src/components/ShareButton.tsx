@@ -9,7 +9,7 @@ interface ShareButtonProps {
   className?: string;
 }
 
-const SITE_DOMAIN = "https://findchristianschools.org";
+const SITE_DOMAIN = "https://findchristianschools.com";
 
 export function ShareButton({ title, text, url, className = "" }: ShareButtonProps) {
   const [open, setOpen] = useState(false);
@@ -17,7 +17,7 @@ export function ShareButton({ title, text, url, className = "" }: ShareButtonPro
   const shareUrl = url ? `${SITE_DOMAIN}${url}` : "";
   const encodedUrl = encodeURIComponent(shareUrl || SITE_DOMAIN);
   const encodedTitle = encodeURIComponent(title);
-  const shareText = text || `Check out ${title} on FindChristianSchools.org`;
+  const shareText = text || `Check out ${title} on FindChristianSchools.com`;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -28,7 +28,7 @@ export function ShareButton({ title, text, url, className = "" }: ShareButtonPro
   }, []);
 
   const copyLink = () => {
-    navigator.clipboard.writeText(shareUrl || window.location.href.replace(/manus\.space/, "findchristianschools.org")).then(() => {
+    navigator.clipboard.writeText(shareUrl || window.location.href.replace(/manus\.space/, "findchristianschools.com")).then(() => {
       toast.success("Link copied!");
     }).catch(() => toast.error("Could not copy link"));
     setOpen(false);

@@ -10,7 +10,7 @@ import type { Express, Request, Response } from "express";
 import { and, eq } from "drizzle-orm";
 import { getDb, stateToCode } from "./db";
 import { schools } from "../drizzle/schema";
-import { parse as parseCookieHeader } from "cookie";
+import { getAdminIdFromRequest } from "./_core/adminSession";
 
 function slugify(value: string): string {
   return value
@@ -82,10 +82,7 @@ function parseCSV(text: string): Array<Record<string, string>> {
 }
 
 function isAdminRequest(req: Request): boolean {
-  const cookieHeader = req.headers.cookie;
-  if (!cookieHeader) return false;
-  const cookies = parseCookieHeader(cookieHeader);
-  return Boolean(cookies.admin_session);
+  return getAdminIdFromRequest(req) !== null;
 }
 
 export function registerAdminImportRoute(app: Express) {

@@ -195,43 +195,48 @@ export function verseWordsForSearch(text: string): string[] {
 // ---------- Print HTML ----------
 const PRINT_CSS = `
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a1a; max-width: 750px; margin: 0 auto; padding: 28px 24px; font-size: 15px; line-height: 1.55; }
-  .sheet-header { text-align: center; border-bottom: 3px double #002855; padding-bottom: 12px; margin-bottom: 18px; }
-  .sheet-header .brand { font-family: -apple-system, sans-serif; font-size: 13px; font-weight: 800; color: #002855; letter-spacing: 0.5px; }
-  .sheet-header h1 { font-size: 24px; margin: 6px 0 2px; color: #002855; }
-  .sheet-header .sub { font-family: -apple-system, sans-serif; font-size: 12px; color: #64748b; }
-  .name-line { display: flex; gap: 24px; font-family: -apple-system, sans-serif; font-size: 13px; margin-bottom: 16px; color: #334155; }
-  .name-line span { border-bottom: 1px solid #94a3b8; flex: 1; min-width: 120px; }
-  .problems { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; margin: 14px 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1e293b; max-width: 780px; margin: 0 auto; padding: 36px 40px; font-size: 15px; line-height: 1.6; background: #ffffff; }
+  .sheet-header { text-align: center; background: linear-gradient(135deg, #002855 0%, #003d7a 60%, #00509e 100%); border-radius: 16px; padding: 26px 24px 22px; margin-bottom: 24px; color: #ffffff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .sheet-header .logo-lockup { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+  .sheet-header .logo-mark { width: 44px; height: 44px; background: #ffffff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; color: #002855; font-family: -apple-system, sans-serif; }
+  .sheet-header .brand { font-family: -apple-system, sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 0.4px; }
+  .sheet-header .brand .green { color: #6EBE44; }
+  .sheet-header .brand .gold { color: #FFC72C; font-size: 11px; letter-spacing: 2px; display: block; margin-top: 2px; font-weight: 700; }
+  .sheet-header h1 { font-size: 26px; margin: 10px 0 4px; color: #ffffff; font-weight: 700; }
+  .sheet-header .sub { font-family: -apple-system, sans-serif; font-size: 13px; color: #bfdbfe; }
+  .name-line { display: flex; gap: 28px; font-family: -apple-system, sans-serif; font-size: 14px; margin-bottom: 22px; color: #334155; background: #f1f5f9; border-radius: 10px; padding: 12px 18px; }
+  .name-line span { border-bottom: 2px solid #6EBE44; flex: 1; min-width: 120px; }
+  .problems { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 16px 0; }
   .problems.single { grid-template-columns: 1fr; }
-  .problem { font-size: 17px; padding: 7px 4px; border-bottom: 1px dotted #cbd5e1; }
-  .spell-word { font-size: 19px; font-weight: bold; letter-spacing: 2px; }
-  .trace { font-size: 40px; color: #cbd5e1; letter-spacing: 6px; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; border-bottom: 2px dashed #cbd5e1; margin: 10px 0; padding: 4px 0; }
-  .trace-sm { font-size: 28px; color: #cbd5e1; letter-spacing: 4px; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; border-bottom: 2px dashed #cbd5e1; margin: 8px 0; padding: 2px 0; }
-  .write-lines { margin: 12px 0; }
-  .write-line { border-bottom: 1px solid #94a3b8; height: 34px; }
-  .passage { background: #f8fafc; border-left: 4px solid #002855; padding: 14px 16px; margin: 14px 0; font-size: 15px; }
+  .problem { font-size: 18px; padding: 10px 14px; background: #f8fafc; border-radius: 10px; border-left: 4px solid #6EBE44; }
+  .spell-word { font-size: 20px; font-weight: bold; letter-spacing: 2px; color: #002855; }
+  .trace { font-size: 42px; color: #93c5fd; letter-spacing: 6px; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; border-bottom: 3px dashed #6EBE44; margin: 12px 0; padding: 6px 0; text-align: center; }
+  .trace-sm { font-size: 30px; color: #93c5fd; letter-spacing: 4px; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; border-bottom: 3px dashed #6EBE44; margin: 10px 0; padding: 4px 0; text-align: center; }
+  .write-lines { margin: 14px 0; }
+  .write-line { border-bottom: 2px solid #cbd5e1; height: 36px; border-radius: 2px; }
+  .passage { background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border-left: 5px solid #002855; border-radius: 0 12px 12px 0; padding: 18px 20px; margin: 18px 0; font-size: 15px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .passage p { margin-bottom: 10px; }
   .passage p:last-child { margin-bottom: 0; }
-  .questions { margin: 14px 0; }
-  .questions.single { margin: 14px 0; }
-  .q { margin-bottom: 12px; }
-  .q .qt { font-weight: bold; margin-bottom: 4px; }
-  .q .ql { border-bottom: 1px solid #94a3b8; height: 26px; }
-  .answer-key { margin-top: 26px; padding-top: 14px; border-top: 2px solid #002855; page-break-before: auto; }
-  .answer-key h2 { font-family: -apple-system, sans-serif; font-size: 16px; color: #002855; margin-bottom: 10px; }
+  .questions { margin: 16px 0; }
+  .questions.single { margin: 16px 0; }
+  .q { margin-bottom: 14px; background: #f8fafc; border-radius: 10px; padding: 12px 16px; }
+  .q .qt { font-weight: bold; margin-bottom: 6px; color: #002855; }
+  .q .ql { border-bottom: 2px solid #cbd5e1; height: 28px; }
+  .answer-key { margin-top: 30px; padding: 20px; background: #fffbeb; border: 2px solid #FFC72C; border-radius: 14px; page-break-before: auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .answer-key h2 { font-family: -apple-system, sans-serif; font-size: 17px; color: #92400e; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
   .answer-key .problems { grid-template-columns: 1fr 1fr; }
-  .answer-key .problem { font-size: 14px; border: none; padding: 3px 4px; }
-  .ws-grid { border-collapse: collapse; margin: 14px auto; }
-  .ws-grid td { width: 26px; height: 26px; text-align: center; font-family: monospace; font-size: 15px; border: 1px solid #cbd5e1; }
-  .word-bank { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 10px 0; font-family: monospace; font-size: 14px; }
-  .verse-display { text-align: center; font-size: 20px; font-style: italic; margin: 16px 0; padding: 14px; background: #f8fafc; border-radius: 8px; }
-  .verse-ref { text-align: center; font-family: -apple-system, sans-serif; font-weight: 700; color: #002855; margin-bottom: 8px; }
-  .color-box { border: 2px dashed #94a3b8; border-radius: 12px; min-height: 220px; margin: 14px 0; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-family: -apple-system, sans-serif; }
-  .section-title { font-family: -apple-system, sans-serif; font-size: 15px; font-weight: 800; color: #002855; margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .footer { margin-top: 26px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-family: -apple-system, sans-serif; font-size: 10px; color: #94a3b8; text-align: center; }
+  .answer-key .problem { font-size: 14px; border: none; padding: 4px 6px; background: transparent; border-left: none; }
+  .ws-grid { border-collapse: separate; border-spacing: 2px; margin: 18px auto; }
+  .ws-grid td { width: 30px; height: 30px; text-align: center; font-family: monospace; font-size: 16px; font-weight: bold; color: #002855; background: #eff6ff; border-radius: 6px; border: 1px solid #bfdbfe; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .word-bank { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 14px 0; font-family: monospace; font-size: 15px; background: #f0fdf4; border-radius: 10px; padding: 12px 16px; border: 1px solid #bbf7d0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .verse-display { text-align: center; font-size: 21px; font-style: italic; margin: 18px 0; padding: 20px; background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border-radius: 14px; border: 1px solid #bfdbfe; color: #1e3a5f; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .verse-ref { text-align: center; font-family: -apple-system, sans-serif; font-weight: 800; color: #002855; margin-bottom: 10px; font-size: 16px; letter-spacing: 0.5px; }
+  .color-box { border: 3px dashed #6EBE44; border-radius: 16px; min-height: 240px; margin: 18px 0; display: flex; align-items: center; justify-content: center; color: #6EBE44; font-family: -apple-system, sans-serif; font-weight: 600; background: #f0fdf4; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .section-title { font-family: -apple-system, sans-serif; font-size: 15px; font-weight: 800; color: #ffffff; background: #002855; display: inline-block; padding: 6px 16px; border-radius: 20px; margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 0.8px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .footer { margin-top: 30px; padding: 14px; background: #002855; border-radius: 12px; font-family: -apple-system, sans-serif; font-size: 11px; color: #bfdbfe; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .footer strong { color: #6EBE44; }
   .page-break { page-break-before: always; }
-  @media print { body { padding: 12px; } .no-print { display: none; } }
+  @media print { body { padding: 16px 20px; } .no-print { display: none; } }
 `;
 
 function sheetShell(title: string, subtitle: string, bodyHtml: string): string {
@@ -239,13 +244,16 @@ function sheetShell(title: string, subtitle: string, bodyHtml: string): string {
 <html><head><meta charset="utf-8"><title>${title} — FindChristianSchools.com</title>
 <style>${PRINT_CSS}</style></head><body>
 <div class="sheet-header">
-  <div class="brand">FIND CHRISTIAN SCHOOLS</div>
+  <div class="logo-lockup">
+    <div class="logo-mark">✝</div>
+    <div class="brand"><span class="green">Find</span><span style="color:#ffffff">ChristianSchools</span><span class="gold">FAITH · EDUCATION · FUTURE</span></div>
+  </div>
   <h1>${title}</h1>
   <div class="sub">${subtitle}</div>
 </div>
 <div class="name-line"><div style="flex:2">Name: <span></span></div><div style="flex:1">Date: <span></span></div></div>
 ${bodyHtml}
-<div class="footer">Free printable from FindChristianSchools.com &mdash; findchristianschools.com/tools</div>
+<div class="footer"><strong>FindChristianSchools.com</strong> &mdash; Free printable &mdash; findchristianschools.com/tools</div>
 </body></html>`;
 }
 

@@ -1,6 +1,7 @@
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
+import NewsletterPopup from "@/components/NewsletterPopup";
 import { Route, Switch, useLocation } from "wouter";
 import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -166,6 +167,7 @@ function App() {
           <SeoHead />
           <Router />
           <FloatingDonateButton />
+          <NewsletterPopup />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

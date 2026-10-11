@@ -104,6 +104,18 @@ export default function Footer() {
 
         {/* Site-wide non-endorsement disclosure */}
         <div className="mt-6 pt-6 border-t border-blue-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <p className="text-sm font-semibold text-white mb-1">The Christian Ed Weekly</p>
+              <p className="text-xs text-blue-300">Education news, teacher tips & free resources — every Thursday.</p>
+            </div>
+            <a
+              href="/newsletter"
+              className="inline-block bg-[#6EBE44] text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-[#5da83a] transition whitespace-nowrap text-center"
+            >
+              Sign Up Free
+            </a>
+          </div>
           <p className="text-xs text-blue-300 leading-relaxed">
             Inclusion in this directory does not constitute endorsement. We do
             not endorse, guarantee, or warrant the services, beliefs, or

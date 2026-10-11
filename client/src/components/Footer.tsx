@@ -21,7 +21,7 @@ export default function Footer() {
               <span className="text-xl font-bold">
                 <span className="text-[#6EBE44]">Find</span>
                 <span className="text-white">ChristianSchools</span>
-                <span className="text-white opacity-70">.org<span className="trademark">™</span></span>
+                <span className="text-white opacity-70">.com<span className="trademark">™</span></span>
               </span>
             </div>
             <p className="text-sm text-blue-200 leading-relaxed mb-4">

@@ -16,11 +16,11 @@ export default function CollegeProfile() {
   // Dynamic SEO meta tags
   useEffect(() => {
     if (college) {
-      document.title = `${college.name} - Christian College in ${college.city}, ${college.state} | FindChristianSchools.org`;
+      document.title = `${college.name} - Christian College in ${college.city}, ${college.state} | FindChristianSchools.com`;
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) metaDesc.setAttribute('content', `${college.name} is a Christian college in ${college.city}, ${college.state}.`);
     }
-    return () => { document.title = 'FindChristianSchools.org | Faith \u00b7 Education \u00b7 Future'; };
+    return () => { document.title = 'FindChristianSchools.com | Faith \u00b7 Education \u00b7 Future'; };
   }, [college]);
 
   if (isLoading) {

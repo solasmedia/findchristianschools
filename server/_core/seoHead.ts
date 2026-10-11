@@ -22,6 +22,10 @@ const STATIC_ROUTES = new Set([
   "/curriculum-guide", "/curriculum-comparison", "/lesson-planning",
   "/lesson-planner", "/submit", "/feedback", "/404",
   "/blog",
+  "/traveled",
+  "/tools", "/tools/worksheet-generator", "/tools/math-worksheet-generator",
+  "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator",
+  "/tools/reading-worksheet-generator", "/tools/bible-verse-maker",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",
@@ -56,6 +60,38 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/blog": {
     title: "Teacher Resource Blog | FindChristianSchools.com",
     description: "Bible lesson plans, classroom activities, crafts, and teaching ideas for Christian educators. Free downloadable resources.",
+  },
+  "/tools": {
+    title: "Free Tools for Christian Teachers | FindChristianSchools.com",
+    description: "Free printable worksheet generator, Bible memory verse maker, and lesson plan builder for Christian teachers and homeschool families. No account needed.",
+  },
+  "/tools/worksheet-generator": {
+    title: "Free Printable Worksheet Generator | FindChristianSchools.com",
+    description: "Generate free printable worksheets for grades K-8: math, spelling, handwriting, and reading comprehension. Includes answer keys. No account required.",
+  },
+  "/tools/math-worksheet-generator": {
+    title: "Free Math Worksheet Generator (K-8) | FindChristianSchools.com",
+    description: "Create free printable math worksheets: addition, subtraction, multiplication, division, and fractions. Grade-appropriate with full answer keys.",
+  },
+  "/tools/spelling-worksheet-generator": {
+    title: "Free Spelling Worksheet Generator | FindChristianSchools.com",
+    description: "Generate printable spelling practice sheets with grade-level Dolch-based word lists. Write-three-times drills and fill-in-the-blank exercises.",
+  },
+  "/tools/handwriting-worksheet-generator": {
+    title: "Free Handwriting Practice Sheet Generator | FindChristianSchools.com",
+    description: "Print traceable handwriting practice pages: uppercase, lowercase, numbers, words, and short Bible verses. Perfect for early writers.",
+  },
+  "/tools/reading-worksheet-generator": {
+    title: "Free Reading Comprehension Worksheet Generator | FindChristianSchools.com",
+    description: "Printable reading passages with comprehension questions and answer keys. Original wholesome stories for Christian families, grades K-8.",
+  },
+  "/tools/bible-verse-maker": {
+    title: "Bible Memory Verse Worksheets (Printable) | FindChristianSchools.com",
+    description: "Turn any KJV memory verse into printable trace sheets, fill-in-the-blank, word searches, and copywork pages. 50 kid-favorite verses. Free.",
+  },
+  "/traveled": {
+    title: "TravelED — Educational Family Trips & Homeschool Field Trips | FindChristianSchools.com",
+    description: "America's top history destinations for Christian families, with free printable study guides. Plan educational family trips and homeschool field trips.",
   },
   "/states": {
     title: "Browse Christian Schools by State | FindChristianSchools.com",

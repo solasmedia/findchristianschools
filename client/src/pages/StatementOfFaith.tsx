@@ -52,7 +52,7 @@ export default function StatementOfFaith() {
             <h1 className="text-3xl font-bold text-[#002855]">Statement of Faith</h1>
           </div>
           <p className="text-gray-500 italic mb-8">
-            FindChristianSchools.org affirms the following core Christian beliefs. All listed organizations must be in agreement with these tenets.
+            FindChristianSchools.com affirms the following core Christian beliefs. All listed organizations must be in agreement with these tenets.
           </p>
 
           <div className="space-y-6">
@@ -67,7 +67,7 @@ export default function StatementOfFaith() {
           <div className="mt-10 bg-red-50 border border-red-200 rounded-lg p-5">
             <p className="text-sm text-red-800 font-medium">Compliance & Withdrawal Notice</p>
             <p className="text-sm text-red-700 mt-1">
-              Any organization found to violate or no longer uphold this Statement of Faith may be withdrawn from the FindChristianSchools.org directory at any time, without prior notice. By submitting a listing, you acknowledge and accept this policy.
+              Any organization found to violate or no longer uphold this Statement of Faith may be withdrawn from the FindChristianSchools.com directory at any time, without prior notice. By submitting a listing, you acknowledge and accept this policy.
             </p>
           </div>
 

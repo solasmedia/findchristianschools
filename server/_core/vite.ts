@@ -60,8 +60,59 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+  // SEO: serve index.html with per-route head injection.
+  // Unknown routes return 404; detail pages get unique titles/meta via DB lookup.
+  let cachedTemplate: string | null = null;
+  const getTemplate = (): string => {
+    if (!cachedTemplate) {
+      cachedTemplate = fs.readFileSync(path.resolve(distPath, "index.html"), "utf-8");
+    }
+    return cachedTemplate;
+  };
+
+  app.use("*", async (req, res) => {
+    // Lazy import to avoid circular deps at module load
+    const { matchRoute, resolveMeta, injectHead } = await import("./seoHead");
+
+    // Normalize path (strip trailing slash for canonical)
+    let reqPath = req.path;
+    if (reqPath.length > 1 && reqPath.endsWith("/")) reqPath = reqPath.slice(0, -1);
+
+    const match = matchRoute(reqPath);
+
+    // Unknown route → proper 404 (client still renders NotFound page)
+    if (match.kind === "unknown") {
+      try {
+        const html = injectHead(getTemplate(), {
+          title: "Page Not Found | FindChristianSchools.org",
+          description: "The page you are looking for doesn't exist.",
+          canonical: `${process.env.SITE_URL || "https://www.findchristianschools.com"}/404`,
+        });
+        res.status(404).set({ "Content-Type": "text/html" }).end(html);
+      } catch {
+        res.status(404).sendFile(path.resolve(distPath, "index.html"));
+      }
+      return;
+    }
+
+    // Known route → inject SEO head (detail pages get DB-driven titles)
+    try {
+      const meta = await resolveMeta(match, reqPath);
+      if (!meta) {
+        // Valid route pattern but entity doesn't exist (bad slug) → 404
+        const html = injectHead(getTemplate(), {
+          title: "Page Not Found | FindChristianSchools.org",
+          description: "The page you are looking for doesn't exist.",
+          canonical: `${process.env.SITE_URL || "https://www.findchristianschools.com"}/404`,
+        });
+        res.status(404).set({ "Content-Type": "text/html" }).end(html);
+        return;
+      }
+      const html = injectHead(getTemplate(), meta);
+      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+    } catch (e) {
+      console.error("[serveStatic] head injection failed:", e);
+      res.sendFile(path.resolve(distPath, "index.html"));
+    }
   });
 }

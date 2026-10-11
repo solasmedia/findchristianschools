@@ -35,12 +35,12 @@ export default function LegalContact() {
             <section className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
               <h2 className="text-2xl font-bold text-[#002855] mb-4">DMCA Takedown Notices</h2>
               <p className="text-gray-700 mb-4">
-                If you believe content on FindChristianSchools.org infringes your copyright or intellectual property rights, submit a DMCA takedown notice to:
+                If you believe content on FindChristianSchools.com infringes your copyright or intellectual property rights, submit a DMCA takedown notice to:
               </p>
               <div className="flex items-center gap-3 bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
                 <Mail className="w-6 h-6 text-red-600" />
                 <div>
-                  <p className="font-semibold text-[#002855]">dmca@findchristianschools.org</p>
+                  <p className="font-semibold text-[#002855]">dmca@findchristianschools.com</p>
                   <p className="text-sm text-gray-600">Include: your contact info, description of copyrighted work, URL of infringing content, and statement under penalty of perjury</p>
                 </div>
               </div>
@@ -58,7 +58,7 @@ export default function LegalContact() {
               <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-lg p-4">
                 <Mail className="w-6 h-6 text-green-600" />
                 <div>
-                  <p className="font-semibold text-[#002855]">billing@findchristianschools.org</p>
+                  <p className="font-semibold text-[#002855]">billing@findchristianschools.com</p>
                   <p className="text-sm text-gray-600">Response time: 2-3 business days</p>
                 </div>
               </div>
@@ -73,7 +73,7 @@ export default function LegalContact() {
               <div className="flex items-center gap-3 bg-purple-50 border border-purple-200 rounded-lg p-4">
                 <Mail className="w-6 h-6 text-purple-600" />
                 <div>
-                  <p className="font-semibold text-[#002855]">support@findchristianschools.org</p>
+                  <p className="font-semibold text-[#002855]">support@findchristianschools.com</p>
                   <p className="text-sm text-gray-600">Response time: 1-2 business days</p>
                 </div>
               </div>
@@ -88,7 +88,7 @@ export default function LegalContact() {
               <div className="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <Mail className="w-6 h-6 text-yellow-600" />
                 <div>
-                  <p className="font-semibold text-[#002855]">legal@findchristianschools.org</p>
+                  <p className="font-semibold text-[#002855]">legal@findchristianschools.com</p>
                   <p className="text-sm text-gray-600">Response time: 5-7 business days</p>
                 </div>
               </div>

@@ -49,6 +49,7 @@ import LessonPlanner from "./pages/LessonPlanner";
 import Submit from "./pages/Submit";
 import Feedback from "./pages/Feedback";
 import { FloatingDonateButton } from "./components/FloatingDonateButton";
+import { SeoHead } from "./components/SeoHead";
 import { usePageTracking } from "./hooks/useAnalytics";
 
 function Router() {
@@ -125,6 +126,7 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
+          <SeoHead />
           <Router />
           <FloatingDonateButton />
         </TooltipProvider>

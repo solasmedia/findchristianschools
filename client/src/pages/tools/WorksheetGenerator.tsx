@@ -7,6 +7,7 @@ import {
   generateMathProblems, opsForGrade, pickSpellingWords,
   buildMathSheet, buildSpellingSheet, buildHandwritingSheet, buildReadingSheet,
   buildVocabSheet, pickVocabWords, type VocabWord,
+  buildWordScrambleSheet, buildWordSearchSheet, scrambleWord,
   getSheetHtml,
   HANDWRITING_SETS,
   type GradeKey, type SubjectKey, type Difficulty, type MathOp, type MathProblem,
@@ -91,6 +92,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
   const [customWords, setCustomWords] = useState<string[] | null>(null);
   const [customHandwriting, setCustomHandwriting] = useState<string[] | null>(null);
   const [customVocab, setCustomVocab] = useState<VocabWord[] | null>(null);
+  const [customScramble, setCustomScramble] = useState<string[] | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
   const [newItemText, setNewItemText] = useState("");
@@ -102,6 +104,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
 
   const handleSubjectChange = (s: SubjectKey) => {
     setSubject(s);
+    setCustomScramble(null);
     if (s === "math") {
       const ops = opsForGrade(grade);
       if (!ops.includes(op)) setOp(ops[0]);
@@ -148,6 +151,20 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       setCustomProblems(null);
       setCustomWords(null);
       setCustomHandwriting(null);
+    } else if (subject === "scramble") {
+      // Start with empty list for user to fill
+      setCustomScramble([]);
+      setCustomProblems(null);
+      setCustomWords(null);
+      setCustomHandwriting(null);
+      setCustomVocab(null);
+    } else if (subject === "wordsearch") {
+      // Start with empty list for user to fill
+      setCustomScramble([]);
+      setCustomProblems(null);
+      setCustomWords(null);
+      setCustomHandwriting(null);
+      setCustomVocab(null);
     } else {
       // Reading prints directly (no item-level editing)
       setCustomProblems(null);
@@ -176,6 +193,10 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       buildHandwritingSheet(customHandwriting, hwSet.label, `Handwriting Practice — ${hwSet.label}`, "Trace each item, then practice on the lines", hwStyle);
     } else if (subject === "vocabulary" && customVocab) {
       buildVocabSheet(customVocab, `${GRADE_LABELS[grade]} Vocabulary Practice`, `${customVocab.length} words · Define + use in a sentence · Answer key included`);
+    } else if (subject === "scramble" && customScramble && customScramble.length > 0) {
+      buildWordScrambleSheet(customScramble, `${GRADE_LABELS[grade]} Word Scramble`, `${customScramble.length} words · Unscramble each word · Answer key included`);
+    } else if (subject === "wordsearch" && customScramble && customScramble.length > 0) {
+      buildWordSearchSheet(customScramble, `${GRADE_LABELS[grade]} Word Search`, `${customScramble.length} words · Find each word · Answer key included`);
     }
   };
 
@@ -202,6 +223,18 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       const answerHtml = customVocab.map((w, i) => `<div class="problem"><strong>${i + 1}. ${escapeHtml(w.word)}</strong> — ${escapeHtml(w.definition)}</div>`).join("");
       const body = `<div class="section-title">Match, define, and use each word</div><div class="problems single">${rows}</div><div class="answer-key"><h2>Answer Key — Definitions</h2><div class="problems">${answerHtml}</div></div>`;
       html = getSheetHtml(`${gradeLabel} Vocabulary Practice`, `${customVocab.length} words · Define + use in a sentence`, body);
+    } else if (subject === "scramble" && customScramble && customScramble.length > 0) {
+      const rows = customScramble.map((w, i) => {
+        const s = scrambleWord(w);
+        return `<div class="problem"><span style="font-size:20px;font-weight:bold;letter-spacing:4px;color:#002855;">${i + 1}. ${escapeHtml(s.toUpperCase())}</span><div style="font-family:-apple-system,sans-serif;font-size:13px;color:#64748b;margin-top:6px">Unscramble: ____________________</div></div>`;
+      }).join("");
+      const answerHtml = customScramble.map((w, i) => `<div class="problem"><strong>${i + 1}.</strong> ${escapeHtml(w)}</div>`).join("");
+      const body = `<div class="section-title">Unscramble each word</div><div class="problems single">${rows}</div><div class="answer-key"><h2>Answer Key</h2><div class="problems">${answerHtml}</div></div>`;
+      html = getSheetHtml(`${gradeLabel} Word Scramble`, `${customScramble.length} words · Unscramble each word`, body);
+    } else if (subject === "wordsearch" && customScramble && customScramble.length > 0) {
+      const rows = customScramble.map((w, i) => `<div class="problem">${i + 1}. ${escapeHtml(w)}</div>`).join("");
+      const body = `<div class="section-title">Word Search — words to find</div><div class="problems single">${rows}</div><p style="color:#64748b;font-size:13px;margin-top:12px;">Preview shows the word list. The full puzzle grid with answer key prints when you hit Print.</p>`;
+      html = getSheetHtml(`${gradeLabel} Word Search`, `${customScramble.length} words · Find each word`, body);
     }
     // Ensure the footer branding is present
     if (html && !html.includes("findchristianschools.com/tools")) {
@@ -251,6 +284,8 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       // Parse "word = definition" or just add word
       const parts = newItemText.split("=");
       setCustomVocab([...customVocab, { word: parts[0].trim(), definition: parts[1]?.trim() || "" }]);
+    } else if ((subject === "scramble" || subject === "wordsearch") && customScramble !== null) {
+      setCustomScramble([...customScramble, newItemText.trim()]);
     }
     setNewItemText("");
   };
@@ -264,7 +299,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
     if (!customHandwriting) return;
     setCustomHandwriting(customHandwriting.filter((_, i) => i !== idx));
   };
-  const hasCustomizable = (subject === "math" && customProblems) || (subject === "spelling" && customWords !== null && spellingMode !== "generate") || (subject === "handwriting" && customHandwriting) || (subject === "vocabulary" && customVocab);
+  const hasCustomizable = (subject === "math" && customProblems) || (subject === "spelling" && customWords !== null && spellingMode !== "generate") || (subject === "handwriting" && customHandwriting) || (subject === "vocabulary" && customVocab) || ((subject === "scramble" || subject === "wordsearch") && customScramble !== null);
 
   const selectCls = "w-full text-sm border border-gray-300 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#002855]/20 focus:border-[#002855] bg-white";
 
@@ -435,7 +470,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                 <h3 className="text-lg font-bold text-[#002855] flex items-center gap-2">
                   <Pencil className="w-5 h-5 text-[#6EBE44]" /> Customize Your Worksheet
                 </h3>
-                <span className="text-xs text-gray-500">{subject === "math" ? customProblems?.length : subject === "spelling" ? customWords?.length : subject === "vocabulary" ? customVocab?.length : customHandwriting?.length} items</span>
+                <span className="text-xs text-gray-500">{subject === "math" ? customProblems?.length : subject === "spelling" ? customWords?.length : subject === "vocabulary" ? customVocab?.length : (subject === "scramble" || subject === "wordsearch") ? customScramble?.length : customHandwriting?.length} items</span>
               </div>
               <p className="text-sm text-gray-600 mb-4">Edit any item, delete ones you don't want, or add your own. Then preview before printing.</p>
 
@@ -513,6 +548,20 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                     />
                   </div>
                 ))}
+                {(subject === "scramble" || subject === "wordsearch") && customScramble?.map((w, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-lg p-2">
+                    <span className="text-xs font-bold text-gray-400 w-6 text-center">{i + 1}</span>
+                    <input
+                      value={w}
+                      onChange={e => { const u = [...(customScramble || [])]; u[i] = e.target.value; setCustomScramble(u); }}
+                      className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#002855]"
+                      placeholder="Word for puzzle"
+                    />
+                    <button onClick={() => setCustomScramble((customScramble || []).filter((_, j) => j !== i))} className="p-2 text-red-400 hover:text-red-600 transition" aria-label="Delete">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
 
               {/* Add item */}
@@ -521,7 +570,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                   value={newItemText}
                   onChange={e => setNewItemText(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && addItem()}
-                  placeholder={subject === "math" ? "Add problem (e.g. 12 + 5 = 17)" : subject === "spelling" ? "Add a spelling word" : subject === "vocabulary" ? "Add word = definition" : "Add a word or sentence to trace"}
+                  placeholder={subject === "math" ? "Add problem (e.g. 12 + 5 = 17)" : subject === "spelling" ? "Add a spelling word" : subject === "vocabulary" ? "Add word = definition" : (subject === "scramble" || subject === "wordsearch") ? "Add a word for the puzzle" : "Add a word or sentence to trace"}
                   className="flex-1 text-sm border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#6EBE44]/30 focus:border-[#6EBE44]"
                 />
                 <button onClick={addItem} className="px-4 py-2.5 bg-[#6EBE44] text-white rounded-xl font-semibold text-sm hover:bg-[#5da83a] transition flex items-center gap-1.5">

@@ -372,6 +372,29 @@ export function buildWordSearch(words: string[], size = 12): { grid: string[][];
   return { grid, placed };
 }
 
+export function buildWordSearchSheet(words: string[], title: string, subtitle: string) {
+  const { grid, placed } = buildWordSearch(words, 12);
+  const gridHtml = grid.map(row =>
+    `<div style="display:flex;justify-content:center;">${row.map(ch =>
+      `<span style="display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;font-family:monospace;font-size:16px;font-weight:bold;color:#002855;">${ch}</span>`
+    ).join("")}</div>`
+  ).join("");
+  const wordList = placed.map(p => `<span style="display:inline-block;margin:4px 8px;font-size:14px;font-weight:600;color:#002855;">${p.word}</span>`).join("");
+  // Answer key: highlight placed words
+  const keyGrid = grid.map(row => [...row]);
+  const answerHtml = grid.map((row, r) =>
+    `<div style="display:flex;justify-content:center;">${row.map((ch, c) => {
+      const inWord = placed.some(p => p.cells.some(([pr, pc]) => pr === r && pc === c));
+      return `<span style="display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;font-family:monospace;font-size:16px;font-weight:bold;${inWord ? "background:#6EBE44;color:#fff;border-radius:4px;" : "color:#002855;"}">${ch}</span>`;
+    }).join("")}</div>`
+  ).join("");
+  const body = `<div class="section-title">Find each word in the puzzle</div>
+    <div style="margin:16px 0;">${gridHtml}</div>
+    <div style="text-align:center;margin:12px 0;"><strong>Words to find:</strong><br/>${wordList}</div>
+    <div class="answer-key"><h2>Answer Key</h2><div style="margin:16px 0;">${answerHtml}</div></div>`;
+  openPrintSheet(title, subtitle, body);
+}
+
 export function verseWordsForSearch(text: string): string[] {
   return text
     .replace(/[.,;:!?"""]/g, "")

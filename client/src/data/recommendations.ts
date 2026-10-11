@@ -132,15 +132,6 @@ export const TEACHING_PRODUCTS: TeachingProduct[] = [
     rating: 5,
     priceRange: "$15-20",
   },
-  {
-    asin: "B08XYZ1234",
-    name: "Classical Education Starter Library",
-    category: "curriculum",
-    review: "A curated set of the great books that form the backbone of classical education — adapted for young readers without losing the richness.",
-    whyRecommended: "For families or schools starting a classical program, this removes the guesswork of book selection.",
-    rating: 4,
-    priceRange: "$50-75",
-  },
 ];
 
 export const BOOK_CATEGORIES = [

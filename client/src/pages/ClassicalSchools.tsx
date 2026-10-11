@@ -92,6 +92,12 @@ export default function ClassicalSchools() {
           </div>
         </div>
       </div>
+      <div className="max-w-4xl mx-auto px-4 pb-8">
+        <p className="text-xs text-gray-500 italic text-center">
+          Note: Classical designation is based on school names and descriptions and has not been independently verified. 
+          Schools may claim their listing to confirm or correct this designation.
+        </p>
+      </div>
       <Footer />
     </div>
   );

@@ -133,7 +133,7 @@ export default function FederalTaxCredit() {
           </p>
           <p className="text-gray-700 leading-relaxed">
             The U.S. Treasury released proposed regulations on <strong>October 1, 2026</strong>, and the program
-            officially launches <strong>January 1, 2027</strong>. As of fall 2026, roughly 31 states have indicated
+            officially launches <strong>January 1, 2027</strong>. As of September 2026, 30 states have officially opted in, according to the IRS
             they will participate.
           </p>
         </section>
@@ -295,6 +295,7 @@ export default function FederalTaxCredit() {
               { name: "Alabama", url: "https://www.alabamaachieves.org" },
               { name: "Alaska", url: "https://education.alaska.gov" },
               { name: "Arkansas", url: "https://dese.ade.arkansas.gov" },
+              { name: "Arizona", url: "https://www.azed.gov" },
               { name: "Colorado", url: "https://www.cde.state.co.us" },
               { name: "Florida", url: "https://www.fldoe.org" },
               { name: "Georgia", url: "https://www.gadoe.org" },
@@ -338,13 +339,13 @@ export default function FederalTaxCredit() {
 
           <h3 className="text-lg font-bold text-amber-600 mb-3 flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
-            Not Participating (6)
+            Not Participating (5)
           </h3>
           <p className="text-gray-600 text-sm mb-3">
             These states have said they will not participate. Donors in these states can still claim the credit by donating to SGOs in participating states — but students here cannot receive scholarships.
           </p>
           <div className="flex flex-wrap gap-2 mb-8">
-            {["Arizona", "Hawaii", "Minnesota", "New Mexico", "Oregon", "Wisconsin"].map((s) => (
+            {["Hawaii", "Minnesota", "New Mexico", "Oregon", "Wisconsin"].map((s) => (
               <span key={s} className="bg-gray-100 text-gray-600 rounded-full px-4 py-2 text-sm font-medium">{s}</span>
             ))}
           </div>

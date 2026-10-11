@@ -70,28 +70,15 @@ export function registerBlogImportTemp(app: Express) {
       const errors: string[] = [];
       for (const item of items) {
         try {
-          await db.insert(blogPosts).values({
-            title: item.title,
-            slug: item.slug,
-            excerpt: item.excerpt || null,
-            category: item.category || "teaching_tips",
-            ageGroup: item.ageGroup || null,
-            content: item.content,
-            heroImageUrl: item.heroImageUrl || null,
-            readingTimeMinutes: item.readingTimeMinutes || 5,
-            status: item.status || "scheduled",
-            scheduledFor: item.scheduledFor ? new Date(item.scheduledFor) : null,
-            featured: !!item.featured,
-            seoTitle: item.seoTitle || null,
-            resourceTitle: item.resourceTitle || null,
-            resourceDescription: item.resourceDescription || null,
-            resourceContent: item.resourceContent || null,
-            resourceType: item.resourceType || null,
-            isPremiumResource: !!item.isPremiumResource,
-            resourcePriceCents: item.resourcePriceCents || null,
-            resourcePageCount: item.resourcePageCount || null,
-            resourcePreviewContent: item.resourcePreviewContent || null,
-          });
+          // Use raw SQL with only core columns to avoid missing-column issues
+          await db.execute(sql.raw(
+            `INSERT INTO blog_posts (title, slug, excerpt, category, ageGroup, content, readingTimeMinutes, status, scheduledFor, featured, seoTitle) VALUES (${[
+              item.title, item.slug, item.excerpt || null, item.category || "teaching_tips",
+              item.ageGroup || null, item.content, item.readingTimeMinutes || 5,
+              item.status || "scheduled", item.scheduledFor ? `'${item.scheduledFor}'` : "NULL",
+              item.featured ? 1 : 0, item.seoTitle || null
+            ].map(v => v === null || v === "NULL" ? "NULL" : `'${String(v).replace(/'/g, "''")}'`).join(", ")}) ON DUPLICATE KEY UPDATE title=VALUES(title), content=VALUES(content), excerpt=VALUES(excerpt), status=VALUES(status), scheduledFor=VALUES(scheduledFor)`
+          ));
           imported++;
         } catch (e: any) {
           errors.push(item.slug + ": " + (e.cause?.message || e.message || "unknown").slice(0, 150));

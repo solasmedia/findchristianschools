@@ -17,6 +17,8 @@ import Races from "./pages/Races";
 import RaceProfile from "./pages/RaceProfile";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import News from "./pages/News";
+import NewsArticle from "./pages/NewsArticle";
 import TravelEd from "./pages/TravelEd";
 import TravelEdDestination from "./pages/TravelEdDestination";
 import Mission from "./pages/Mission";
@@ -112,6 +114,8 @@ function Router() {
       <Route path="/race/:slug" component={RaceProfile} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/news" component={News} />
+      <Route path="/news/:slug" component={NewsArticle} />
       <Route path="/traveled" component={TravelEd} />
       <Route path="/traveled/:slug" component={TravelEdDestination} />
       <Route path="/signup" component={SignUp} />

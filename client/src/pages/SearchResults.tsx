@@ -328,43 +328,41 @@ export default function SearchResults() {
           <h1 className="text-3xl font-bold text-white mb-2">Find a Christian School</h1>
           <p className="text-blue-100 mb-4">Found <span className="font-bold text-white">{totalCount}</span> Christian schools matching your criteria{schoolCount < totalCount ? ` (showing ${schoolCount})` : ''}</p>
 
-          {/* Search bar: keyword/ZIP + state + locate-me */}
-          <form onSubmit={handleSearchSubmit} className="flex flex-col gap-2 max-w-3xl">
-            <div className="flex flex-col md:flex-row gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="School name, city, or ZIP code"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44]"
-                />
-              </div>
-              <select
-                value={stateSelect}
-                onChange={(e) => setStateSelect(e.target.value)}
-                className="px-4 py-2.5 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44] bg-white"
-                aria-label="Select state"
-              >
-                <option value="">All States</option>
-                {US_STATES.map(s => <option key={s.code} value={s.code}>{s.name}</option>)}
-              </select>
+          {/* Search bar: keyword/ZIP + state + near me + search — all on one level */}
+          <form onSubmit={handleSearchSubmit} className="flex flex-col lg:flex-row gap-2 lg:gap-3 max-w-4xl lg:items-center">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="School name, city, or ZIP code"
+                className="w-full pl-10 pr-4 py-3 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44]"
+              />
             </div>
-            <div className="flex gap-2 justify-end">
+            <select
+              value={stateSelect}
+              onChange={(e) => setStateSelect(e.target.value)}
+              className="px-4 py-3 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44] bg-white lg:w-44 flex-shrink-0"
+              aria-label="Select state"
+            >
+              <option value="">All States</option>
+              {US_STATES.map(s => <option key={s.code} value={s.code}>{s.name}</option>)}
+            </select>
+            <div className="flex gap-2 lg:gap-3 flex-shrink-0">
               <button
                 type="button"
                 onClick={handleLocateMe}
                 disabled={locating}
                 title="Use my location"
-                className="px-4 py-2.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm font-medium flex items-center justify-center gap-2 transition disabled:opacity-50 flex-shrink-0"
+                className="px-4 py-3 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm font-medium flex items-center justify-center gap-2 transition disabled:opacity-50 flex-shrink-0 whitespace-nowrap"
               >
                 {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
                 <span>Near Me</span>
               </button>
               <button
                 type="submit"
-                className="px-6 py-2.5 rounded-lg bg-[#6EBE44] hover:bg-[#5aa838] text-white text-sm font-bold transition flex-shrink-0"
+                className="px-6 py-3 rounded-lg bg-[#6EBE44] hover:bg-[#5aa838] text-white text-sm font-bold transition flex-shrink-0 whitespace-nowrap"
               >
                 Search
               </button>

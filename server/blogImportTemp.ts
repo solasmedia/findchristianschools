@@ -24,6 +24,7 @@ const ALTER_STATEMENTS: string[] = [
   "ALTER TABLE blog_posts ADD COLUMN resourcePreviewContent text NULL",
   "ALTER TABLE blog_posts ADD COLUMN heroImageUrl varchar(512) NULL",
   "ALTER TABLE blog_posts ADD COLUMN seoTitle varchar(255) NULL",
+  "ALTER TABLE schools ADD COLUMN educationalModel ENUM('traditional','classical','charlotte_mason','montessori','unschooling','eclectic','university_model') DEFAULT 'traditional'",
 ];
 
 export function registerBlogImportTemp(app: Express) {

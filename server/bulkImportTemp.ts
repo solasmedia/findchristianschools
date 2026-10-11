@@ -72,6 +72,19 @@ CREATE TABLE IF NOT EXISTS \`races\` (
 )`;
 
 export function registerBulkImportTemp(app: Express) {
+  // TEMP DEBUG: check table columns
+  app.get("/api/admin/check-columns-temp", async (req: Request, res: Response) => {
+    const key = req.headers["x-admin-key"];
+    if (key !== ADMIN_KEY) { res.status(403).json({ error: "Forbidden" }); return; }
+    try {
+      const db = await getDb();
+      if (!db) { res.status(500).json({ error: "No DB" }); return; }
+      const [cols] = await db.execute(sql.raw("SHOW COLUMNS FROM `schools`"));
+      const colNames = (cols as any[]).map(c => c.Field);
+      res.json({ columns: colNames, hasSofAttested: colNames.includes("sofAttested") });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
   app.post("/api/admin/bulk-import-temp", async (req: Request, res: Response) => {
     try {
       const key = req.headers["x-admin-key"];

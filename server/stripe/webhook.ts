@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import type { Request, Response } from "express";
 import { getDb } from "../db";
-import { schools } from "../../drizzle/schema";
+import { schools, colleges } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { notifyPremiumPurchase } from "../_core/emailNotifications";
 
@@ -44,6 +44,7 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       const schoolId = session.metadata?.school_id;
       const schoolName = session.metadata?.schoolName;
       const listingType = session.metadata?.listingType;
+      const stripeListingType = session.metadata?.listing_type; // 'school' or 'college'
       const donationAmount = session.metadata?.donationAmount;
       const customerId = session.customer as string;
       const subscriptionId = session.subscription as string;
@@ -51,11 +52,13 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       const db = await getDb();
       if (!db) break;
 
+      const isCollege = stripeListingType === 'college';
+
       // Handle both old (school_id) and new (schoolName) metadata formats
       let targetSchoolId: number | null = null;
       if (schoolId) {
         targetSchoolId = parseInt(schoolId);
-      } else if (schoolName) {
+      } else if (schoolName && !isCollege) {
         // Find school by name
         const schoolResult = await db.select().from(schools).where(eq(schools.name, schoolName)).limit(1);
         if (schoolResult.length > 0) {
@@ -85,15 +88,22 @@ export async function handleStripeWebhook(req: Request, res: Response) {
           updateData.listingType = "free";
         }
 
-        await db.update(schools).set(updateData).where(eq(schools.id, targetSchoolId));
-        console.log(`[Webhook] School ${targetSchoolId} payment processed (${listingType})`);
+        if (isCollege) {
+          await db.update(colleges).set(updateData).where(eq(colleges.id, targetSchoolId));
+          console.log(`[Webhook] College ${targetSchoolId} payment processed (${listingType})`);
+        } else {
+          await db.update(schools).set(updateData).where(eq(schools.id, targetSchoolId));
+          console.log(`[Webhook] School ${targetSchoolId} payment processed (${listingType})`);
+        }
 
         // Send email notification
         try {
-          const schoolResult = await db.select().from(schools).where(eq(schools.id, targetSchoolId)).limit(1);
-          if (schoolResult.length > 0) {
-            const amount = session.amount_total ? session.amount_total / 100 : (listingType === "premium" ? 99 : parseInt(donationAmount || "0"));
-            await notifyPremiumPurchase(schoolResult[0], amount).catch(() => {});
+          if (!isCollege) {
+            const schoolResult = await db.select().from(schools).where(eq(schools.id, targetSchoolId)).limit(1);
+            if (schoolResult.length > 0) {
+              const amount = session.amount_total ? session.amount_total / 100 : (listingType === "premium" ? 99 : parseInt(donationAmount || "0"));
+              await notifyPremiumPurchase(schoolResult[0], amount).catch(() => {});
+            }
           }
         } catch (err) {
           console.error('[Webhook] Failed to send purchase notification:', err);
@@ -110,6 +120,10 @@ export async function handleStripeWebhook(req: Request, res: Response) {
           isPremium: false,
           premiumExpiresAt: null,
         }).where(eq(schools.stripeSubscriptionId, subscription.id));
+        await db.update(colleges).set({
+          isPremium: false,
+          premiumExpiresAt: null,
+        }).where(eq(colleges.stripeSubscriptionId, subscription.id));
         console.log(`[Webhook] Subscription ${subscription.id} cancelled`);
       }
       break;

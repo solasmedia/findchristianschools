@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
           </div>
           <p className="text-[#6EBE44] text-sm font-semibold uppercase tracking-wider mb-2">Your Privacy Matters</p>
           <h1 className="text-3xl md:text-4xl font-bold">Privacy Policy</h1>
-          <p className="mt-3 text-blue-200 max-w-2xl mx-auto">How FindChristianSchools.org protects and uses your information</p>
+          <p className="mt-3 text-blue-200 max-w-2xl mx-auto">How FindChristianSchools.com protects and uses your information</p>
         </div>
       </section>
 
@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
                 <h2 className="text-xl font-bold text-[#002855]">Public Data Sources</h2>
               </div>
               <p className="text-gray-700 leading-relaxed">
-                Some school listings on FindChristianSchools.org are sourced from publicly available federal databases, specifically the <strong>National Center for Education Statistics (NCES) Private School Universe Survey (PSS)</strong>. This is a biennial survey conducted by the U.S. Department of Education that collects data on all private schools in the United States.
+                Some school listings on FindChristianSchools.com are sourced from publicly available federal databases, specifically the <strong>National Center for Education Statistics (NCES) Private School Universe Survey (PSS)</strong>. This is a biennial survey conducted by the U.S. Department of Education that collects data on all private schools in the United States.
               </p>
               <p className="text-gray-700 leading-relaxed">
                 Information obtained from the NCES PSS includes basic school details such as name, address, phone number, grade levels, enrollment figures, and religious affiliation. This data is public record and freely available through the federal government.
@@ -122,7 +122,7 @@ export default function PrivacyPolicy() {
                 <li><strong>Newsletter Subscribers:</strong> Retained until you unsubscribe</li>
               </ul>
               <p className="text-gray-700 leading-relaxed mt-4">
-                You may request deletion of your personal information at any time by contacting privacy@findchristianschools.org, subject to legal retention requirements.
+                You may request deletion of your personal information at any time by contacting privacy@findchristianschools.com, subject to legal retention requirements.
               </p>
             </section>
 
@@ -146,7 +146,7 @@ export default function PrivacyPolicy() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">Children's Privacy (COPPA)</h2>
               <p className="text-gray-700 leading-relaxed">
-                FindChristianSchools.org is not intended for children under 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected information from a child under 13, we will delete such information immediately. Parents who believe their child has provided information to us should contact privacy@findchristianschools.org.
+                FindChristianSchools.com is not intended for children under 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected information from a child under 13, we will delete such information immediately. Parents who believe their child has provided information to us should contact privacy@findchristianschools.com.
               </p>
             </section>
 
@@ -163,7 +163,7 @@ export default function PrivacyPolicy() {
                 <li>Data portability (receive your data in a portable format)</li>
               </ul>
               <p className="text-gray-700 leading-relaxed mt-4">
-                To exercise these rights, contact privacy@findchristianschools.org. We will respond to your request within 30 days.
+                To exercise these rights, contact privacy@findchristianschools.com. We will respond to your request within 30 days.
               </p>
             </section>
 
@@ -173,7 +173,7 @@ export default function PrivacyPolicy() {
                 <strong>GDPR (European Users):</strong> If you are located in the European Union, you have additional rights under the General Data Protection Regulation, including the right to withdraw consent and the right to lodge a complaint with your local data protection authority.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                <strong>CCPA (California Users):</strong> If you are a California resident, you have the right to know what personal information is collected, the right to delete personal information, and the right to opt-out of the sale of personal information. We do not sell your personal information. To exercise these rights, contact privacy@findchristianschools.org.
+                <strong>CCPA (California Users):</strong> If you are a California resident, you have the right to know what personal information is collected, the right to delete personal information, and the right to opt-out of the sale of personal information. We do not sell your personal information. To exercise these rights, contact privacy@findchristianschools.com.
               </p>
               <p className="text-gray-700 leading-relaxed">
                 <strong>California "Do Not Track":</strong> We do not respond to Do Not Track signals, but you can control tracking through browser settings and opt-out mechanisms.
@@ -190,7 +190,7 @@ export default function PrivacyPolicy() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">About This Service</h2>
               <p className="text-gray-700 leading-relaxed">
-                FindChristianSchools.org is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> network, dedicated to connecting families with faith-based education worldwide.
+                FindChristianSchools.com is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> network, dedicated to connecting families with faith-based education worldwide.
               </p>
             </section>
 
@@ -202,14 +202,14 @@ export default function PrivacyPolicy() {
                   <Mail className="w-5 h-5 text-[#0055A4]" />
                   <div>
                     <p className="font-semibold text-[#002855]">Privacy</p>
-                    <p className="text-sm text-gray-600">privacy@findchristianschools.org</p>
+                    <p className="text-sm text-gray-600">privacy@findchristianschools.com</p>
                   </div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-center gap-3">
                   <Mail className="w-5 h-5 text-[#0055A4]" />
                   <div>
                     <p className="font-semibold text-[#002855]">Support</p>
-                    <p className="text-sm text-gray-600">support@findchristianschools.org</p>
+                    <p className="text-sm text-gray-600">support@findchristianschools.com</p>
                   </div>
                 </div>
               </div>

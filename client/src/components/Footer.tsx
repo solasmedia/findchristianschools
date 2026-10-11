@@ -81,7 +81,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-blue-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4">
             <p className="text-xs text-blue-300">
-              &copy; 2026 FindChristianSchools.org<span className="trademark">™</span>. All rights reserved.
+              &copy; 2026 FindChristianSchools.com<span className="trademark">™</span>. All rights reserved.
             </p>
             <div className="flex items-center gap-1 text-xs text-blue-300">
               <span>Every listing supports</span>

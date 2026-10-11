@@ -9,6 +9,8 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { rateLimitMiddleware, accessLoggingMiddleware, detectScrapingMiddleware } from "./ipProtection";
+import { securityHeadersMiddleware } from "./securityHeaders";
+import { rateLimitExpress, RATE_LIMITS } from "../rateLimit";
 import { runMigrations } from "../migrate";
 
 function isPortAvailable(port: number): Promise<boolean> {
@@ -40,13 +42,18 @@ async function startServer() {
     const { handleStripeWebhook } = await import("../stripe/webhook");
     return handleStripeWebhook(req, res);
   });
-  // Configure body parser with larger size limit for file uploads
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
+  // Configure body parser with reasonable size limits
+  // (50MB was excessive — file uploads go through S3 presigned URLs, not request bodies)
+  app.use(express.json({ limit: "2mb" }));
+  app.use(express.urlencoded({ limit: "2mb", extended: true }));
+  // Security headers (CSP, HSTS, X-Frame-Options, etc.)
+  app.use(securityHeadersMiddleware);
   // IP protection middleware (rate limiting, access logging, scraping detection)
   app.use(rateLimitMiddleware);
   app.use(accessLoggingMiddleware);
   app.use(detectScrapingMiddleware);
+  // Strict rate limiting on auth endpoints (prevent brute force)
+  app.use("/api/trpc/adminAuth", rateLimitExpress(RATE_LIMITS.auth, "auth") as any);
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   // Stripe checkout endpoint

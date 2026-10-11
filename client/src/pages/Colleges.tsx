@@ -87,7 +87,7 @@ export default function Colleges() {
                   value={searchQuery}
                   onChange={(e) => handleFilterChange(setSearchQuery)(e.target.value)}
                   placeholder="College name, city, or denomination"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44]"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44] placeholder-gray-400"
                 />
               </div>
               <select

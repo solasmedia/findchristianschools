@@ -639,16 +639,20 @@ export const appRouter = router({
   // ============ STRIPE ============
   stripe: router({
     createCheckout: protectedProcedure.input(z.object({
-      schoolId: z.number(), schoolName: z.string(), promoCode: z.string().optional(),
+      schoolId: z.number().optional(), schoolName: z.string(), promoCode: z.string().optional(),
+      collegeId: z.number().optional(),
     })).mutation(async ({ ctx, input }) => {
-      if (input.promoCode) {
+      if (!input.schoolId && !input.collegeId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'schoolId or collegeId required' });
+      }
+      if (input.promoCode && input.schoolId) {
         const db = await getDb();
         if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
         const result = await db.select().from(schools).where(eq(schools.promoCode, input.promoCode.toUpperCase())).limit(1);
         if (!result[0]) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid promo code' });
       }
       const origin = ctx.req.headers.origin || 'https://findchristianschools.org';
-      return createPremiumCheckout({ schoolId: input.schoolId, schoolName: input.schoolName, userEmail: ctx.user.email || '', userId: ctx.user.id, origin, promoCode: input.promoCode });
+      return createPremiumCheckout({ schoolId: input.schoolId, collegeId: input.collegeId, schoolName: input.schoolName, userEmail: ctx.user.email || '', userId: ctx.user.id, origin, promoCode: input.promoCode });
     }),
     createDonation: publicProcedure.input(z.object({
       amount: z.number().min(100), // minimum $1.00 in cents
@@ -879,7 +883,8 @@ export const appRouter = router({
   // ============ CLAIM & REMOVAL REQUESTS ============
   claimRequests: router({
     create: publicProcedure.input(z.object({
-      schoolId: z.number(),
+      schoolId: z.number().optional(),
+      collegeId: z.number().optional(),
       claimantName: z.string().min(1),
       claimantEmail: z.string().email(),
       claimantPhone: z.string().optional(),
@@ -887,17 +892,23 @@ export const appRouter = router({
       relationship: z.string().optional(),
       verificationNotes: z.string().optional(),
     })).mutation(async ({ input }) => {
+      if (!input.schoolId && !input.collegeId) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Either schoolId or collegeId is required' });
+      }
       const result = await createClaimRequest(input);
+      const listingLabel = input.collegeId ? `College ID: ${input.collegeId}` : `School ID: ${input.schoolId}`;
       await notifyOwner({
         title: `New Claim Request from ${input.claimantName}`,
-        content: `School ID: ${input.schoolId}\nClaimant: ${input.claimantName} (${input.claimantEmail})\nRole: ${input.claimantRole}\n\nPlease review in Admin > Claims.`,
+        content: `${listingLabel}\nClaimant: ${input.claimantName} (${input.claimantEmail})\nRole: ${input.claimantRole}\n\nPlease review in Admin > Claims.`,
       }).catch(() => {});
-      await notifyClaimRequest({ id: input.schoolId }, {
-        contactName: input.claimantName,
-        contactEmail: input.claimantEmail,
-        contactPhone: input.claimantPhone,
-        claimantRole: input.claimantRole,
-      }).catch(() => {});
+      if (input.schoolId) {
+        await notifyClaimRequest({ id: input.schoolId }, {
+          contactName: input.claimantName,
+          contactEmail: input.claimantEmail,
+          contactPhone: input.claimantPhone,
+          claimantRole: input.claimantRole,
+        }).catch(() => {});
+      }
       return result;
     }),
   }),

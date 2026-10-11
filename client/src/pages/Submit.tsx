@@ -53,7 +53,16 @@ export default function Submit() {
 
   const stateCode = params.get("state");
   const claimSlug = params.get("claim") || undefined;
+  const claimType = params.get("type") || "school";
+  const isCollegeClaim = claimType === "college" && claimSlug;
   const prefillState = stateCode ? US_STATES.find(s => s.code === stateCode.toUpperCase())?.name || "" : "";
+
+  // College claim lookup
+  const { data: claimCollege } = trpc.colleges.getBySlug.useQuery(
+    { slug: claimSlug || "" },
+    { enabled: !!isCollegeClaim }
+  );
+  const createClaimRequest = trpc.claimRequests.create.useMutation();
 
   const [form, setForm] = useState({
     name: "", address: "", city: "", state: prefillState, stateCode: stateCode?.toUpperCase() || "", zip: "",
@@ -95,6 +104,32 @@ export default function Submit() {
   const maxSteps = steps.length;
 
   const handleSubmit = async () => {
+    // College claim flow
+    if (isCollegeClaim) {
+      if (!claimCollege?.id) {
+        toast.error("College not found");
+        return;
+      }
+      if (!form.contactName || !form.contactEmail) {
+        toast.error("Please provide your name and email");
+        return;
+      }
+      try {
+        await createClaimRequest.mutateAsync({
+          collegeId: claimCollege.id,
+          claimantName: form.contactName,
+          claimantEmail: form.contactEmail,
+          claimantPhone: form.contactPhone || undefined,
+          claimantRole: form.contactTitle || "Representative",
+        });
+        toast.success("College claimed successfully! Your request is pending admin review.");
+        navigate(`/college/${claimSlug}`);
+      } catch (err: any) {
+        toast.error(err.message || "Failed to submit claim");
+      }
+      return;
+    }
+
     if (!agreedToFaith) {
       toast.error("You must agree to the Statement of Faith");
       return;
@@ -211,6 +246,74 @@ export default function Submit() {
                 <p className="text-gray-600 text-sm">Submit a single class or learning experience</p>
               </Card>
             </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // College claim simplified form
+  if (isCollegeClaim) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Navigation />
+        <div className="container py-8 lg:py-12 max-w-2xl">
+          <h1 className="text-2xl lg:text-3xl font-bold text-[#002855] mb-2">Claim Your College</h1>
+          <p className="text-gray-600 mb-6">
+            {claimCollege ? `Claiming: ${claimCollege.name}` : "Loading college..."}
+          </p>
+          <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
+              <input
+                type="text"
+                value={form.contactName}
+                onChange={(e) => setForm({ ...form, contactName: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="Full name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <input
+                type="email"
+                value={form.contactEmail}
+                onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="you@college.edu"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <input
+                type="tel"
+                value={form.contactPhone}
+                onChange={(e) => setForm({ ...form, contactPhone: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="(555) 123-4567"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Your Role *</label>
+              <input
+                type="text"
+                value={form.contactTitle}
+                onChange={(e) => setForm({ ...form, contactTitle: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                placeholder="e.g. Admissions Director"
+              />
+            </div>
+            <button
+              onClick={handleSubmit}
+              disabled={createClaimRequest.isPending}
+              className="w-full bg-[#0055A4] hover:bg-[#002855] text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
+            >
+              {createClaimRequest.isPending ? "Submitting..." : "Submit Claim Request"}
+            </button>
+            <p className="text-xs text-gray-500 text-center">
+              Your claim will be reviewed by our team. You'll receive an email once approved.
+            </p>
           </div>
         </div>
         <Footer />

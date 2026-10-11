@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import TaxCreditNudge from "@/components/TaxCreditNudge";
 import { Plus, GripVertical, Trash2, Edit3, Check, Clock, Download, RotateCcw, BookOpen, ChevronLeft, ChevronRight, Sparkles, Calendar as CalendarIcon, Copy, Cross, BookMarked, Calculator, PenTool, Beaker, Scroll, Palette, Music, Dumbbell, Globe, MoreHorizontal } from "lucide-react";
 
 interface LessonBlock {
@@ -749,7 +750,10 @@ ${dayHtmlSections}
           </button>
 
           {/* Footer note */}
-          <p className="text-xs text-gray-500 text-center mt-10">
+          <div className="max-w-md mx-auto mt-8">
+            <TaxCreditNudge variant="card" />
+          </div>
+          <p className="text-xs text-gray-500 text-center mt-6">
             Find Christian Schools™ Lesson Plan Builder &mdash; Export before leaving
           </p>
         </div>

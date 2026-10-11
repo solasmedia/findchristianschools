@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import TaxCreditNudge from "@/components/TaxCreditNudge";
 import { Printer, RefreshCw, ChevronDown, Check, Eye, Pencil, Trash2, Plus, X } from "lucide-react";
 import {
   generateMathProblems, opsForGrade, pickSpellingWords,
@@ -479,6 +480,10 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
               </div>
             </div>
           )}
+
+          <div className="mt-6">
+            <TaxCreditNudge variant="card" />
+          </div>
 
           {/* FAQ */}
           <div className="mt-10 bg-white rounded-2xl border border-gray-200 p-5 sm:p-7">

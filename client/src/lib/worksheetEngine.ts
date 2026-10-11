@@ -245,7 +245,6 @@ function sheetShell(title: string, subtitle: string, bodyHtml: string): string {
 <style>${PRINT_CSS}</style></head><body>
 <div class="sheet-header">
   <div class="logo-lockup">
-    <div class="logo-mark">✝</div>
     <div class="brand"><span class="green">Find</span><span style="color:#ffffff">ChristianSchools</span><span class="gold">FAITH · EDUCATION · FUTURE</span></div>
   </div>
   <h1>${title}</h1>

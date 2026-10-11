@@ -16,7 +16,7 @@ export default function Dmca() {
 
         <div className="prose prose-sm max-w-none text-gray-700 space-y-6">
           <p>
-            FindChristianSchools.org respects the intellectual property rights
+            FindChristianSchools.com respects the intellectual property rights
             of others and complies with the Digital Millennium Copyright Act
             (DMCA). If you believe that content on this site infringes your
             copyright, you may request its removal by following the procedure
@@ -71,10 +71,10 @@ export default function Dmca() {
               <p className="text-sm mt-2">
                 Email:{" "}
                 <a
-                  href="mailto:legal@findchristianschools.org"
+                  href="mailto:legal@findchristianschools.com"
                   className="text-[#0055A4] hover:underline"
                 >
-                  legal@findchristianschools.org
+                  legal@findchristianschools.com
                 </a>
                 <br />
                 Subject line: "DMCA Takedown Notice"

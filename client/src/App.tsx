@@ -54,6 +54,7 @@ import CurriculumComparison from "./pages/CurriculumComparison";
 import LessonPlanning from "./pages/LessonPlanning";
 import LessonPlanner from "./pages/LessonPlanner";
 import ToolsHub from "./pages/tools/ToolsHub";
+import TeacherResources from "./pages/TeacherResources";
 import WorksheetGenerator from "./pages/tools/WorksheetGenerator";
 import BibleVerseMaker from "./pages/tools/BibleVerseMaker";
 
@@ -128,6 +129,7 @@ function Router() {
       <Route path="/lesson-planning" component={LessonPlanning} />
       <Route path="/lesson-planner" component={LessonPlanner} />
       <Route path="/tools" component={ToolsHub} />
+      <Route path="/teacher-resources" component={TeacherResources} />
       <Route path="/tools/worksheet-generator" component={MathWorksheets} />
       <Route path="/tools/math-worksheet-generator" component={MathWorksheets} />
       <Route path="/tools/spelling-worksheet-generator" component={SpellingWorksheets} />

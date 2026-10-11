@@ -98,6 +98,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "TravelED — Educational Family Trips & Homeschool Field Trips | FindChristianSchools.com",
     description: "America's top history destinations for Christian families, with free printable study guides. Plan educational family trips and homeschool field trips.",
   },
+  "/teacher-resources": {
+    title: "Teacher Resources — Free Worksheets, Lesson Plans & Tools | FindChristianSchools.com",
+    description: "Free teacher resources for Christian educators: customizable worksheet generators, lesson plan builder, Bible verse maker, handwriting practice, and more. No account needed.",
+  },
   "/federal-tax-credit": {
     title: "Federal Scholarship Tax Credit 2027: $1,700 for Christian School Families | FindChristianSchools.com",
     description: "A major change is coming that could open new doors for families considering Christian education. The new Federal Education Tax Credit could help make private Christian education more accessible and affordable for families across America.",

@@ -194,10 +194,10 @@ export default function StateHub() {
 
   // Dynamic SEO
   useEffect(() => {
-    document.title = `Christian Schools in ${stateName} | FindChristianSchools.org`;
+    document.title = `Christian Schools in ${stateName} | FindChristianSchools.com`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', `Find Christian schools, homeschool resources, and faith-based education programs in ${stateName}. Learn about ${stateName} homeschool laws, scholarships, and regulations.`);
-    return () => { document.title = 'FindChristianSchools.org | Faith \u00b7 Education \u00b7 Future'; };
+    return () => { document.title = 'FindChristianSchools.com | Faith \u00b7 Education \u00b7 Future'; };
   }, [stateName]);
 
   return (

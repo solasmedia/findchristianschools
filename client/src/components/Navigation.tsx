@@ -33,6 +33,8 @@ const navItems: NavItem[] = [
     children: [
       { href: "/resources", label: "Resource Hub" },
       { href: "/blog", label: "Teacher Blog" },
+      { href: "/tools", label: "Free Teacher Tools" },
+      { href: "/traveled", label: "TravelED" },
       { href: "/curriculum-comparison", label: "Curriculum Comparison" },
       { href: "/lesson-planning", label: "Lesson Planning" },
       // { href: "/learning-resources", label: "Learning Resources" }, // Hidden for now

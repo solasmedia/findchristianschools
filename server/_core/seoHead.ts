@@ -98,6 +98,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "TravelED — Educational Family Trips & Homeschool Field Trips | FindChristianSchools.com",
     description: "America's top history destinations for Christian families, with free printable study guides. Plan educational family trips and homeschool field trips.",
   },
+  "/federal-tax-credit": {
+    title: "Federal Scholarship Tax Credit 2027: $1,700 for Christian School Families | FindChristianSchools.com",
+    description: "The Education Freedom Tax Credit launches January 1, 2027. Donate up to $1,700 and get it back dollar-for-dollar on your taxes. Learn how Christian families qualify for K-12 scholarships.",
+  },
   "/states": {
     title: "Browse Christian Schools by State | FindChristianSchools.com",
     description: "Explore Christian schools in every US state.",

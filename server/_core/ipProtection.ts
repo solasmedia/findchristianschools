@@ -5,7 +5,9 @@ import { getDb } from "../db";
 // In-memory rate limiting store (IP -> { count, resetTime })
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 60000; // 1 minute
-const RATE_LIMIT_MAX_REQUESTS = 10000; // requests per minute per IP (increased for dev)
+// 600 requests per minute per IP — generous for normal browsing, blocks floods.
+// Legitimate users rarely exceed 100 req/min; scrapers/bots hit thousands.
+const RATE_LIMIT_MAX_REQUESTS = 600;
 
 // Get client IP (handles proxies)
 function getClientIP(req: Request): string {

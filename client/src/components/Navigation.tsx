@@ -122,7 +122,7 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Nav - absolutely centered */}
-          <nav className="hidden lg:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-full px-1.5 py-0.5 shadow-sm max-w-[65vw] overflow-x-auto">
+          <nav className="hidden lg:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-full px-1.5 py-0.5 shadow-sm">
             {navItems.slice(0, -1).map((item) =>
               item.children ? (
                 <DropdownNav key={item.href} item={item} location={location} />

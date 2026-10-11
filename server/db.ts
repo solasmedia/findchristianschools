@@ -514,9 +514,12 @@ export async function getCollegeCountsByState() {
 // ---------------------------------------------------------------------------
 
 function publicRaceConditions() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   return [
     ne(races.listingStatus, "removed"),
     eq(races.isApproved, true),
+    gte(races.raceDate, today),
   ];
 }
 
@@ -548,11 +551,6 @@ export async function searchRaces(params: {
   }
   if (params.city) conditions.push(like(races.city, `%${params.city}%`));
   if (params.zip) conditions.push(eq(races.zip, params.zip.slice(0, 5)));
-  if (params.upcoming) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    conditions.push(gte(races.raceDate, today));
-  }
 
   const limit = Math.min(params.limit ?? 50, 200);
   const offset = params.offset ?? 0;
@@ -801,10 +799,13 @@ export async function deleteJob(id: number) {
 // ---------------------------------------------------------------------------
 
 function publicEventConditions() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   return [
     eq(events.isApproved, true),
     eq(events.isPublished, true),
     eq(events.isActive, true),
+    gte(events.startDate, today),
   ];
 }
 

@@ -12,13 +12,16 @@ function getStripe(): Stripe {
 }
 
 export async function createPremiumCheckout(params: {
-  schoolId: number;
+  schoolId?: number;
+  collegeId?: number;
   schoolName: string;
   userEmail: string;
   userId: number;
   origin: string;
   promoCode?: string;
 }) {
+  const listingType = params.collegeId ? 'college' : 'school';
+  const listingId = params.collegeId || params.schoolId || 0;
   const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
     customer_email: params.userEmail,
@@ -26,7 +29,8 @@ export async function createPremiumCheckout(params: {
     allow_promotion_codes: true,
     discounts: params.promoCode ? [{ coupon: params.promoCode }] : undefined,
     metadata: {
-      school_id: params.schoolId.toString(),
+      school_id: listingId.toString(),
+      listing_type: listingType,
       user_id: params.userId.toString(),
       customer_email: params.userEmail,
     },
@@ -44,7 +48,7 @@ export async function createPremiumCheckout(params: {
         quantity: 1,
       },
     ],
-    success_url: `${params.origin}/membership/success?school_id=${params.schoolId}`,
+    success_url: `${params.origin}/membership/success?school_id=${listingId}&type=${listingType}`,
     cancel_url: `${params.origin}/membership`,
   });
 

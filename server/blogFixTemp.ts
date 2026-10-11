@@ -25,17 +25,12 @@ export function registerBlogFixTemp(app: Express) {
       const errors: string[] = [];
       for (const item of items) {
         try {
-          // Delete existing by slug, then insert fresh
-          await db.execute(sql.raw(`DELETE FROM blog_posts WHERE slug = '${item.slug.replace(/'/g, "''")}'`));
-          const title = item.title.replace(/'/g, "''");
-          const slug = item.slug.replace(/'/g, "''");
-          const excerpt = (item.excerpt || "").replace(/'/g, "''");
-          const content = (item.content || "").replace(/'/g, "''");
-          const category = item.category || "teaching_tips";
-          const status = "published";
-          await db.execute(sql.raw(
-            `INSERT INTO blog_posts (title, slug, excerpt, content, category, status, publishedAt, createdAt) VALUES ('${title}', '${slug}', '${excerpt}', '${content}', '${category}', '${status}', NOW(), NOW())`
-          ));
+          // Use parameterized query to safely handle content
+          await db.execute(sql`DELETE FROM blog_posts WHERE slug = ${item.slug}`);
+          await db.execute(sql`
+            INSERT INTO blog_posts (title, slug, excerpt, content, category, status, publishedAt, createdAt)
+            VALUES (${item.title}, ${item.slug}, ${item.excerpt || ""}, ${item.content || ""}, ${item.category || "teaching_tips"}, 'published', NOW(), NOW())
+          `);
           imported++;
         } catch (e: any) {
           errors.push(`${item.slug}: ${e.message}`);

@@ -73,6 +73,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
   // Customization state
   const [customProblems, setCustomProblems] = useState<MathProblem[] | null>(null);
   const [customWords, setCustomWords] = useState<string[] | null>(null);
+  const [customHandwriting, setCustomHandwriting] = useState<string[] | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [previewHtml, setPreviewHtml] = useState("");
   const [newItemText, setNewItemText] = useState("");
@@ -102,14 +103,21 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       const problems = generateMathProblems(grade, op, count, difficulty);
       setCustomProblems(problems);
       setCustomWords(null);
+      setCustomHandwriting(null);
     } else if (subject === "spelling") {
       const words = pickSpellingWords(SPELLING_WORDS[grade] || SPELLING_WORDS["3"], count);
       setCustomWords(words);
       setCustomProblems(null);
-    } else {
-      // Handwriting and reading print directly (no item-level editing)
+      setCustomHandwriting(null);
+    } else if (subject === "handwriting") {
+      setCustomHandwriting([...hwSet.items]);
       setCustomProblems(null);
       setCustomWords(null);
+    } else {
+      // Reading prints directly (no item-level editing)
+      setCustomProblems(null);
+      setCustomWords(null);
+      setCustomHandwriting(null);
       printDirect();
       return;
     }
@@ -119,19 +127,18 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
 
   const printDirect = () => {
     const gradeLabel = GRADE_LABELS[grade];
-    if (subject === "handwriting") {
-      buildHandwritingSheet(hwSet.items, hwSet.label, `Handwriting Practice — ${hwSet.label}`, "Trace each item, then practice on the lines", (hwSet as any).style || "print");
-    } else {
-      buildReadingSheet(passage, `Reading Comprehension — ${passage.title}`, `${passage.gradeBand} · Questions + answer key`);
-    }
+    buildReadingSheet(passage, `Reading Comprehension — ${passage.title}`, `${passage.gradeBand} · Questions + answer key`);
   };
 
   const handlePrintCustomized = () => {
     const gradeLabel = GRADE_LABELS[grade];
+    const hwStyle = (hwSet as any).style || "print";
     if (subject === "math" && customProblems) {
       buildMathSheet(customProblems, `${gradeLabel} ${OP_LABELS[op]} Worksheet`, `${customProblems.length} problems · ${difficulty} · Answer key included`);
     } else if (subject === "spelling" && customWords) {
       buildSpellingSheet(customWords, `${gradeLabel} Spelling Practice`, `${customWords.length} words · Write 3x + fill-in-the-blank`);
+    } else if (subject === "handwriting" && customHandwriting) {
+      buildHandwritingSheet(customHandwriting, hwSet.label, `Handwriting Practice — ${hwSet.label}`, "Trace each item, then practice on the lines", hwStyle);
     }
   };
 
@@ -147,6 +154,12 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       const rows = customWords.map((w, i) => `<div class="problem"><span class="spell-word">${i + 1}. ${escapeHtml(w)}</span><div style="font-family:-apple-system,sans-serif;font-size:12px;color:#64748b;margin-top:4px">Write it 3 times: ____________________ &nbsp; ____________________ &nbsp; ____________________</div></div>`).join("");
       const body = `<div class="problems single">${rows}</div>`;
       html = getSheetHtml(`${gradeLabel} Spelling Practice`, `${customWords.length} words · Write 3x + fill-in-the-blank`, body);
+    } else if (subject === "handwriting" && customHandwriting) {
+      const hwStyle = (hwSet as any).style || "print";
+      const traceCls = hwStyle === "cursive" ? "trace-cursive" : "trace";
+      const rows = customHandwriting.map(it => `<div style="margin-bottom:8px"><div class="${traceCls}">${escapeHtml(it)}</div><div class="write-line"></div><div class="write-line"></div></div>`).join("");
+      const body = `<div class="section-title">Trace, then practice: ${escapeHtml(hwSet.label)}</div>${rows}`;
+      html = getSheetHtml(`Handwriting Practice — ${hwSet.label}`, "Trace each item, then practice on the lines", body);
     }
     // Ensure the footer branding is present
     if (html && !html.includes("findchristianschools.com/tools")) {
@@ -190,10 +203,22 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       setCustomProblems([...customProblems, { question: q, answer: a }]);
     } else if (subject === "spelling" && customWords) {
       setCustomWords([...customWords, newItemText.trim()]);
+    } else if (subject === "handwriting" && customHandwriting) {
+      setCustomHandwriting([...customHandwriting, newItemText.trim()]);
     }
     setNewItemText("");
   };
-  const hasCustomizable = (subject === "math" && customProblems) || (subject === "spelling" && customWords);
+  const updateHandwriting = (idx: number, value: string) => {
+    if (!customHandwriting) return;
+    const updated = [...customHandwriting];
+    updated[idx] = value;
+    setCustomHandwriting(updated);
+  };
+  const deleteHandwriting = (idx: number) => {
+    if (!customHandwriting) return;
+    setCustomHandwriting(customHandwriting.filter((_, i) => i !== idx));
+  };
+  const hasCustomizable = (subject === "math" && customProblems) || (subject === "spelling" && customWords) || (subject === "handwriting" && customHandwriting);
 
   const selectCls = "w-full text-sm border border-gray-300 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#002855]/20 focus:border-[#002855] bg-white";
 
@@ -336,7 +361,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                 <h3 className="text-lg font-bold text-[#002855] flex items-center gap-2">
                   <Pencil className="w-5 h-5 text-[#6EBE44]" /> Customize Your Worksheet
                 </h3>
-                <span className="text-xs text-gray-500">{subject === "math" ? customProblems?.length : customWords?.length} items</span>
+                <span className="text-xs text-gray-500">{subject === "math" ? customProblems?.length : subject === "spelling" ? customWords?.length : customHandwriting?.length} items</span>
               </div>
               <p className="text-sm text-gray-600 mb-4">Edit any item, delete ones you don't want, or add your own. Then preview before printing.</p>
 
@@ -377,6 +402,20 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                     </button>
                   </div>
                 ))}
+                {subject === "handwriting" && customHandwriting?.map((h, i) => (
+                  <div key={i} className="flex items-center gap-2 bg-gray-50 rounded-lg p-2">
+                    <span className="text-xs font-bold text-gray-400 w-6 text-center">{i + 1}</span>
+                    <input
+                      value={h}
+                      onChange={e => updateHandwriting(i, e.target.value)}
+                      className="flex-1 text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-[#002855]"
+                      placeholder="Word or sentence to trace"
+                    />
+                    <button onClick={() => deleteHandwriting(i)} className="p-2 text-red-400 hover:text-red-600 transition" aria-label="Delete">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
               </div>
 
               {/* Add item */}
@@ -385,7 +424,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                   value={newItemText}
                   onChange={e => setNewItemText(e.target.value)}
                   onKeyDown={e => e.key === "Enter" && addItem()}
-                  placeholder={subject === "math" ? "Add problem (e.g. 12 + 5 = 17)" : "Add a spelling word"}
+                  placeholder={subject === "math" ? "Add problem (e.g. 12 + 5 = 17)" : subject === "spelling" ? "Add a spelling word" : "Add a word or sentence to trace"}
                   className="flex-1 text-sm border border-gray-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#6EBE44]/30 focus:border-[#6EBE44]"
                 />
                 <button onClick={addItem} className="px-4 py-2.5 bg-[#6EBE44] text-white rounded-xl font-semibold text-sm hover:bg-[#5da83a] transition flex items-center gap-1.5">

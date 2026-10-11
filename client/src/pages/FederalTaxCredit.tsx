@@ -5,9 +5,96 @@ import { GraduationCap, DollarSign, Users, FileText, CheckCircle, AlertCircle, E
 
 export default function FederalTaxCredit() {
   useEffect(() => {
-    document.title = "Federal Scholarship Tax Credit (FSTC) — What Christian Families Need to Know | FindChristianSchools.com";
+    document.title = "Federal Scholarship Tax Credit 2027: $1,700 for Christian School Families | FindChristianSchools.com";
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "The Education Freedom Tax Credit launches January 1, 2027. Learn how the $1,700 federal scholarship tax credit works, who qualifies, and how to find participating scholarship organizations in your state.");
+    if (meta) meta.setAttribute("content", "The Education Freedom Tax Credit launches January 1, 2027. Donate up to $1,700 and get it back dollar-for-dollar on your taxes. Learn how Christian families qualify for K-12 scholarships, find SGOs in your state, and key dates.");
+
+    // Keywords meta
+    let kw = document.querySelector('meta[name="keywords"]');
+    if (!kw) {
+      kw = document.createElement("meta");
+      kw.setAttribute("name", "keywords");
+      document.head.appendChild(kw);
+    }
+    kw.setAttribute("content", "federal scholarship tax credit, education freedom tax credit, FSTC, EFTC, Christian school scholarships, school choice tax credit, SGO, scholarship granting organization, $1700 tax credit");
+
+    // Open Graph
+    const ogTags: [string, string][] = [
+      ["og:title", "Federal Scholarship Tax Credit: $1,700 for Christian School Families"],
+      ["og:description", "Starting January 1, 2027, donate up to $1,700 to fund K-12 scholarships and get every dollar back on your taxes. Here's how Christian families benefit."],
+      ["og:type", "article"],
+      ["og:url", "https://www.findchristianschools.com/federal-tax-credit"],
+    ];
+    ogTags.forEach(([prop, content]) => {
+      let tag = document.querySelector(`meta[property="${prop}"]`);
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.setAttribute("property", prop);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute("content", content);
+    });
+
+    // JSON-LD structured data
+    let ld = document.querySelector('script[data-ld="fstc"]');
+    if (!ld) {
+      ld = document.createElement("script");
+      ld.setAttribute("type", "application/ld+json");
+      ld.setAttribute("data-ld", "fstc");
+      document.head.appendChild(ld);
+    }
+    ld.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Federal Scholarship Tax Credit: What Christian Families Need to Know",
+      "description": "The Education Freedom Tax Credit launches January 1, 2027. Learn how the $1,700 federal scholarship tax credit works, who qualifies, and how to find participating scholarship organizations.",
+      "author": { "@type": "Organization", "name": "FindChristianSchools.com" },
+      "publisher": { "@type": "Organization", "name": "FindChristianSchools.com" },
+      "datePublished": "2026-10-11",
+      "dateModified": "2026-10-11",
+      "mainEntityOfPage": "https://www.findchristianschools.com/federal-tax-credit",
+      "about": [
+        { "@type": "Thing", "name": "Education Freedom Tax Credit" },
+        { "@type": "Thing", "name": "Federal Scholarship Tax Credit" },
+        { "@type": "Thing", "name": "School Choice" },
+      ],
+    });
+
+    // FAQ structured data
+    let faqLd = document.querySelector('script[data-ld="fstc-faq"]');
+    if (!faqLd) {
+      faqLd = document.createElement("script");
+      faqLd.setAttribute("type", "application/ld+json");
+      faqLd.setAttribute("data-ld", "fstc-faq");
+      document.head.appendChild(faqLd);
+    }
+    faqLd.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the Federal Scholarship Tax Credit?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The Education Freedom Tax Credit (also called the Federal Scholarship Tax Credit) is a federal program signed into law July 4, 2025, that lets taxpayers donate up to $1,700 per year ($3,400 for married couples) to Scholarship Granting Organizations and receive a dollar-for-dollar federal tax credit. The program takes effect January 1, 2027." }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the $1,700 scholarship tax credit work?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A taxpayer donates up to $1,700 to a qualified Scholarship Granting Organization (SGO). They then claim a dollar-for-dollar federal income tax credit for that amount — reducing their tax bill by exactly what they donated. The SGO uses the funds to provide scholarships to eligible K-12 students." }
+        },
+        {
+          "@type": "Question",
+          "name": "Who qualifies for the Education Freedom Tax Credit scholarships?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Students from households earning up to 300% of the area median gross income who are eligible for K-12 enrollment and live in a state that has opted into the program. Scholarship funds can be used for tuition, fees, tutoring, books, curriculum, special needs services, technology, and transportation." }
+        },
+        {
+          "@type": "Question",
+          "name": "When does the Federal Scholarship Tax Credit start?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The program takes effect January 1, 2027. States must submit their qualifying SGO lists by February 15, 2027. The U.S. Treasury released proposed regulations on October 1, 2026." }
+        },
+      ],
+    });
+
     window.scrollTo(0, 0);
   }, []);
 
@@ -144,8 +231,8 @@ export default function FederalTaxCredit() {
 
         {/* Explain Like I'm 11 */}
         <section className="mb-10 bg-gradient-to-br from-[#f0fdf4] to-[#eff6ff] rounded-2xl p-6 sm:p-8 border-2 border-[#6EBE44]/30">
-          <h2 className="text-2xl font-bold text-[#002855] mb-2">Explain It Like I'm 11</h2>
-          <p className="text-gray-500 text-sm mb-6 italic">For kids, grandparents, and anyone who wants the simple version.</p>
+          <h2 className="text-2xl font-bold text-[#002855] mb-2">The Simple Version</h2>
+          <p className="text-gray-500 text-sm mb-6 italic">No jargon. Just the plain-English explanation.</p>
 
           <div className="bg-white rounded-xl p-6 shadow-sm">
             <p className="text-lg text-gray-800 leading-relaxed mb-4">

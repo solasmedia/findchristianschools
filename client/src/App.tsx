@@ -128,7 +128,7 @@ function Router() {
       <Route path="/traveled" component={TravelEd} />
       <Route path="/classical-christian-schools" component={ClassicalSchools} />
       <Route path="/book-club" component={BookClub} />
-      <Route path="/videos" component={Videos} />
+      {/* <Route path="/videos" component={Videos} /> - Hidden for now */}
       <Route path="/newsletter" component={Newsletter} />
       <Route path="/traveled/:slug" component={TravelEdDestination} />
       <Route path="/federal-tax-credit" component={FederalTaxCredit} />

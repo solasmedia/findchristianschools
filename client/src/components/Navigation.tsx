@@ -47,7 +47,6 @@ const navItems: NavItem[] = [
       { href: "/news", label: "Education News" },
       { href: "/teacher-resources", label: "Teacher Resources" },
       { href: "/book-club", label: "Book Club" },
-      { href: "/videos", label: "Videos" },
       { href: "/traveled", label: "TravelED" },
       { href: "/federal-tax-credit", label: "Scholarship Tax Credit" },
       { href: "/curriculum-comparison", label: "Curriculum Comparison" },

@@ -98,6 +98,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "TravelED — Educational Family Trips & Homeschool Field Trips | FindChristianSchools.com",
     description: "America's top history destinations for Christian families, with free printable study guides. Plan educational family trips and homeschool field trips.",
   },
+  "/tools/vocabulary-worksheet-generator": {
+    title: "Free Vocabulary Worksheet Generator | FindChristianSchools.com",
+    description: "Printable vocabulary worksheets with definitions, sentence writing, and answer keys. Faith-inflected word lists for grades 3–8, fully customizable.",
+  },
   "/tools/flashcards": {
     title: "Free Flashcard Maker for Teachers | FindChristianSchools.com",
     description: "Create printable flashcards and study in interactive mode. Perfect for vocabulary, Bible verses, math facts, and any subject. Free, no account needed.",

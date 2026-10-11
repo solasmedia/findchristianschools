@@ -2,7 +2,7 @@
 // Pure functions — no React. Builds printable branded HTML.
 
 export type GradeKey = "K" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8";
-export type SubjectKey = "math" | "spelling" | "handwriting" | "reading";
+export type SubjectKey = "math" | "spelling" | "handwriting" | "reading" | "scramble" | "wordsearch" | "vocabulary";
 export type Difficulty = "easy" | "medium" | "hard";
 export type MathOp = "addition" | "subtraction" | "multiplication" | "division" | "fractions" | "mixed";
 
@@ -149,7 +149,190 @@ export const HANDWRITING_SETS = [
   { id: "cursive-verses", label: "Bible Verses (Cursive)", items: ["The Lord is my shepherd. — Psalm 23:1", "I can do all things through Christ. — Phil 4:13", "Be still and know that I am God. — Psalm 46:10", "Trust in the Lord with all thine heart. — Prov 3:5"], style: "cursive", grades: "4-8" },
 ];
 
+// ---------- Vocabulary ----------
+export interface VocabWord {
+  word: string;
+  definition: string;
+}
+
+export const VOCAB_WORDS: Record<string, VocabWord[]> = {
+  "3": [
+    { word: "ancient", definition: "Very old; from long ago" },
+    { word: "brave", definition: "Not afraid; showing courage" },
+    { word: "curious", definition: "Wanting to learn or know more" },
+    { word: "generous", definition: "Willing to give freely" },
+    { word: "honest", definition: "Telling the truth" },
+    { word: "journey", definition: "Traveling from one place to another" },
+    { word: "kindness", definition: "Being caring and helpful to others" },
+    { word: "patient", definition: "Willing to wait without complaining" },
+  ],
+  "4": [
+    { word: "diligent", definition: "Working hard and carefully" },
+    { word: "faithful", definition: "Loyal and trustworthy" },
+    { word: "grateful", definition: "Thankful; showing appreciation" },
+    { word: "humble", definition: "Not proud; modest" },
+    { word: "justice", definition: "Fairness; doing what is right" },
+    { word: "mercy", definition: "Kindness shown to someone who doesn't deserve it" },
+    { word: "obey", definition: "To follow rules or commands" },
+    { word: "wisdom", definition: "Good judgment; knowing what is right" },
+  ],
+  "5": [
+    { word: "compassion", definition: "Caring deeply for others' suffering" },
+    { word: "courage", definition: "Bravery in the face of fear" },
+    { word: "integrity", definition: "Being honest even when no one is watching" },
+    { word: "persevere", definition: "To keep going despite difficulties" },
+    { word: "reverent", definition: "Showing deep respect, especially for God" },
+    { word: "sacrifice", definition: "Giving up something valuable for others" },
+    { word: "steadfast", definition: "Firm and unwavering" },
+    { word: "virtue", definition: "Good moral character" },
+  ],
+  "6": [
+    { word: "benevolent", definition: "Kind and generous toward others" },
+    { word: "diligence", definition: "Careful and persistent effort" },
+    { word: "fortitude", definition: "Mental strength in facing difficulty" },
+    { word: "humility", definition: "The quality of being humble" },
+    { word: "providence", definition: "God's care and guidance over creation" },
+    { word: "redemption", definition: "Being saved or bought back; deliverance" },
+    { word: "sovereign", definition: "Having supreme authority; God is sovereign" },
+    { word: "testimony", definition: "A personal account of what God has done" },
+  ],
+};
+
+export function pickVocabWords(grade: string, count: number): VocabWord[] {
+  const pool = VOCAB_WORDS[grade] || VOCAB_WORDS["5"];
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, Math.min(count, pool.length));
+}
+
+export function buildVocabSheet(words: VocabWord[], title: string, subtitle: string) {
+  const rows = words.map((w, i) => `
+    <div class="problem">
+      <span class="spell-word">${i + 1}. ${w.word}</span>
+      <div style="font-family:-apple-system,sans-serif;font-size:13px;color:#334155;margin-top:6px;line-height:1.6;">
+        <strong>Definition:</strong> ___________________________________________<br/>
+        <strong>Use it in a sentence:</strong> ___________________________________________
+      </div>
+    </div>`).join("");
+  const answerHtml = words.map((w, i) => `
+    <div class="problem"><strong>${i + 1}. ${w.word}</strong> — ${w.definition}</div>`).join("");
+  const body = `
+    <div class="section-title">Match, define, and use each word</div>
+    <div class="problems single">${rows}</div>
+    <div class="answer-key"><h2>Answer Key — Definitions</h2><div class="problems">${answerHtml}</div></div>`;
+  openPrintSheet(title, subtitle, body);
+}
+
 // ---------- Word search ----------
+export function scrambleWord(word: string): string {
+  const letters = word.split("");
+  // Ensure scrambled version is different from original
+  let scrambled = word;
+  let attempts = 0;
+  while (scrambled.toLowerCase() === word.toLowerCase() && attempts < 10) {
+    for (let i = letters.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [letters[i], letters[j]] = [letters[j], letters[i]];
+    }
+    scrambled = letters.join("");
+    attempts++;
+  }
+  return scrambled;
+}
+
+export function buildWordScrambleSheet(words: string[], title: string, subtitle: string) {
+  const rows = words.map((w, i) => {
+    const scrambled = scrambleWord(w);
+    return `<div class="problem"><span style="font-size:20px;font-weight:bold;letter-spacing:4px;color:#002855;">${i + 1}. ${scrambled.toUpperCase()}</span>
+      <div style="font-family:-apple-system,sans-serif;font-size:13px;color:#64748b;margin-top:6px">Unscramble: ____________________</div></div>`;
+  }).join("");
+  const answerHtml = words.map((w, i) => `<div class="problem"><strong>${i + 1}.</strong> ${w}</div>`).join("");
+  const body = `<div class="section-title">Unscramble each word</div>
+    <div class="problems single">${rows}</div>
+    <div class="answer-key"><h2>Answer Key</h2><div class="problems">${answerHtml}</div></div>`;
+  openPrintSheet(title, subtitle, body);
+}
+
+// ---------- Kahoot export ----------
+export interface KahootQuestion {
+  question: string;
+  answers: string[]; // up to 4, first is correct
+  timeLimit?: number; // seconds, default 20
+}
+
+export function exportToKahoot(questions: KahootQuestion[], quizTitle: string): void {
+  // Kahoot spreadsheet import format (XLSX-compatible CSV)
+  // Columns: Question, Answer 1, Answer 2, Answer 3, Answer 4, Time (sec), Correct answer(s)
+  const rows: string[][] = [
+    ["Question", "Answer 1", "Answer 2", "Answer 3", "Answer 4", "Time limit (sec)", "Correct answer"],
+  ];
+  for (const q of questions) {
+    const answers = [...q.answers].slice(0, 4);
+    while (answers.length < 4) answers.push("");
+    // Shuffle answer positions but track correct
+    const correctText = answers[0];
+    const shuffled = shuffle(answers);
+    const correctIdx = shuffled.indexOf(correctText) + 1;
+    rows.push([
+      q.question,
+      shuffled[0], shuffled[1], shuffled[2], shuffled[3],
+      String(q.timeLimit || 20),
+      String(correctIdx),
+    ]);
+  }
+  // Build CSV
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = quizTitle.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-kahoot.csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+export function mathProblemsToKahoot(problems: MathProblem[], title: string): void {
+  const questions: KahootQuestion[] = problems.slice(0, 20).map(p => {
+    const correct = parseFloat(p.answer);
+    // Generate 3 plausible wrong answers
+    const wrongs = new Set<string>();
+    const base = isNaN(correct) ? 10 : correct;
+    while (wrongs.size < 3) {
+      const offset = Math.floor(Math.random() * 10) - 5;
+      const wrong = isNaN(correct) ? `${base + offset}` : `${correct + offset}`;
+      if (wrong !== p.answer && parseFloat(wrong) !== correct) wrongs.add(wrong);
+    }
+    return {
+      question: p.question.replace(/=$/, "").trim() + " = ?",
+      answers: [p.answer, ...Array.from(wrongs)],
+      timeLimit: 20,
+    };
+  });
+  exportToKahoot(questions, title);
+}
+
+export function spellingWordsToKahoot(words: string[], title: string): void {
+  const questions: KahootQuestion[] = words.slice(0, 20).map(w => {
+    // Create "which is spelled correctly?" questions
+    const wrongs = new Set<string>();
+    while (wrongs.size < 3) {
+      const chars = w.split("");
+      const i = Math.floor(Math.random() * chars.length);
+      const j = Math.floor(Math.random() * chars.length);
+      [chars[i], chars[j]] = [chars[j], chars[i]];
+      const wrong = chars.join("");
+      if (wrong.toLowerCase() !== w.toLowerCase()) wrongs.add(wrong);
+    }
+    return {
+      question: `Which is spelled correctly?`,
+      answers: [w, ...Array.from(wrongs)],
+      timeLimit: 15,
+    };
+  });
+  exportToKahoot(questions, title);
+}
+
 export function buildWordSearch(words: string[], size = 12): { grid: string[][]; placed: { word: string; cells: [number, number][] }[] } {
   const grid: string[][] = Array.from({ length: size }, () => Array(size).fill(""));
   const placed: { word: string; cells: [number, number][] }[] = [];

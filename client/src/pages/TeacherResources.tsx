@@ -44,6 +44,13 @@ const worksheetTools = [
     tag: "Free",
   },
   {
+    href: "/tools/vocabulary-worksheet-generator",
+    icon: SpellCheck,
+    title: "Vocabulary Worksheets",
+    desc: "Faith-inflected word lists with definitions, sentence writing, and answer keys. Grades 3–8.",
+    tag: "New",
+  },
+  {
     href: "/tools/bible-verse-maker",
     icon: BookMarked,
     title: "Bible Verse Maker",

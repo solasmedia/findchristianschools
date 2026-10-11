@@ -63,6 +63,7 @@ const MathWorksheets = () => <WorksheetGenerator presetSubject="math" />;
 const SpellingWorksheets = () => <WorksheetGenerator presetSubject="spelling" />;
 const HandwritingWorksheets = () => <WorksheetGenerator presetSubject="handwriting" />;
 const ReadingWorksheets = () => <WorksheetGenerator presetSubject="reading" />;
+const VocabularyWorksheets = () => <WorksheetGenerator presetSubject="vocabulary" />;
 import Submit from "./pages/Submit";
 import Feedback from "./pages/Feedback";
 import { FloatingDonateButton } from "./components/FloatingDonateButton";
@@ -136,6 +137,7 @@ function Router() {
       <Route path="/tools/spelling-worksheet-generator" component={SpellingWorksheets} />
       <Route path="/tools/handwriting-worksheet-generator" component={HandwritingWorksheets} />
       <Route path="/tools/reading-worksheet-generator" component={ReadingWorksheets} />
+      <Route path="/tools/vocabulary-worksheet-generator" component={VocabularyWorksheets} />
       <Route path="/tools/bible-verse-maker" component={BibleVerseMaker} />
       <Route path="/tools/flashcards" component={Flashcards} />
       <Route path="/submit" component={Submit} />

@@ -57,6 +57,7 @@ import ToolsHub from "./pages/tools/ToolsHub";
 import TeacherResources from "./pages/TeacherResources";
 import WorksheetGenerator from "./pages/tools/WorksheetGenerator";
 import BibleVerseMaker from "./pages/tools/BibleVerseMaker";
+import Flashcards from "./pages/tools/Flashcards";
 
 const MathWorksheets = () => <WorksheetGenerator presetSubject="math" />;
 const SpellingWorksheets = () => <WorksheetGenerator presetSubject="spelling" />;
@@ -136,6 +137,7 @@ function Router() {
       <Route path="/tools/handwriting-worksheet-generator" component={HandwritingWorksheets} />
       <Route path="/tools/reading-worksheet-generator" component={ReadingWorksheets} />
       <Route path="/tools/bible-verse-maker" component={BibleVerseMaker} />
+      <Route path="/tools/flashcards" component={Flashcards} />
       <Route path="/submit" component={Submit} />
       <Route path="/feedback" component={Feedback} />
       {/* Redirect routes for common URL variations */}

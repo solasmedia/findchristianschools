@@ -4,7 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import {
   Calculator, SpellCheck, PenLine, BookOpen, BookMarked, Printer,
-  Sparkles, Newspaper, GraduationCap, Map, DollarSign, ArrowRight, Heart
+  Sparkles, Newspaper, GraduationCap, Map, DollarSign, ArrowRight, Heart, Layers
 } from "lucide-react";
 
 const worksheetTools = [
@@ -49,6 +49,13 @@ const worksheetTools = [
     title: "Bible Verse Maker",
     desc: "Turn any KJV verse into trace sheets, fill-in-the-blank, word searches, and copywork pages.",
     tag: "Teachers love this",
+  },
+  {
+    href: "/tools/flashcards",
+    icon: Layers,
+    title: "Flashcard Maker",
+    desc: "Custom flashcards for any topic — study interactively, then print to cut and fold.",
+    tag: "New",
   },
 ];
 

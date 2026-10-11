@@ -115,9 +115,26 @@ Sitemap: ${SITE_URL}/sitemap.xml`
         // blog_posts table may not exist yet if migration hasn't run
       }
 
+      // --- News items: only active ---
+      let newsUrls = "";
+      try {
+        const { newsItems } = await import("../drizzle/schema");
+        const newsRows = await db
+          .select({ slug: newsItems.slug })
+          .from(newsItems)
+          .where(eq(newsItems.isActive, true))
+          .limit(5000);
+        newsUrls = newsRows
+          .filter(r => r.slug)
+          .map(r => `  <url><loc>${SITE_URL}/news/${r.slug}</loc><changefreq>daily</changefreq><priority>0.7</priority></url>`)
+          .join("\n");
+      } catch {
+        // news_items table may not exist yet if migration hasn't run
+      }
+
       // Static pages
       // Static pages
-      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/traveled", "/tools", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
+      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/news", "/traveled", "/tools", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
         .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>${p === "" ? "1.0" : "0.5"}</priority></url>`)
         .join("\n");
 

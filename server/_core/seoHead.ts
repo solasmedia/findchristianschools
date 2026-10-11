@@ -21,6 +21,7 @@ const STATIC_ROUTES = new Set([
   "/colleges", "/races", "/signup", "/contact", "/list-course",
   "/curriculum-guide", "/curriculum-comparison", "/lesson-planning",
   "/lesson-planner", "/submit", "/feedback", "/404",
+  "/blog",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",
@@ -33,27 +34,31 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     description: "Find Christian schools, homeschool resources, and faith-based education programs near you. Every listing supports Christian education missions worldwide.",
   },
   "/search": {
-    title: "Find a Christian School Near You | FindChristianSchools.org",
+    title: "Find a Christian School Near You | FindChristianSchools.com",
     description: "Search 9,000+ Christian schools by ZIP code, city, state, denomination, and program type. Find the right faith-based education for your family.",
   },
   "/colleges": {
-    title: "Find a Christian College | FindChristianSchools.org",
+    title: "Find a Christian College | FindChristianSchools.com",
     description: "Explore Christian colleges and universities across the US. Search by state, denomination, and more.",
   },
   "/races": {
-    title: "Christian Races & Running Events | FindChristianSchools.org",
+    title: "Christian Races & Running Events | FindChristianSchools.com",
     description: "Find Christian 5Ks, half marathons, marathons, and charity runs near you, grouped by state.",
   },
   "/events": {
-    title: "Christian Education Events | FindChristianSchools.org",
+    title: "Christian Education Events | FindChristianSchools.com",
     description: "Upcoming Christian conferences, workshops, open houses, and education events.",
   },
   "/jobs": {
-    title: "Christian Education Jobs | FindChristianSchools.org",
+    title: "Christian Education Jobs | FindChristianSchools.com",
     description: "Find teaching and staff positions at Christian schools across the country.",
   },
+  "/blog": {
+    title: "Teacher Resource Blog | FindChristianSchools.com",
+    description: "Bible lesson plans, classroom activities, crafts, and teaching ideas for Christian educators. Free downloadable resources.",
+  },
   "/states": {
-    title: "Browse Christian Schools by State | FindChristianSchools.org",
+    title: "Browse Christian Schools by State | FindChristianSchools.com",
     description: "Explore Christian schools in every US state.",
   },
 };
@@ -63,6 +68,7 @@ export type RouteMatch =
   | { kind: "school"; slug: string }
   | { kind: "college"; slug: string }
   | { kind: "race"; slug: string }
+  | { kind: "blog"; slug: string }
   | { kind: "state"; code: string }
   | { kind: "city"; code: string; city: string }
   | { kind: "unknown" };
@@ -82,6 +88,9 @@ export function matchRoute(rawPath: string): RouteMatch {
 
   const race = path.match(/^\/race\/([^/]+)$/);
   if (race) return { kind: "race", slug: decodeURIComponent(race[1]) };
+
+  const blog = path.match(/^\/blog\/([^/]+)$/);
+  if (blog) return { kind: "blog", slug: decodeURIComponent(blog[1]) };
 
   const state = path.match(/^\/state\/([a-zA-Z]{2})$/);
   if (state) return { kind: "state", code: state[1].toUpperCase() };
@@ -116,7 +125,7 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
 
   if (match.kind === "static") {
     const meta = STATIC_META[match.path] || {
-      title: "FindChristianSchools.org | Faith · Education · Future",
+      title: "FindChristianSchools.com | Faith · Education · Future",
       description: "Find Christian schools, colleges, and faith-based education resources.",
     };
     return { ...meta, canonical };
@@ -130,7 +139,7 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
       if (!school) return null;
       const loc = [school.city, school.state].filter(Boolean).join(", ");
       return {
-        title: `${school.name} - Christian School in ${loc} | FindChristianSchools.org`,
+        title: `${school.name} - Christian School in ${loc} | FindChristianSchools.com`,
         description: `${school.name} is a Christian school in ${loc}${school.denomination ? ` (${school.denomination})` : ""}. View details, contact info, and more.`,
         canonical,
         ogType: "article",
@@ -142,7 +151,7 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
       if (!college) return null;
       const loc = [college.city, college.state].filter(Boolean).join(", ");
       return {
-        title: `${college.name} - Christian College in ${loc} | FindChristianSchools.org`,
+        title: `${college.name} - Christian College in ${loc} | FindChristianSchools.com`,
         description: `${college.name} is a Christian college in ${loc}${college.denomination ? ` (${college.denomination})` : ""}. View details and contact info.`,
         canonical,
         ogType: "article",
@@ -154,15 +163,26 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
       if (!race) return null;
       const loc = [race.city, race.state].filter(Boolean).join(", ");
       return {
-        title: `${race.name} - Christian Race in ${loc} | FindChristianSchools.org`,
+        title: `${race.name} - Christian Race in ${loc} | FindChristianSchools.com`,
         description: `${race.name} is a Christian running event in ${loc}. View race details, distances, and signup info.`,
+        canonical,
+        ogType: "article",
+      };
+    }
+    if (match.kind === "blog") {
+      const { getBlogPostBySlug } = await import("../db");
+      const post = await getBlogPostBySlug(match.slug);
+      if (!post) return null;
+      return {
+        title: post.seoTitle || `${post.title} | FindChristianSchools.com`,
+        description: post.excerpt || "Christian teacher resources, Bible lesson plans, and classroom ideas from FindChristianSchools.com.",
         canonical,
         ogType: "article",
       };
     }
     if (match.kind === "state") {
       return {
-        title: `Christian Schools in ${match.code} | FindChristianSchools.org`,
+        title: `Christian Schools in ${match.code} | FindChristianSchools.com`,
         description: `Browse Christian schools in ${match.code}. Search by city, denomination, and program type.`,
         canonical,
       };
@@ -170,7 +190,7 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
     if (match.kind === "city") {
       const cityName = match.city.replace(/-/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       return {
-        title: `Christian Schools in ${cityName}, ${match.code} | FindChristianSchools.org`,
+        title: `Christian Schools in ${cityName}, ${match.code} | FindChristianSchools.com`,
         description: `Find Christian schools in ${cityName}, ${match.code}. Compare faith-based education options.`,
         canonical,
       };
@@ -181,7 +201,7 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
   }
 
   return {
-    title: "FindChristianSchools.org | Faith · Education · Future",
+    title: "FindChristianSchools.com | Faith · Education · Future",
     description: "Find Christian schools, colleges, and faith-based education resources.",
     canonical,
   };

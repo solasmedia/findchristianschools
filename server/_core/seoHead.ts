@@ -29,7 +29,7 @@ const STATIC_ROUTES = new Set([
   "/tools/reading-worksheet-generator", "/tools/bible-verse-maker",
   "/tools/vocabulary-worksheet-generator", "/tools/flashcards",
   "/teacher-resources", "/federal-tax-credit",
-  "/classical-christian-schools", "/book-club", "/videos",
+  "/classical-christian-schools", "/book-club", "/videos", "/newsletter",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",
@@ -112,6 +112,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/videos": {
     title: "Videos for Christian Educators | FindChristianSchools.com",
     description: "Free educational videos for Christian teachers and families — Bible book overviews, education news, and teaching tips.",
+  },
+  "/newsletter": {
+    title: "The Christian Ed Weekly — Newsletter | FindChristianSchools.com",
+    description: "Join The Christian Ed Weekly — free weekly updates on Christian education news, teaching tips, and resources.",
   },
   "/book-club": {
     title: "Book Club & Recommended Resources | FindChristianSchools.com",

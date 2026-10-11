@@ -691,3 +691,38 @@ export const resourcePurchases = mysqlTable("resource_purchases", {
 
 export type ResourcePurchase = typeof resourcePurchases.$inferSelect;
 export type InsertResourcePurchase = typeof resourcePurchases.$inferInsert;
+
+// Aggregated Christian education news (RSS auto-fetch, summaries link to originals)
+export const newsItems = mysqlTable("news_items", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  sourceName: varchar("sourceName", { length: 128 }).notNull(),
+  sourceUrl: varchar("sourceUrl", { length: 1024 }).notNull().unique(), // original article URL (dedup key)
+  summary: text("summary"), // neutral 2-3 sentence summary from the feed's own description
+  category: mysqlEnum("category", [
+    "national", "state", "policy", "school_choice", "curriculum",
+  ]).default("national").notNull(),
+  stateCode: varchar("stateCode", { length: 2 }), // nullable, for state-tagged news
+  publishedAt: timestamp("publishedAt"),
+  fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),
+  imageUrl: varchar("imageUrl", { length: 512 }),
+  isActive: boolean("isActive").default(true).notNull(),
+});
+
+export type NewsItem = typeof newsItems.$inferSelect;
+export type InsertNewsItem = typeof newsItems.$inferInsert;
+
+// Tracks feed fetch runs (drives the >12h staleness check)
+export const newsFetchLog = mysqlTable("news_fetch_log", {
+  id: int("id").autoincrement().primaryKey(),
+  startedAt: timestamp("startedAt").defaultNow().notNull(),
+  finishedAt: timestamp("finishedAt"),
+  itemsFetched: int("itemsFetched").default(0).notNull(),
+  itemsInserted: int("itemsInserted").default(0).notNull(),
+  status: varchar("status", { length: 32 }).default("running").notNull(), // running | success | error
+  errorMessage: text("errorMessage"),
+});
+
+export type NewsFetchLog = typeof newsFetchLog.$inferSelect;
+export type InsertNewsFetchLog = typeof newsFetchLog.$inferInsert;

@@ -22,7 +22,7 @@ export function registerClassicalTagTemp(app: Express) {
       return;
     }
     try {
-      const { getDb } = await import("./_core/db");
+      const { getDb } = await import("../_core/db");
       const db = await getDb();
       if (!db) {
         res.status(500).json({ error: "No DB" });

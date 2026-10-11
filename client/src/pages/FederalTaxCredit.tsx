@@ -7,7 +7,7 @@ export default function FederalTaxCredit() {
   useEffect(() => {
     document.title = "Federal Scholarship Tax Credit 2027: $1,700 for Christian School Families | FindChristianSchools.com";
     const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", "The Education Freedom Tax Credit launches January 1, 2027. Donate up to $1,700 and get it back dollar-for-dollar on your taxes. Learn how Christian families qualify for K-12 scholarships, find SGOs in your state, and key dates.");
+    if (meta) meta.setAttribute("content", "A major change is coming that could open new doors for families considering Christian education. The new Federal Education Tax Credit could help make private Christian education more accessible and affordable for families across America.");
 
     // Keywords meta
     let kw = document.querySelector('meta[name="keywords"]');
@@ -276,6 +276,40 @@ export default function FederalTaxCredit() {
                 <span className="text-gray-600 text-sm sm:text-base">{item.event}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Share */}
+        <section className="mb-10 bg-gradient-to-br from-[#6EBE44]/10 to-[#002855]/5 rounded-2xl p-6 sm:p-8 text-center border border-[#6EBE44]/20">
+          <h2 className="text-xl font-bold text-[#002855] mb-3">Know Someone Who Needs to See This?</h2>
+          <p className="text-gray-600 mb-6 max-w-lg mx-auto">
+            Whether you're a parent exploring Christian schooling, a school administrator, or someone passionate about educational choice — share this with a friend who should understand what's coming.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button
+              onClick={() => {
+                const url = "https://www.findchristianschools.com/federal-tax-credit";
+                const text = "A major change is coming for Christian education — the new Federal Education Tax Credit could make private Christian school more affordable. Worth a read:";
+                if (navigator.share) {
+                  navigator.share({ title: document.title, text, url }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(`${text} ${url}`);
+                  alert("Link copied! Paste it anywhere to share.");
+                }
+              }}
+              className="inline-flex items-center gap-2 bg-[#002855] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#003d7a] transition"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+              Share This Page
+            </button>
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent("https://www.findchristianschools.com/federal-tax-credit")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#1877F2] text-white font-semibold px-6 py-3 rounded-full hover:opacity-90 transition"
+            >
+              Share on Facebook
+            </a>
           </div>
         </section>
 

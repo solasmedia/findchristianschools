@@ -100,7 +100,7 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   },
   "/federal-tax-credit": {
     title: "Federal Scholarship Tax Credit 2027: $1,700 for Christian School Families | FindChristianSchools.com",
-    description: "The Education Freedom Tax Credit launches January 1, 2027. Donate up to $1,700 and get it back dollar-for-dollar on your taxes. Learn how Christian families qualify for K-12 scholarships.",
+    description: "A major change is coming that could open new doors for families considering Christian education. The new Federal Education Tax Credit could help make private Christian education more accessible and affordable for families across America.",
   },
   "/states": {
     title: "Browse Christian Schools by State | FindChristianSchools.com",

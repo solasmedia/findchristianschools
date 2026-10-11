@@ -39,6 +39,7 @@ export const schools = mysqlTable("schools", {
   gradeStart: varchar("gradeStart", { length: 10 }),
   gradeEnd: varchar("gradeEnd", { length: 10 }),
   programType: mysqlEnum("programType", ["traditional", "online", "hybrid", "homeschool_coop", "boarding"]).default("traditional").notNull(),
+  educationalModel: mysqlEnum("educationalModel", ["traditional", "classical", "charlotte_mason", "montessori", "unschooling", "eclectic", "university_model"]).default("traditional"),
   tuitionType: mysqlEnum("tuitionType", ["free", "tuition_assisted", "tuition_based"]).default("tuition_based").notNull(),
   tuitionMin: int("tuitionMin"),
   tuitionMax: int("tuitionMax"),

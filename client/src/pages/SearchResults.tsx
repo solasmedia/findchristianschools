@@ -43,6 +43,14 @@ const programTypes = [
   { value: "class", label: "Class" },
 ];
 
+const educationalModels = [
+  { value: "classical", label: "Classical Christian" },
+  { value: "charlotte_mason", label: "Charlotte Mason" },
+  { value: "montessori", label: "Montessori" },
+  { value: "university_model", label: "University Model" },
+  { value: "traditional", label: "Traditional" },
+];
+
 const sortOptions = [
   { value: "featured", label: "Featured First" },
   { value: "name", label: "Name (A-Z)" },
@@ -276,6 +284,11 @@ export default function SearchResults() {
     setProgramFilters(prev => prev.includes(program) ? prev.filter(p => p !== program) : [program]);
   };
 
+  const [modelFilters, setModelFilters] = useState<string[]>(params.get("educationalModel") ? [params.get("educationalModel")!] : []);
+  const toggleModelFilter = (model: string) => {
+    setModelFilters(prev => prev.includes(model) ? prev.filter(m => m !== model) : [model]);
+  };
+
   const handleSort = (schools: any[]) => {
     const sorted = [...schools];
     if (sortBy === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -291,9 +304,10 @@ export default function SearchResults() {
     return loadedSchools.filter((school: any) => {
       if (deliveryTypeFilter && !school.programType?.includes(deliveryTypeFilter)) return false;
       if (courseFilter && !school.name.toLowerCase().includes(courseFilter.toLowerCase())) return false;
+      if (modelFilters.length > 0 && !modelFilters.includes(school.educationalModel)) return false;
       return true;
     });
-  }, [loadedSchools, deliveryTypeFilter, courseFilter]);
+  }, [loadedSchools, deliveryTypeFilter, courseFilter, modelFilters]);
 
   const schoolCount = filteredByCoursesClasses?.length || 0;
   const totalCount = data?.total ?? schoolCount;
@@ -454,6 +468,24 @@ export default function SearchResults() {
                     className="w-4 h-4 text-[#0055A4] rounded"
                   />
                   <span className="text-sm text-gray-700">{program.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Educational Model Filter */}
+          <div className="mb-6">
+            <h3 className="font-semibold text-[#002855] mb-3 text-sm">Educational Model</h3>
+            <div className="space-y-2">
+              {educationalModels.map(model => (
+                <label key={model.value} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={modelFilters.includes(model.value)}
+                    onChange={() => toggleModelFilter(model.value)}
+                    className="w-4 h-4 text-[#0055A4] rounded"
+                  />
+                  <span className="text-sm text-gray-700">{model.label}</span>
                 </label>
               ))}
             </div>

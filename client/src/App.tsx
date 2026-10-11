@@ -20,6 +20,7 @@ import BlogPost from "./pages/BlogPost";
 import News from "./pages/News";
 import NewsArticle from "./pages/NewsArticle";
 import TravelEd from "./pages/TravelEd";
+import ClassicalSchools from "./pages/ClassicalSchools";
 import TravelEdDestination from "./pages/TravelEdDestination";
 import FederalTaxCredit from "./pages/FederalTaxCredit";
 import Mission from "./pages/Mission";
@@ -121,6 +122,7 @@ function Router() {
       <Route path="/news" component={News} />
       <Route path="/news/:slug" component={NewsArticle} />
       <Route path="/traveled" component={TravelEd} />
+      <Route path="/classical-christian-schools" component={ClassicalSchools} />
       <Route path="/traveled/:slug" component={TravelEdDestination} />
       <Route path="/federal-tax-credit" component={FederalTaxCredit} />
       <Route path="/signup" component={SignUp} />

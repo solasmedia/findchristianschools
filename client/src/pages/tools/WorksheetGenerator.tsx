@@ -19,6 +19,7 @@ const OP_LABELS: Record<MathOp, string> = {
 
 const SUBJECT_LABELS: Record<SubjectKey, string> = {
   math: "Math", spelling: "Spelling", handwriting: "Handwriting", reading: "Reading Comprehension",
+  scramble: "Word Scramble", wordsearch: "Word Search",
 };
 
 const FAQ: Record<SubjectKey, { q: string; a: string }[]> = {
@@ -60,6 +61,14 @@ const SEO_COPY: Record<SubjectKey, { h1: string; intro: string }> = {
     h1: "Free Reading Comprehension Worksheet Generator",
     intro: "Printable reading passages with comprehension questions and answer keys. Original wholesome stories written for Christian families, grades K–8.",
   },
+  scramble: {
+    h1: "Free Word Scramble Generator",
+    intro: "Enter your own words and generate printable word scramble puzzles. Perfect for vocabulary review, Bible words, or spelling practice.",
+  },
+  wordsearch: {
+    h1: "Free Word Search Generator",
+    intro: "Enter your own words and generate printable word search puzzles with your branding. Great for review days and early finishers.",
+  },
 };
 
 export default function WorksheetGenerator({ presetSubject = "math" }: { presetSubject?: SubjectKey }) {
@@ -67,6 +76,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
   const [grade, setGrade] = useState<GradeKey>("3");
   const [op, setOp] = useState<MathOp>("addition");
   const [count, setCount] = useState(20);
+  const [spellingMode, setSpellingMode] = useState<"generate" | "custom" | "alter">("alter");
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [handwritingSet, setHandwritingSet] = useState(HANDWRITING_SETS[0].id);
   const [passageId, setPassageId] = useState(READING_PASSAGES[2].id);
@@ -106,8 +116,19 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
       setCustomWords(null);
       setCustomHandwriting(null);
     } else if (subject === "spelling") {
-      const words = pickSpellingWords(SPELLING_WORDS[grade] || SPELLING_WORDS["3"], count);
-      setCustomWords(words);
+      if (spellingMode === "generate") {
+        // Quick generate and print directly
+        const words = pickSpellingWords(SPELLING_WORDS[grade] || SPELLING_WORDS["3"], count);
+        buildSpellingSheet(words, `${GRADE_LABELS[grade]} Spelling Practice`, `${words.length} words · Write 3x + fill-in-the-blank`);
+        return;
+      } else if (spellingMode === "custom") {
+        // Start with empty list for user to fill
+        setCustomWords([]);
+      } else {
+        // Generate then let user edit
+        const words = pickSpellingWords(SPELLING_WORDS[grade] || SPELLING_WORDS["3"], count);
+        setCustomWords(words);
+      }
       setCustomProblems(null);
       setCustomHandwriting(null);
     } else if (subject === "handwriting") {
@@ -219,7 +240,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
     if (!customHandwriting) return;
     setCustomHandwriting(customHandwriting.filter((_, i) => i !== idx));
   };
-  const hasCustomizable = (subject === "math" && customProblems) || (subject === "spelling" && customWords) || (subject === "handwriting" && customHandwriting);
+  const hasCustomizable = (subject === "math" && customProblems) || (subject === "spelling" && customWords !== null && spellingMode !== "generate") || (subject === "handwriting" && customHandwriting);
 
   const selectCls = "w-full text-sm border border-gray-300 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#002855]/20 focus:border-[#002855] bg-white";
 
@@ -312,11 +333,39 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
             {/* Spelling options */}
             {subject === "spelling" && (
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Words per sheet</label>
-                <select value={count} onChange={e => setCount(Number(e.target.value))} className={`${selectCls} mt-2`}>
-                  {[8, 10, 12, 15, 20].map(n => <option key={n} value={n}>{n} words</option>)}
-                </select>
-                <p className="text-xs text-gray-500 mt-2">Words drawn from grade-level Dolch-based lists.</p>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">How do you want to start?</label>
+                <div className="grid grid-cols-3 gap-2 mt-2">
+                  <button
+                    onClick={() => { setSpellingMode("generate"); }}
+                    className={`py-2.5 px-2 rounded-xl text-xs font-semibold transition ${spellingMode === "generate" ? "bg-[#002855] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                  >
+                    Generate for me
+                  </button>
+                  <button
+                    onClick={() => { setSpellingMode("custom"); setCustomWords([]); }}
+                    className={`py-2.5 px-2 rounded-xl text-xs font-semibold transition ${spellingMode === "custom" ? "bg-[#002855] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                  >
+                    My own words
+                  </button>
+                  <button
+                    onClick={() => { setSpellingMode("alter"); }}
+                    className={`py-2.5 px-2 rounded-xl text-xs font-semibold transition ${spellingMode === "alter" ? "bg-[#002855] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                  >
+                    Generate & edit
+                  </button>
+                </div>
+                {spellingMode !== "custom" && (
+                  <>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mt-4 block">Words per sheet</label>
+                    <select value={count} onChange={e => setCount(Number(e.target.value))} className={`${selectCls} mt-2`}>
+                      {[8, 10, 12, 15, 20].map(n => <option key={n} value={n}>{n} words</option>)}
+                    </select>
+                    <p className="text-xs text-gray-500 mt-2">Words drawn from grade-level Dolch-based lists.</p>
+                  </>
+                )}
+                {spellingMode === "custom" && (
+                  <p className="text-xs text-gray-500 mt-2">Enter your own words below — add as many as you like, then preview and print.</p>
+                )}
               </div>
             )}
 

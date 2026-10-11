@@ -10,6 +10,9 @@ import { Link } from "wouter";
 import InviteSchoolCard from "@/components/InviteSchoolCard";
 import { getProgramsByState } from "@shared/schoolChoicePrograms";
 
+// Federal Scholarship Tax Credit participating states (IRS, as of Sept 2026)
+const FEDERAL_TAX_CREDIT_STATES = new Set(["Alabama","Alaska","Arkansas","Arizona","Colorado","Florida","Georgia","Idaho","Indiana","Iowa","Kansas","Kentucky","Louisiana","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","North Carolina","North Dakota","Ohio","Oklahoma","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","West Virginia","Wyoming"]);
+
 const stateNames: Record<string, string> = {
   AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"
 };
@@ -243,6 +246,29 @@ export default function StateHub() {
           </p>
         </div>
       </section>
+
+      {/* Federal Tax Credit Participation Banner */}
+      {FEDERAL_TAX_CREDIT_STATES.has(stateName) ? (
+        <div className="bg-blue-50 border-b border-blue-200">
+          <div className="container py-3 flex items-center gap-3">
+            <span className="text-2xl">✅</span>
+            <div>
+              <p className="font-bold text-blue-900 text-sm">{stateName} participates in the Federal Scholarship Tax Credit</p>
+              <p className="text-blue-700 text-xs">Starting January 1, 2027, donors can claim up to $1,700 ($3,400 for married couples) for donations to scholarship organizations serving {stateName} families. <Link href="/federal-tax-credit" className="underline font-semibold">Learn more</Link></p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-amber-50 border-b border-amber-200">
+          <div className="container py-3 flex items-center gap-3">
+            <span className="text-2xl">⚠️</span>
+            <div>
+              <p className="font-bold text-amber-900 text-sm">{stateName} has not yet opted into the Federal Scholarship Tax Credit</p>
+              <p className="text-amber-700 text-xs">Students in {stateName} cannot yet receive scholarships under this program. <Link href="/federal-tax-credit" className="underline font-semibold">Check status</Link></p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* School Choice Programs Banner */}
       {(() => {

@@ -64,7 +64,7 @@ export function registerBulkImportTemp(app: Express) {
             });
             imported++;
           } catch (e: any) {
-            errors.push(`${item.name}: ${e.message?.slice(0, 500)}`);
+            errors.push(`${item.name}: ${(e.cause?.message || e.message)?.slice(0, 500)}`);
           }
         }
       } else if (type === "races") {
@@ -89,7 +89,7 @@ export function registerBulkImportTemp(app: Express) {
             });
             imported++;
           } catch (e: any) {
-            errors.push(`${item.name}: ${e.message?.slice(0, 500)}`);
+            errors.push(`${item.name}: ${(e.cause?.message || e.message)?.slice(0, 500)}`);
           }
         }
       } else {

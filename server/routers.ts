@@ -598,7 +598,7 @@ export const appRouter = router({
       await notifyEventPosted({
         title: input.title,
         date: input.startDate?.toLocaleDateString(),
-        contactEmail: 'admin@findchristianschools.org',
+        contactEmail: 'admin@findchristianschools.com',
       }).catch(() => {});
       return result;
     }),
@@ -767,14 +767,14 @@ export const appRouter = router({
         const result = await db.select().from(schools).where(eq(schools.promoCode, input.promoCode.toUpperCase())).limit(1);
         if (!result[0]) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid promo code' });
       }
-      const origin = ctx.req.headers.origin || 'https://findchristianschools.org';
+      const origin = ctx.req.headers.origin || 'https://findchristianschools.com';
       return createPremiumCheckout({ schoolId: input.schoolId, collegeId: input.collegeId, schoolName: input.schoolName, userEmail: ctx.user.email || '', userId: ctx.user.id, origin, promoCode: input.promoCode });
     }),
     createDonation: publicProcedure.input(z.object({
       amount: z.number().min(100), // minimum $1.00 in cents
       recurring: z.boolean(),
     })).mutation(async ({ ctx, input }) => {
-      const origin = ctx.req.headers.origin || 'https://findchristianschools.org';
+      const origin = ctx.req.headers.origin || 'https://findchristianschools.com';
       const email = ctx.user?.email || undefined;
       const userId = ctx.user?.id || undefined;
       return createDonationCheckout({ amount: input.amount, recurring: input.recurring, email, userId, origin });
@@ -1104,7 +1104,7 @@ export const appRouter = router({
       await notifyCoursePosted({
         title: input.name,
         provider: input.instructor || 'Unknown',
-        contactEmail: 'admin@findchristianschools.org',
+        contactEmail: 'admin@findchristianschools.com',
       }).catch(() => {});
       return result;
     }),

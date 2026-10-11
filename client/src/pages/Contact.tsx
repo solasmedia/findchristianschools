@@ -24,7 +24,7 @@ const contactReasons = [
   { value: "premium_upgrade", label: "Upgrade to Premium Listing", icon: Star, description: "I'm interested in upgrading my school to a Premium listing" },
   { value: "add_school", label: "Add a School Not in the Directory", icon: BookOpen, description: "I know of a Christian school that isn't listed yet" },
   { value: "report_error", label: "Report Incorrect School Information", icon: AlertCircle, description: "The information shown for a school is wrong or outdated" },
-  { value: "general_question", label: "General Question", icon: HelpCircle, description: "I have a question about FindChristianSchools.org" },
+  { value: "general_question", label: "General Question", icon: HelpCircle, description: "I have a question about FindChristianSchools.com" },
   { value: "partnership", label: "Partnership or Advertising", icon: Users, description: "I'm interested in partnering with or advertising on the site" },
   { value: "technical_issue", label: "Technical Issue or Bug", icon: AlertCircle, description: "Something on the site isn't working correctly" },
   { value: "other", label: "Other", icon: MessageSquare, description: "Something else not listed above" },

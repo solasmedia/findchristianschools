@@ -102,7 +102,7 @@ export default function Mission() {
           <Heart className="w-12 h-12 text-[#FFC72C] mx-auto mb-6" />
           <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">Our Mission & Global Impact</h1>
           <p className="text-lg text-blue-100 max-w-2xl mx-auto mb-8">
-            Every listing on FindChristianSchools.org directly supports Christian education missions 
+            Every listing on FindChristianSchools.com directly supports Christian education missions 
             in developing nations around the world.
           </p>
           <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 max-w-2xl mx-auto border border-white/20">
@@ -122,7 +122,7 @@ export default function Mission() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <p className="text-gray-700 leading-relaxed mb-4">
-                FindChristianSchools.org was founded with a singular purpose: to ensure that no generation 
+                FindChristianSchools.com was founded with a singular purpose: to ensure that no generation 
                 grows up without knowing Christ. We are a team of educators, missionaries, and technology 
                 professionals united by the belief that Christian education is the foundation of a faithful future.
               </p>
@@ -164,7 +164,7 @@ export default function Mission() {
             have no access to Christian education.
           </p>
           <p className="text-gray-700 leading-relaxed">
-            FindChristianSchools.org exists to change that narrative. By connecting families with faith-based 
+            FindChristianSchools.com exists to change that narrative. By connecting families with faith-based 
             education at home and funding Christian schools abroad, we are building a generation that knows the 
             Lord and can pass that knowledge to their children.
           </p>

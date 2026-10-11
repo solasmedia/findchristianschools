@@ -20,6 +20,15 @@ export interface RecommendedBook {
 
 export const RECOMMENDED_BOOKS: RecommendedBook[] = [
   {
+    asin: "1889236276",
+    title: "The Classroom Management Secret",
+    author: "Michael Linsin",
+    category: "teaching",
+    review: "Practical, no-nonsense classroom management built on respect and consistency. Linsin's approach aligns well with a Christian classroom — firm boundaries delivered with grace, not control through fear.",
+    whyRecommended: "One of the most actionable classroom management books available. Teachers see results in weeks, not semesters.",
+    rating: 5,
+  },
+  {
     asin: "B00X0QV2DY",
     title: "Teaching from Rest",
     author: "Sarah Mackenzie",

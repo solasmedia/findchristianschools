@@ -18,7 +18,25 @@ interface LessonBlock {
   classActivity: string;
   testQuiz: string;
   homework: string;
+  // Biblical integration (optional, never forced)
+  biblicalIntegration: "none" | "scripture" | "worldview" | "devotional";
+  biblicalText: string;
 }
+
+type BiblicalIntegration = LessonBlock["biblicalIntegration"];
+
+const BIBLICAL_INTEGRATION_LABELS: Record<BiblicalIntegration, string> = {
+  none: "None — standard academic lesson",
+  scripture: "Scripture reference",
+  worldview: "Biblical worldview discussion",
+  devotional: "Short devotional",
+};
+
+const BIBLICAL_INTEGRATION_HINTS: Record<Exclude<BiblicalIntegration, "none">, string> = {
+  scripture: "e.g., Genesis 1:1 (KJV) — \"In the beginning God created the heaven and the earth.\"",
+  worldview: "e.g., How does the water cycle show God's faithful design? (Genesis 8:22)",
+  devotional: "e.g., 2-minute reflection: God gives us water as a gift — how can we be good stewards of it?",
+};
 
 type DayKey = 0 | 1 | 2 | 3 | 4;
 
@@ -56,11 +74,11 @@ function getSubjectIcon(subject: string): React.ReactNode {
 
 const defaultSubjects = ["Bible", "Math", "Reading", "Writing", "Science", "History", "Art", "Music", "PE", "Foreign Language", "Other"];
 
-const emptyFields = { lessonNumber: "", objective: "", resources: "", classActivity: "", testQuiz: "", homework: "" };
+const emptyFields = { lessonNumber: "", objective: "", resources: "", classActivity: "", testQuiz: "", homework: "", biblicalIntegration: "none" as BiblicalIntegration, biblicalText: "" };
 
 const samplePlan: LessonBlock[] = [
-  { id: "1", subject: "Bible", topic: "Morning Devotional & Prayer", startTime: "08:00", duration: 20, notes: "Read chapter together, discuss key verse", color: "from-amber-400 to-amber-500", lessonNumber: "1", objective: "Begin the day with Scripture and prayer", resources: "Bible, devotional book", classActivity: "Read aloud, discuss key verse", testQuiz: "", homework: "" },
-  { id: "2", subject: "Math", topic: "Lesson & Practice", startTime: "08:25", duration: 45, notes: "New concept + worksheet", color: "from-blue-400 to-blue-500", lessonNumber: "47", objective: "Master multiplication of two-digit numbers", resources: "Textbook pp. 94-97, worksheet", classActivity: "Lesson + practice problems", testQuiz: "", homework: "Finish worksheet" },
+  { id: "1", subject: "Bible", topic: "Morning Devotional & Prayer", startTime: "08:00", duration: 20, notes: "Read chapter together, discuss key verse", color: "from-amber-400 to-amber-500", lessonNumber: "1", objective: "Begin the day with Scripture and prayer", resources: "Bible, devotional book", classActivity: "Read aloud, discuss key verse", testQuiz: "", homework: "", biblicalIntegration: "devotional", biblicalText: "Psalm 118:24 (KJV) — \"This is the day which the LORD hath made; we will rejoice and be glad in it.\"" },
+  { id: "2", subject: "Math", topic: "Lesson & Practice", startTime: "08:25", duration: 45, notes: "New concept + worksheet", color: "from-blue-400 to-blue-500", lessonNumber: "47", objective: "Master multiplication of two-digit numbers", resources: "Textbook pp. 94-97, worksheet", classActivity: "Lesson + practice problems", testQuiz: "", homework: "Finish worksheet", biblicalIntegration: "none", biblicalText: "" },
   { id: "3", subject: "Reading", topic: "Independent Reading", startTime: "09:15", duration: 30, notes: "Chapter book or assigned reading", color: "from-emerald-400 to-emerald-500", ...emptyFields },
   { id: "4", subject: "Writing", topic: "Copywork / Creative Writing", startTime: "09:50", duration: 25, notes: "Handwriting practice or journal entry", color: "from-purple-400 to-purple-500", ...emptyFields },
   { id: "5", subject: "Science", topic: "Lesson & Activity", startTime: "10:20", duration: 35, notes: "Textbook + hands-on experiment", color: "from-cyan-400 to-cyan-500", ...emptyFields },
@@ -217,6 +235,8 @@ export default function LessonPlanner() {
       classActivity: "",
       testQuiz: "",
       homework: "",
+      biblicalIntegration: "none" as BiblicalIntegration,
+      biblicalText: "",
     };
     setBlocks([...blocks, newBlock]);
     setEditingId(newBlock.id);
@@ -304,6 +324,7 @@ export default function LessonPlanner() {
                 b.classActivity ? `<strong>Class Activity:</strong> ${b.classActivity}` : '',
                 b.testQuiz ? `<strong>Test/Quiz:</strong> ${b.testQuiz}` : '',
                 b.homework ? `<strong>HW:</strong> ${b.homework}` : '',
+                (b.biblicalIntegration !== 'none' && b.biblicalText) ? `<strong style="color:#b45309;">&#10013; ${b.biblicalIntegration === 'scripture' ? 'Scripture' : b.biblicalIntegration === 'worldview' ? 'Biblical Worldview' : 'Devotional'}:</strong> ${b.biblicalText}` : '',
                 b.notes ? `<span class="note">${b.notes}</span>` : '',
               ].filter(Boolean).join('<br>');
               return `<tr>
@@ -410,6 +431,7 @@ ${dayHtmlSections}
             />
           </div>
           <p className="text-blue-200/60 text-xs mt-2">Tap title to rename &middot; Free tool &middot; Nothing saved</p>
+          <p className="text-blue-100/90 text-sm mt-3 font-medium italic">"Spend less time preparing lessons. Spend more time teaching."</p>
         </div>
       </section>
 
@@ -637,6 +659,29 @@ ${dayHtmlSections}
                         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Notes</label>
                         <input type="text" value={block.notes} onChange={(e) => updateBlock(block.id, { notes: e.target.value })} placeholder="Any additional notes..." className="w-full mt-1 text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#002855]/20 focus:border-[#002855]" />
                       </div>
+                      {/* Biblical Integration (optional) */}
+                      <div className="mb-4 p-3 bg-amber-50/60 border border-amber-200/60 rounded-xl">
+                        <label className="text-xs font-semibold text-amber-800 uppercase tracking-wider">Biblical Integration <span className="normal-case font-normal text-amber-600">(optional)</span></label>
+                        <select
+                          value={block.biblicalIntegration}
+                          onChange={(e) => updateBlock(block.id, { biblicalIntegration: e.target.value as BiblicalIntegration })}
+                          className="w-full mt-1.5 text-sm border border-amber-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 bg-white text-gray-800"
+                        >
+                          {(Object.keys(BIBLICAL_INTEGRATION_LABELS) as BiblicalIntegration[]).map(k => (
+                            <option key={k} value={k}>{BIBLICAL_INTEGRATION_LABELS[k]}</option>
+                          ))}
+                        </select>
+                        {block.biblicalIntegration !== "none" && (
+                          <input
+                            type="text"
+                            value={block.biblicalText}
+                            onChange={(e) => updateBlock(block.id, { biblicalText: e.target.value })}
+                            placeholder={BIBLICAL_INTEGRATION_HINTS[block.biblicalIntegration]}
+                            className="w-full mt-2 text-sm border border-amber-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 bg-white"
+                          />
+                        )}
+                        <p className="text-[11px] text-amber-700/70 mt-1.5">Only add Scripture where it genuinely fits the lesson — never forced.</p>
+                      </div>
                       <div className="flex justify-between items-center pt-3 border-t border-gray-100">
                         <button onClick={() => deleteBlock(block.id)} className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1.5 font-medium">
                           <Trash2 className="w-4 h-4" /> Remove
@@ -664,6 +709,11 @@ ${dayHtmlSections}
                             {block.topic && <span className="text-sm text-gray-600 truncate">{block.topic}</span>}
                           </div>
                           {block.objective && <p className="text-xs text-gray-600 mt-0.5 line-clamp-1"><span className="font-medium">Obj:</span> {block.objective}</p>}
+                          {block.biblicalIntegration !== "none" && block.biblicalText && (
+                            <p className="text-xs text-amber-700 mt-0.5 line-clamp-1">
+                              <span className="font-medium">✝ {BIBLICAL_INTEGRATION_LABELS[block.biblicalIntegration].split(" — ")[0]}:</span> {block.biblicalText}
+                            </p>
+                          )}
                           {block.resources && <p className="text-xs text-gray-500 mt-0.5 line-clamp-1"><span className="font-medium">Resources:</span> {block.resources}</p>}
                           {(block.testQuiz || block.homework) && (
                             <div className="flex gap-3 mt-0.5">

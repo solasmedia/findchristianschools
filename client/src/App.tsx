@@ -21,6 +21,7 @@ import News from "./pages/News";
 import NewsArticle from "./pages/NewsArticle";
 import TravelEd from "./pages/TravelEd";
 import TravelEdDestination from "./pages/TravelEdDestination";
+import FederalTaxCredit from "./pages/FederalTaxCredit";
 import Mission from "./pages/Mission";
 import Membership from "./pages/Membership";
 import StateHub from "./pages/StateHub";
@@ -118,6 +119,7 @@ function Router() {
       <Route path="/news/:slug" component={NewsArticle} />
       <Route path="/traveled" component={TravelEd} />
       <Route path="/traveled/:slug" component={TravelEdDestination} />
+      <Route path="/federal-tax-credit" component={FederalTaxCredit} />
       <Route path="/signup" component={SignUp} />
       <Route path="/contact" component={Contact} />
       <Route path="/list-course" component={ListCourse} />

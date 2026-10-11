@@ -24,10 +24,10 @@ export default function CityHub() {
   });
 
   useEffect(() => {
-    document.title = `Christian Schools in ${cityName}, ${stateName} | FindChristianSchools.org`;
+    document.title = `Christian Schools in ${cityName}, ${stateName} | FindChristianSchools.com`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', `Find Christian schools in ${cityName}, ${stateName}. Browse ${data?.total || ""} faith-based schools with grades, tuition, and program details.`);
-    return () => { document.title = 'FindChristianSchools.org | Faith · Education · Future'; };
+    return () => { document.title = 'FindChristianSchools.com | Faith · Education · Future'; };
   }, [cityName, stateName, data?.total]);
 
   const schools = data?.schools || [];

@@ -15,6 +15,8 @@ import Colleges from "./pages/Colleges";
 import CollegeProfile from "./pages/CollegeProfile";
 import Races from "./pages/Races";
 import RaceProfile from "./pages/RaceProfile";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import Mission from "./pages/Mission";
 import Membership from "./pages/Membership";
 import StateHub from "./pages/StateHub";
@@ -98,6 +100,8 @@ function Router() {
       <Route path="/college/:slug" component={CollegeProfile} />
       <Route path="/races" component={Races} />
       <Route path="/race/:slug" component={RaceProfile} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/signup" component={SignUp} />
       <Route path="/contact" component={Contact} />
       <Route path="/list-course" component={ListCourse} />

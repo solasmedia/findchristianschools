@@ -92,6 +92,8 @@ import {
   blogPosts,
   resourceDownloads,
   resourcePurchases,
+  newsItems,
+  newsFetchLog,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -113,7 +115,14 @@ let dbInstance: Db | null = null;
 export async function getDb(): Promise<Db | null> {
   if (!ENV.databaseUrl) return null;
   if (!dbInstance) {
-    const pool = mysql.createPool(ENV.databaseUrl);
+    // Ensure SSL is enabled for production database connections.
+    // Railway MySQL requires encrypted connections.
+    let dbUrl = ENV.databaseUrl;
+    if (process.env.NODE_ENV === "production" && !dbUrl.includes("ssl=")) {
+      const separator = dbUrl.includes("?") ? "&" : "?";
+      dbUrl = `${dbUrl}${separator}ssl=%7B%22rejectUnauthorized%22%3Afalse%7D`;
+    }
+    const pool = mysql.createPool(dbUrl);
     dbInstance = drizzle(pool, { schema, mode: "default" });
   }
   return dbInstance;
@@ -1942,4 +1951,185 @@ export async function getBlogPostForPurchase(postId: number) {
     .where(eq(blogPosts.id, postId))
     .limit(1);
   return rows[0] ?? null;
+}
+
+// ============ NEWS (RSS aggregation) ============
+const NEWS_STALE_HOURS = 12;
+
+/**
+ * Trigger a background feed refresh when the last successful run is older
+ * than NEWS_STALE_HOURS. Called on every /news page load (via getNewsItems /
+ * getNewsItemBySlug) — fire-and-forget, so page loads never wait on feeds.
+ * Zero cron dependency.
+ */
+export async function refreshNewsIfStale(): Promise<void> {
+  let db: Awaited<ReturnType<typeof getDb>>;
+  try {
+    db = await getDb();
+  } catch {
+    return;
+  }
+  if (!db) return;
+  try {
+    const [last] = await db
+      .select({ startedAt: newsFetchLog.startedAt, status: newsFetchLog.status })
+      .from(newsFetchLog)
+      .orderBy(desc(newsFetchLog.startedAt))
+      .limit(1);
+    const now = Date.now();
+    if (last) {
+      const ageMs = now - new Date(last.startedAt).getTime();
+      // Don't start a second run while one is in flight (or recently failed)
+      if (last.status === "running" && ageMs < 60 * 60 * 1000) return;
+      if (ageMs < NEWS_STALE_HOURS * 60 * 60 * 1000) return;
+    }
+    // Background refresh — never block the page load
+    const { fetchAllNewsFeeds } = await import("./newsFetcher");
+    fetchAllNewsFeeds().catch((e) => console.error("[news] background refresh failed:", e));
+  } catch {
+    // news_fetch_log table may not exist yet if migration hasn't run
+  }
+}
+
+export type NewsCategoryFilter = "national" | "state" | "policy" | "school_choice" | "curriculum";
+
+export async function getNewsItems(params: {
+  category?: NewsCategoryFilter;
+  stateCode?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}) {
+  // Kick off a background refresh when stale (never blocks)
+  refreshNewsIfStale().catch(() => {});
+  const db = await conn();
+  const conditions = [eq(newsItems.isActive, true)];
+  if (params.category) {
+    conditions.push(eq(newsItems.category, params.category as typeof newsItems.category.enumValues[number]));
+  }
+  if (params.stateCode) {
+    conditions.push(eq(newsItems.stateCode, params.stateCode.toUpperCase()));
+  }
+  if (params.search) {
+    const q = `%${params.search}%`;
+    conditions.push(or(like(newsItems.title, q), like(newsItems.summary, q))!);
+  }
+  try {
+    const rows = await db
+      .select({
+        id: newsItems.id,
+        title: newsItems.title,
+        slug: newsItems.slug,
+        sourceName: newsItems.sourceName,
+        sourceUrl: newsItems.sourceUrl,
+        summary: newsItems.summary,
+        category: newsItems.category,
+        stateCode: newsItems.stateCode,
+        publishedAt: newsItems.publishedAt,
+        imageUrl: newsItems.imageUrl,
+      })
+      .from(newsItems)
+      .where(and(...conditions))
+      .orderBy(desc(newsItems.publishedAt))
+      .limit(params.limit ?? 20)
+      .offset(params.offset ?? 0);
+    const [countRow] = await db
+      .select({ n: count() })
+      .from(newsItems)
+      .where(and(...conditions));
+    return { items: rows, total: Number(countRow?.n ?? 0) };
+  } catch {
+    // news_items table may not exist yet if migration hasn't run
+    return { items: [], total: 0 };
+  }
+}
+
+export async function getNewsItemBySlug(slug: string) {
+  refreshNewsIfStale().catch(() => {});
+  const db = await conn();
+  try {
+    const rows = await db
+      .select()
+      .from(newsItems)
+      .where(and(eq(newsItems.slug, slug), eq(newsItems.isActive, true)))
+      .limit(1);
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getRelatedNewsItems(itemId: number, category: string, limit = 3) {
+  const db = await conn();
+  try {
+    const rows = await db
+      .select({
+        id: newsItems.id,
+        title: newsItems.title,
+        slug: newsItems.slug,
+        sourceName: newsItems.sourceName,
+        category: newsItems.category,
+        publishedAt: newsItems.publishedAt,
+      })
+      .from(newsItems)
+      .where(
+        and(
+          eq(newsItems.isActive, true),
+          eq(newsItems.category, category as typeof newsItems.category.enumValues[number]),
+          ne(newsItems.id, itemId)
+        )
+      )
+      .orderBy(desc(newsItems.publishedAt))
+      .limit(limit);
+    return rows;
+  } catch {
+    return [];
+  }
+}
+
+// --- Admin ---
+export async function getAllNewsItemsAdmin(params: { limit?: number; offset?: number }) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(newsItems)
+    .orderBy(desc(newsItems.publishedAt))
+    .limit(params.limit ?? 50)
+    .offset(params.offset ?? 0);
+  const [countRow] = await db.select({ n: count() }).from(newsItems);
+  return { items: rows, total: Number(countRow?.n ?? 0) };
+}
+
+export async function updateNewsItem(id: number, data: Partial<typeof newsItems.$inferInsert>) {
+  const db = await conn();
+  await db.update(newsItems).set(data).where(eq(newsItems.id, id));
+}
+
+export async function deleteNewsItem(id: number) {
+  const db = await conn();
+  await db.delete(newsItems).where(eq(newsItems.id, id));
+}
+
+export async function getNewsStats() {
+  const db = await conn();
+  try {
+    const [total] = await db.select({ n: count() }).from(newsItems);
+    const [lastFetch] = await db
+      .select()
+      .from(newsFetchLog)
+      .orderBy(desc(newsFetchLog.startedAt))
+      .limit(1);
+    return {
+      totalItems: Number(total?.n ?? 0),
+      lastFetch: lastFetch ?? null,
+    };
+  } catch {
+    return { totalItems: 0, lastFetch: null };
+  }
+}
+
+/** Manual refresh trigger (admin). Runs in foreground so the admin sees the result. */
+export async function triggerNewsRefresh() {
+  const { fetchAllNewsFeeds } = await import("./newsFetcher");
+  return fetchAllNewsFeeds();
 }

@@ -27,9 +27,12 @@ export function registerBlogFixTemp(app: Express) {
         try {
           // Use parameterized query to safely handle content
           await db.execute(sql`DELETE FROM blog_posts WHERE slug = ${item.slug}`);
+          // Extract first image URL for heroImageUrl
+          const imgMatch = (item.content || "").match(/<img[^>]+src="([^"]+)"/);
+          const heroUrl = imgMatch ? imgMatch[1] : null;
           await db.execute(sql`
-            INSERT INTO blog_posts (title, slug, excerpt, content, category, status, publishedAt, createdAt)
-            VALUES (${item.title}, ${item.slug}, ${item.excerpt || ""}, ${item.content || ""}, ${item.category || "teaching_tips"}, 'published', NOW(), NOW())
+            INSERT INTO blog_posts (title, slug, excerpt, content, category, status, publishedAt, createdAt, heroImageUrl)
+            VALUES (${item.title}, ${item.slug}, ${item.excerpt || ""}, ${item.content || ""}, ${item.category || "teaching_tips"}, 'published', NOW(), NOW(), ${heroUrl})
           `);
           imported++;
         } catch (e: any) {

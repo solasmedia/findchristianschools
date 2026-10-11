@@ -11,9 +11,9 @@ export function registerBlogFixTemp(app: Express) {
       return;
     }
     try {
-      const { items } = req.body;
-      if (!Array.isArray(items)) {
-        res.status(400).json({ error: "items array required" });
+      const { updates } = req.body;
+      if (!Array.isArray(updates)) {
+        res.status(400).json({ error: "updates array required" });
         return;
       }
       const db = await getDb();
@@ -22,20 +22,14 @@ export function registerBlogFixTemp(app: Express) {
         return;
       }
       let updated = 0;
-      const errors: string[] = [];
-      for (const item of items) {
-        try {
-          // Only update content, leave heroImageUrl as-is (it's already correct)
-          await db.execute(sql`
-            UPDATE blog_posts SET content = ${item.content || ""}, updatedAt = NOW()
-            WHERE slug = ${item.slug}
-          `);
-          updated++;
-        } catch (e: any) {
-          errors.push(`${item.slug}: ${e.message}`);
-        }
+      for (const u of updates) {
+        await db.execute(sql`
+          UPDATE blog_posts SET heroImageUrl = ${u.heroImageUrl}, updatedAt = NOW()
+          WHERE slug = ${u.slug}
+        `);
+        updated++;
       }
-      res.json({ updated, total: items.length, errors: errors.slice(0, 10) });
+      res.json({ updated });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

@@ -17,6 +17,8 @@ import Races from "./pages/Races";
 import RaceProfile from "./pages/RaceProfile";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import TravelEd from "./pages/TravelEd";
+import TravelEdDestination from "./pages/TravelEdDestination";
 import Mission from "./pages/Mission";
 import Membership from "./pages/Membership";
 import StateHub from "./pages/StateHub";
@@ -48,6 +50,14 @@ import CurriculumGuide from "./pages/CurriculumGuide";
 import CurriculumComparison from "./pages/CurriculumComparison";
 import LessonPlanning from "./pages/LessonPlanning";
 import LessonPlanner from "./pages/LessonPlanner";
+import ToolsHub from "./pages/tools/ToolsHub";
+import WorksheetGenerator from "./pages/tools/WorksheetGenerator";
+import BibleVerseMaker from "./pages/tools/BibleVerseMaker";
+
+const MathWorksheets = () => <WorksheetGenerator presetSubject="math" />;
+const SpellingWorksheets = () => <WorksheetGenerator presetSubject="spelling" />;
+const HandwritingWorksheets = () => <WorksheetGenerator presetSubject="handwriting" />;
+const ReadingWorksheets = () => <WorksheetGenerator presetSubject="reading" />;
 import Submit from "./pages/Submit";
 import Feedback from "./pages/Feedback";
 import { FloatingDonateButton } from "./components/FloatingDonateButton";
@@ -102,6 +112,8 @@ function Router() {
       <Route path="/race/:slug" component={RaceProfile} />
       <Route path="/blog" component={Blog} />
       <Route path="/blog/:slug" component={BlogPost} />
+      <Route path="/traveled" component={TravelEd} />
+      <Route path="/traveled/:slug" component={TravelEdDestination} />
       <Route path="/signup" component={SignUp} />
       <Route path="/contact" component={Contact} />
       <Route path="/list-course" component={ListCourse} />
@@ -109,6 +121,13 @@ function Router() {
       <Route path="/curriculum-comparison" component={CurriculumComparison} />
       <Route path="/lesson-planning" component={LessonPlanning} />
       <Route path="/lesson-planner" component={LessonPlanner} />
+      <Route path="/tools" component={ToolsHub} />
+      <Route path="/tools/worksheet-generator" component={MathWorksheets} />
+      <Route path="/tools/math-worksheet-generator" component={MathWorksheets} />
+      <Route path="/tools/spelling-worksheet-generator" component={SpellingWorksheets} />
+      <Route path="/tools/handwriting-worksheet-generator" component={HandwritingWorksheets} />
+      <Route path="/tools/reading-worksheet-generator" component={ReadingWorksheets} />
+      <Route path="/tools/bible-verse-maker" component={BibleVerseMaker} />
       <Route path="/submit" component={Submit} />
       <Route path="/feedback" component={Feedback} />
       {/* Redirect routes for common URL variations */}

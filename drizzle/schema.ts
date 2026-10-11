@@ -637,6 +637,7 @@ export const blogPosts = mysqlTable("blog_posts", {
   category: mysqlEnum("category", [
     "bible_lessons", "classroom_activities", "crafts", "critical_thinking",
     "character_education", "seasonal", "chapel", "teaching_tips",
+    "family_resources", "school_leadership",
   ]).default("teaching_tips").notNull(),
   ageGroup: varchar("ageGroup", { length: 64 }), // e.g. "K-2", "3-5", "6-8", "9-12", "All ages"
   content: text("content").notNull(), // HTML article body

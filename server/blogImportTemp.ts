@@ -25,6 +25,7 @@ const ALTER_STATEMENTS: string[] = [
   "ALTER TABLE blog_posts ADD COLUMN heroImageUrl varchar(512) NULL",
   "ALTER TABLE blog_posts ADD COLUMN seoTitle varchar(255) NULL",
   "ALTER TABLE schools ADD COLUMN educationalModel ENUM('traditional','classical','charlotte_mason','montessori','unschooling','eclectic','university_model') DEFAULT 'traditional'",
+  "ALTER TABLE blog_posts MODIFY COLUMN category ENUM('bible_lessons','classroom_activities','crafts','critical_thinking','character_education','seasonal','chapel','teaching_tips','family_resources','school_leadership') NOT NULL DEFAULT 'teaching_tips'",
 ];
 
 export function registerBlogImportTemp(app: Express) {

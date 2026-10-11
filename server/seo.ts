@@ -98,9 +98,33 @@ Sitemap: ${SITE_URL}/sitemap.xml`
         // races table may not exist yet if migration hasn't run
       }
 
+      // --- Blog posts: only published ---
+      let blogUrls = "";
+      try {
+        const { blogPosts } = await import("../drizzle/schema");
+        const blogRows = await db
+          .select({ slug: blogPosts.slug, updatedAt: blogPosts.updatedAt })
+          .from(blogPosts)
+          .where(eq(blogPosts.status, "published"))
+          .limit(5000);
+        blogUrls = blogRows
+          .filter(r => r.slug)
+          .map(r => `  <url><loc>${SITE_URL}/blog/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`)
+          .join("\n");
+      } catch {
+        // blog_posts table may not exist yet if migration hasn't run
+      }
+
       // Static pages
-      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
+      // Static pages
+      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/traveled", "/tools", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
         .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>${p === "" ? "1.0" : "0.5"}</priority></url>`)
+        .join("\n");
+
+      // TravelED destination pages (static content)
+      const traveledSlugs = ["washington-dc","philadelphia","boston","colonial-williamsburg","gettysburg","mount-vernon","plymouth","st-augustine","san-antonio","charleston","new-orleans","santa-fe","yellowstone","ark-encounter","museum-of-the-bible"];
+      const traveledUrls = traveledSlugs
+        .map(s => `  <url><loc>${SITE_URL}/traveled/${s}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
         .join("\n");
 
       // Top cities by school count (for SEO landing pages)
@@ -132,10 +156,13 @@ Sitemap: ${SITE_URL}/sitemap.xml`
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticPages}
+${traveledUrls}
 ${cityUrls}
 ${schoolUrls}
 ${collegeUrls}
 ${raceUrls}
+${blogUrls}
+${newsUrls}
 </urlset>`;
 
       res.header("Content-Type", "application/xml");

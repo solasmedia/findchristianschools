@@ -95,3 +95,46 @@ export async function createDonationCheckout(params: {
 
   return { url: session.url };
 }
+
+/**
+ * One-time checkout for a premium teacher resource packet.
+ * After payment, the Stripe webhook records the purchase keyed by
+ * postId + email, unlocking the full download.
+ */
+export async function createResourceCheckout(params: {
+  postId: number;
+  postSlug: string;
+  postTitle: string;
+  resourceTitle: string;
+  priceCents: number;
+  userEmail: string;
+  origin: string;
+}) {
+  const session = await getStripe().checkout.sessions.create({
+    mode: "payment",
+    customer_email: params.userEmail,
+    metadata: {
+      purchase_type: "blog_resource",
+      post_id: params.postId.toString(),
+      post_title: params.postTitle,
+      customer_email: params.userEmail,
+    },
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: params.resourceTitle,
+            description: `Premium teaching resource from FindChristianSchools.org — "${params.postTitle}"`,
+          },
+          unit_amount: params.priceCents,
+        },
+        quantity: 1,
+      },
+    ],
+    success_url: `${params.origin}/blog/${params.postSlug}?purchased=true&email=${encodeURIComponent(params.userEmail)}`,
+    cancel_url: `${params.origin}/blog/${params.postSlug}`,
+  });
+
+  return { url: session.url, sessionId: session.id };
+}

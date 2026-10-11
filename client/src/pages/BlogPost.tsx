@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { SeoHead } from "@/components/SeoHead";
 import { JsonLd } from "@/components/SeoJsonLd";
 import { Clock, Download, ArrowLeft, CheckCircle, Printer, Mail } from "lucide-react";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 function formatDate(dateStr?: string | Date | null) {
   if (!dateStr) return "";
@@ -184,7 +185,7 @@ function DownloadGate({ post }: { post: any }) {
               <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 mb-3">Free preview</p>
               <div
                 className="prose prose-sm max-w-none text-gray-700"
-                dangerouslySetInnerHTML={{ __html: post.resourcePreviewContent }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.resourcePreviewContent) }}
               />
               <p className="text-sm text-gray-500 italic mt-3">...the full {post.resourcePageCount || ""}-page packet continues after purchase.</p>
             </div>
@@ -386,7 +387,7 @@ export default function BlogPost() {
           {/* Article body — rendered from stored HTML */}
           <div
             className="prose prose-lg max-w-none prose-headings:text-[#002855] prose-headings:font-bold prose-a:text-[#0055A4] prose-blockquote:border-[#0055A4] prose-blockquote:bg-blue-50 prose-blockquote:py-2 prose-blockquote:px-4 prose-blockquote:rounded-r-lg"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
           />
 
           {/* Download gate */}

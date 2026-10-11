@@ -194,6 +194,7 @@ export interface PageMeta {
   description: string;
   canonical: string;
   ogType?: string;
+  ogImage?: string;
 }
 
 /**
@@ -258,6 +259,7 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
         description: post.excerpt || "Christian teacher resources, Bible lesson plans, and classroom ideas from FindChristianSchools.com.",
         canonical,
         ogType: "article",
+        ogImage: post.heroImageUrl || undefined,
       };
     }
     if (match.kind === "news") {
@@ -345,6 +347,35 @@ export function injectHead(html: string, meta: PageMeta): string {
     /<meta charset="UTF-8"\s*\/?>/i,
     `<meta charset="UTF-8" />\n    <link rel="canonical" href="${meta.canonical}" />\n    <meta property="og:url" content="${meta.canonical}" />`
   );
+
+  // Add/replace og:image if provided
+  if (meta.ogImage) {
+    const imgTag = `<meta property="og:image" content="${escapeHtml(meta.ogImage)}" />`;
+    if (/<meta property="og:image"/i.test(out)) {
+      out = out.replace(
+        /<meta property="og:image" content=".*?"\s*\/?>/i,
+        imgTag
+      );
+    } else {
+      out = out.replace(
+        /<meta property="og:url" content=".*?"\s*\/?>/i,
+        `$&\n    ${imgTag}`
+      );
+    }
+    // Also add twitter:image for Twitter cards
+    const twitterTag = `<meta name="twitter:image" content="${escapeHtml(meta.ogImage)}" />`;
+    if (/<meta name="twitter:image"/i.test(out)) {
+      out = out.replace(
+        /<meta name="twitter:image" content=".*?"\s*\/?>/i,
+        twitterTag
+      );
+    } else {
+      out = out.replace(
+        /<meta property="og:image" content=".*?"\s*\/?>/i,
+        `$&\n    ${twitterTag}`
+      );
+    }
+  }
 
   return out;
 }

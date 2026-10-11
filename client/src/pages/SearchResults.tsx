@@ -5,12 +5,28 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, GraduationCap, Filter, X, Map, List, Bookmark, Menu, ChevronDown } from "lucide-react";
+import { Search, MapPin, GraduationCap, Filter, X, Map, List, Bookmark, Menu, ChevronDown, LocateFixed, Loader2 } from "lucide-react";
 import { MapView } from "@/components/Map";
 import { toast } from "sonner";
 import { SaveSchoolButton } from "@/components/SaveSchoolButton";
 import { SearchNudge, incrementSearchCount } from "@/components/SearchNudge";
 import InviteSchoolCard from "@/components/InviteSchoolCard";
+
+const US_STATES = [
+  {code:"AL",name:"Alabama"},{code:"AK",name:"Alaska"},{code:"AZ",name:"Arizona"},{code:"AR",name:"Arkansas"},
+  {code:"CA",name:"California"},{code:"CO",name:"Colorado"},{code:"CT",name:"Connecticut"},{code:"DE",name:"Delaware"},
+  {code:"FL",name:"Florida"},{code:"GA",name:"Georgia"},{code:"HI",name:"Hawaii"},{code:"ID",name:"Idaho"},
+  {code:"IL",name:"Illinois"},{code:"IN",name:"Indiana"},{code:"IA",name:"Iowa"},{code:"KS",name:"Kansas"},
+  {code:"KY",name:"Kentucky"},{code:"LA",name:"Louisiana"},{code:"ME",name:"Maine"},{code:"MD",name:"Maryland"},
+  {code:"MA",name:"Massachusetts"},{code:"MI",name:"Michigan"},{code:"MN",name:"Minnesota"},{code:"MS",name:"Mississippi"},
+  {code:"MO",name:"Missouri"},{code:"MT",name:"Montana"},{code:"NE",name:"Nebraska"},{code:"NV",name:"Nevada"},
+  {code:"NH",name:"New Hampshire"},{code:"NJ",name:"New Jersey"},{code:"NM",name:"New Mexico"},{code:"NY",name:"New York"},
+  {code:"NC",name:"North Carolina"},{code:"ND",name:"North Dakota"},{code:"OH",name:"Ohio"},{code:"OK",name:"Oklahoma"},
+  {code:"OR",name:"Oregon"},{code:"PA",name:"Pennsylvania"},{code:"RI",name:"Rhode Island"},{code:"SC",name:"South Carolina"},
+  {code:"SD",name:"South Dakota"},{code:"TN",name:"Tennessee"},{code:"TX",name:"Texas"},{code:"UT",name:"Utah"},
+  {code:"VT",name:"Vermont"},{code:"VA",name:"Virginia"},{code:"WA",name:"Washington"},{code:"WV",name:"West Virginia"},
+  {code:"WI",name:"Wisconsin"},{code:"WY",name:"Wyoming"},{code:"DC",name:"District of Columbia"}
+];
 
 const filterChips = [
   { value: "", label: "All" },
@@ -60,7 +76,7 @@ export default function SearchResults() {
   const params = useMemo(() => new URLSearchParams(searchString), [searchString]);
   const [, navigate] = useLocation();
 
-  const [query, setQuery] = useState(params.get("query") || "");
+  // (searchText state declared below with other search form state)
   const [tuitionFilter, setTuitionFilter] = useState(params.get("tuitionType") || "");
   const [programFilters, setProgramFilters] = useState<string[]>(params.get("programType") ? [params.get("programType")!] : []);
   const [sortBy, setSortBy] = useState("featured");
@@ -75,11 +91,31 @@ export default function SearchResults() {
   const [schoolType, setSchoolType] = useState(params.get("schoolType") || "");
   const [enrollmentTier, setEnrollmentTier] = useState(params.get("enrollmentTier") || "");
   const [radius, setRadius] = useState(params.get("radius") || "");
+  // Search form state (hero search bar + sidebar ZIP)
+  const [searchText, setSearchText] = useState(params.get("query") || "");
+  const [zipInput, setZipInput] = useState(params.get("zip") || "");
+  const [stateSelect, setStateSelect] = useState(params.get("state") || "");
+  const [locating, setLocating] = useState(false);
+  const [geoDone, setGeoDone] = useState(false);
   const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
   const [loadedSchools, setLoadedSchools] = useState<any[]>([]);
   const [offset, setOffset] = useState(0);
   const PAGE_SIZE = 20;
+
+  // Sync form state when URL params change (e.g., after hero search submit)
+  useEffect(() => {
+    setSearchText(params.get("query") || "");
+    setZipInput(params.get("zip") || "");
+    setStateSelect(params.get("state") || "");
+    setSelectedState(params.get("state") || null);
+    setRadius(params.get("radius") || "");
+    setTuitionFilter(params.get("tuitionType") || "");
+    setDenominationTag(params.get("denominationTag") || "");
+    setSchoolType(params.get("schoolType") || "");
+    setEnrollmentTier(params.get("enrollmentTier") || "");
+    setOffset(0);
+  }, [searchString]);
 
   const searchKey = params.get("query") || params.get("state") || params.get("city") || params.get("zip") || "";
   const [lastCountedKey, setLastCountedKey] = useState("");
@@ -89,6 +125,119 @@ export default function SearchResults() {
       setLastCountedKey(searchKey);
     }
   }, [searchKey]);
+
+  // Auto-detect visitor location on first visit (no search params yet).
+  // Uses browser geolocation + free reverse-geocode to default to their state.
+  // Graceful fallback: does nothing if denied, unavailable, or already searching.
+  useEffect(() => {
+    if (geoDone) return;
+    const hasParams = params.get("query") || params.get("state") || params.get("city") || params.get("zip");
+    if (hasParams) { setGeoDone(true); return; }
+    if (!("geolocation" in navigator)) { setGeoDone(true); return; }
+    // Don't auto-prompt repeatedly in one session
+    try {
+      if (sessionStorage.getItem("fcs_geo_attempted")) { setGeoDone(true); return; }
+      sessionStorage.setItem("fcs_geo_attempted", "1");
+    } catch { /* ignore */ }
+
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const resp = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+          const geo = await resp.json();
+          const stateCode: string | undefined = geo?.principalSubdivisionCode?.split("-")[1] || geo?.city;
+          const match = US_STATES.find(s => s.code === stateCode);
+          if (match) {
+            setStateSelect(match.code);
+            setSelectedState(match.code);
+            toast.success(`Showing Christian schools in ${match.name}`, { duration: 3000 });
+          }
+        } catch { /* silent fallback */ }
+        setLocating(false);
+        setGeoDone(true);
+      },
+      () => { setLocating(false); setGeoDone(true); }, // denied or unavailable
+      { timeout: 8000, maximumAge: 600000 }
+    );
+  }, [geoDone]);
+
+  // Manual "use my location" button handler
+  const handleLocateMe = () => {
+    if (!("geolocation" in navigator)) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const resp = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
+          const geo = await resp.json();
+          const stateCode: string | undefined = geo?.principalSubdivisionCode?.split("-")[1];
+          const match = US_STATES.find(s => s.code === stateCode);
+          if (match) {
+            setStateSelect(match.code);
+            setSelectedState(match.code);
+            const p = new URLSearchParams(searchString);
+            p.set("state", match.code);
+            navigate(`/search?${p.toString()}`);
+            toast.success(`Showing Christian schools in ${match.name}`);
+          } else {
+            toast.error("Could not determine your state");
+          }
+        } catch {
+          toast.error("Could not determine your location");
+        }
+        setLocating(false);
+      },
+      () => { setLocating(false); toast.error("Location access denied"); },
+      { timeout: 10000 }
+    );
+  };
+
+  // Submit the hero search bar -> updates URL params, triggering refetch
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const p = new URLSearchParams();
+    const trimmed = searchText.trim();
+    if (/^\d{5}(-\d{4})?$/.test(trimmed)) {
+      p.set("zip", trimmed.slice(0, 5));
+    } else if (trimmed) {
+      p.set("query", trimmed);
+    }
+    if (stateSelect) p.set("state", stateSelect);
+    if (zipInput.trim() && !p.get("zip")) p.set("zip", zipInput.trim().slice(0, 5));
+    if (radius) p.set("radius", radius);
+    if (tuitionFilter) p.set("tuitionType", tuitionFilter);
+    if (denominationTag) p.set("denominationTag", denominationTag);
+    if (schoolType) p.set("schoolType", schoolType);
+    if (enrollmentTier) p.set("enrollmentTier", enrollmentTier);
+    setOffset(0);
+    setLoadedSchools([]);
+    navigate(`/search?${p.toString()}`);
+  };
+
+  // Sidebar ZIP apply -> updates URL
+  const handleZipApply = () => {
+    const z = zipInput.trim().slice(0, 5);
+    if (!/^\d{5}$/.test(z)) {
+      toast.error("Please enter a valid 5-digit ZIP code");
+      return;
+    }
+    const p = new URLSearchParams(searchString);
+    p.set("zip", z);
+    if (radius) p.set("radius", radius);
+    setOffset(0);
+    setLoadedSchools([]);
+    navigate(`/search?${p.toString()}`);
+  };
 
   const searchInput = {
     query: params.get("query") || undefined,
@@ -176,8 +325,53 @@ export default function SearchResults() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-[#002855] to-[#0055A4] py-8 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-2">Search Results</h1>
-          <p className="text-blue-100">Found <span className="font-bold text-white">{totalCount}</span> Christian schools matching your criteria{schoolCount < totalCount ? ` (showing ${schoolCount})` : ''}</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Find a Christian School</h1>
+          <p className="text-blue-100 mb-4">Found <span className="font-bold text-white">{totalCount}</span> Christian schools matching your criteria{schoolCount < totalCount ? ` (showing ${schoolCount})` : ''}</p>
+
+          {/* Search bar: keyword/ZIP + state + locate-me */}
+          <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-2 max-w-3xl">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                placeholder="School name, city, or ZIP code"
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44]"
+              />
+            </div>
+            <select
+              value={stateSelect}
+              onChange={(e) => setStateSelect(e.target.value)}
+              className="px-4 py-2.5 rounded-lg text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#6EBE44] bg-white"
+              aria-label="Select state"
+            >
+              <option value="">All States</option>
+              {US_STATES.map(s => <option key={s.code} value={s.code}>{s.name}</option>)}
+            </select>
+            <button
+              type="button"
+              onClick={handleLocateMe}
+              disabled={locating}
+              title="Use my location"
+              className="px-4 py-2.5 rounded-lg bg-white/20 hover:bg-white/30 text-white text-sm font-medium flex items-center justify-center gap-2 transition disabled:opacity-50"
+            >
+              {locating ? <Loader2 className="w-4 h-4 animate-spin" /> : <LocateFixed className="w-4 h-4" />}
+              <span className="md:hidden lg:inline">Near Me</span>
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2.5 rounded-lg bg-[#6EBE44] hover:bg-[#5aa838] text-white text-sm font-bold transition"
+            >
+              Search
+            </button>
+          </form>
+          {locating && !geoDone && (
+            <p className="text-blue-100 text-xs mt-2 flex items-center gap-1">
+              <Loader2 className="w-3 h-3 animate-spin" /> Detecting your location…
+            </p>
+          )}
+
           {data?.radiusFallback && (
             <div className="mt-3 bg-blue-600/30 border border-blue-300 rounded-lg p-3 text-sm text-blue-50">
               <strong>📍 Expanded Search:</strong> No schools found in zip code. Showing schools within 25 miles.
@@ -202,13 +396,60 @@ export default function SearchResults() {
             </button>
           </div>
 
-          {/* Zip Radius Filter */}
+          {/* Zip Code Filter */}
+          <div className="mb-6">
+            <h3 className="font-semibold text-[#002855] mb-3 text-sm flex items-center gap-1.5">
+              <MapPin className="w-4 h-4" /> ZIP Code
+            </h3>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={5}
+                value={zipInput}
+                onChange={(e) => setZipInput(e.target.value.replace(/\D/g, "").slice(0, 5))}
+                onKeyDown={(e) => { if (e.key === "Enter") handleZipApply(); }}
+                placeholder="e.g. 32909"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]"
+              />
+              <Button size="sm" onClick={handleZipApply} className="bg-[#0055A4] hover:bg-[#003d7a] text-white">
+                Go
+              </Button>
+            </div>
+            {params.get("zip") && (
+              <button
+                onClick={() => {
+                  const p = new URLSearchParams(searchString);
+                  p.delete("zip");
+                  p.delete("radius");
+                  setZipInput("");
+                  setRadius("");
+                  setOffset(0);
+                  setLoadedSchools([]);
+                  navigate(`/search?${p.toString()}`);
+                }}
+                className="text-xs text-[#0055A4] hover:underline mt-1"
+              >
+                Clear ZIP ({params.get("zip")})
+              </button>
+            )}
+          </div>
+
+          {/* Search Radius Filter */}
           <div className="mb-6">
             <h3 className="font-semibold text-[#002855] mb-3 text-sm">Search Radius</h3>
-            <p className="text-xs text-gray-500 mb-2">Enter a zip code above, then select radius</p>
+            <p className="text-xs text-gray-500 mb-2">Applies to the ZIP code above</p>
             <select
               value={radius}
-              onChange={(e) => setRadius(e.target.value)}
+              onChange={(e) => {
+                const v = e.target.value;
+                setRadius(v);
+                const p = new URLSearchParams(searchString);
+                if (v) p.set("radius", v); else p.delete("radius");
+                setOffset(0);
+                setLoadedSchools([]);
+                navigate(`/search?${p.toString()}`);
+              }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
             >
               <option value="">Exact Zip Only</option>
@@ -335,7 +576,16 @@ export default function SearchResults() {
                   {sortedStates.map(([state, count]) => (
                     <button
                       key={state}
-                      onClick={() => setSelectedState(selectedState === state ? null : state)}
+                      onClick={() => {
+                        const newState = selectedState === state ? null : state;
+                        setSelectedState(newState);
+                        setStateSelect(newState || "");
+                        const p = new URLSearchParams(searchString);
+                        if (newState) p.set("state", newState); else p.delete("state");
+                        setOffset(0);
+                        setLoadedSchools([]);
+                        navigate(`/search?${p.toString()}`);
+                      }}
                       className={`w-full text-left px-3 py-2 rounded-md text-sm transition flex items-center justify-between ${
                         selectedState === state
                           ? "bg-[#0055A4] text-white"
@@ -508,7 +758,7 @@ export default function SearchResults() {
               >
                 <Map className="w-4 h-4 mr-2" /> Map
               </Button>
-              <SaveSearchButton query={query} state={params.get("state") || ""} programType={programFilters[0] || ""} />
+              <SaveSearchButton query={searchText} state={stateSelect || params.get("state") || ""} programType={programFilters[0] || ""} />
             </div>
           </div>
 

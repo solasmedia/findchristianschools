@@ -31,15 +31,15 @@ export default function SchoolProfile() {
   // Dynamic SEO meta tags
   useEffect(() => {
     if (school) {
-      document.title = `${school.name} - Christian School in ${school.city}, ${school.state} | FindChristianSchools.org`;
+      document.title = `${school.name} - Christian School in ${school.city}, ${school.state} | FindChristianSchools.com`;
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) metaDesc.setAttribute('content', `${school.name} is a ${school.programType?.replace('_', ' ')} Christian school in ${school.city}, ${school.state} serving grades ${school.gradeStart}-${school.gradeEnd}.`);
       const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) ogTitle.setAttribute('content', `${school.name} | FindChristianSchools.org`);
+      if (ogTitle) ogTitle.setAttribute('content', `${school.name} | FindChristianSchools.com`);
       const ogDesc = document.querySelector('meta[property="og:description"]');
       if (ogDesc) ogDesc.setAttribute('content', `Find information about ${school.name} in ${school.city}, ${school.state}. Grades ${school.gradeStart}-${school.gradeEnd}, ${school.programType?.replace('_', ' ')} program.`);
     }
-    return () => { document.title = 'FindChristianSchools.org | Faith \u00b7 Education \u00b7 Future'; };
+    return () => { document.title = 'FindChristianSchools.com | Faith \u00b7 Education \u00b7 Future'; };
   }, [school]);
 
   if (isLoading) {
@@ -633,7 +633,7 @@ export default function SchoolProfile() {
                 <div className="flex items-start gap-2">
                   <FileText className="w-3.5 h-3.5 text-gray-400 mt-0.5 shrink-0" />
                   <p className="text-xs text-gray-500 leading-relaxed">
-                    Inclusion in this directory does not constitute an endorsement by FindChristianSchools.org. Listings are provided for informational purposes only. We encourage families to conduct their own due diligence before enrolling. Listings that violate our{' '}
+                    Inclusion in this directory does not constitute an endorsement by FindChristianSchools.com. Listings are provided for informational purposes only. We encourage families to conduct their own due diligence before enrolling. Listings that violate our{' '}
                     <a href="/terms-of-service" className="text-[#0055A4] hover:underline">Terms of Service</a> or Statement of Faith may be withdrawn without prior notice.
                   </p>
                 </div>

@@ -22,6 +22,7 @@ const STATIC_ROUTES = new Set([
   "/curriculum-guide", "/curriculum-comparison", "/lesson-planning",
   "/lesson-planner", "/submit", "/feedback", "/404",
   "/blog",
+  "/news",
   "/traveled",
   "/tools", "/tools/worksheet-generator", "/tools/math-worksheet-generator",
   "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator",
@@ -60,6 +61,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/blog": {
     title: "Teacher Resource Blog | FindChristianSchools.com",
     description: "Bible lesson plans, classroom activities, crafts, and teaching ideas for Christian educators. Free downloadable resources.",
+  },
+  "/news": {
+    title: "Christian Education News | FindChristianSchools.com",
+    description: "Press releases, policy updates, and school choice news for Christian educators, homeschool parents, and school administrators.",
   },
   "/tools": {
     title: "Free Tools for Christian Teachers | FindChristianSchools.com",
@@ -105,6 +110,7 @@ export type RouteMatch =
   | { kind: "college"; slug: string }
   | { kind: "race"; slug: string }
   | { kind: "blog"; slug: string }
+  | { kind: "news"; slug: string }
   | { kind: "state"; code: string }
   | { kind: "city"; code: string; city: string }
   | { kind: "unknown" };
@@ -127,6 +133,9 @@ export function matchRoute(rawPath: string): RouteMatch {
 
   const blog = path.match(/^\/blog\/([^/]+)$/);
   if (blog) return { kind: "blog", slug: decodeURIComponent(blog[1]) };
+
+  const news = path.match(/^\/news\/([^/]+)$/);
+  if (news) return { kind: "news", slug: decodeURIComponent(news[1]) };
 
   const state = path.match(/^\/state\/([a-zA-Z]{2})$/);
   if (state) return { kind: "state", code: state[1].toUpperCase() };
@@ -212,6 +221,17 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
       return {
         title: post.seoTitle || `${post.title} | FindChristianSchools.com`,
         description: post.excerpt || "Christian teacher resources, Bible lesson plans, and classroom ideas from FindChristianSchools.com.",
+        canonical,
+        ogType: "article",
+      };
+    }
+    if (match.kind === "news") {
+      const { getNewsItemBySlug } = await import("../db");
+      const item = await getNewsItemBySlug(match.slug);
+      if (!item) return null;
+      return {
+        title: `${item.title} | FindChristianSchools.com`,
+        description: item.summary || `Christian education news from ${item.sourceName}. Read the full story at the original source.`,
         canonical,
         ogType: "article",
       };

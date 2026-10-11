@@ -401,7 +401,7 @@ export default function SearchResults() {
             <h3 className="font-semibold text-[#002855] mb-3 text-sm flex items-center gap-1.5">
               <MapPin className="w-4 h-4" /> ZIP Code
             </h3>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full min-w-0">
               <input
                 type="text"
                 inputMode="numeric"
@@ -410,9 +410,9 @@ export default function SearchResults() {
                 onChange={(e) => setZipInput(e.target.value.replace(/\D/g, "").slice(0, 5))}
                 onKeyDown={(e) => { if (e.key === "Enter") handleZipApply(); }}
                 placeholder="e.g. 32909"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]"
+                className="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]"
               />
-              <Button size="sm" onClick={handleZipApply} className="bg-[#0055A4] hover:bg-[#003d7a] text-white">
+              <Button size="sm" onClick={handleZipApply} className="bg-[#0055A4] hover:bg-[#003d7a] text-white flex-shrink-0">
                 Go
               </Button>
             </div>

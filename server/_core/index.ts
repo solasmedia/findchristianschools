@@ -55,8 +55,6 @@ async function startServer() {
   // Admin data import API
   const { registerAdminImportRoute } = await import("../adminImport");
   registerAdminImportRoute(app);
-  const { registerBulkImportTemp } = await import("../bulkImportTemp");
-  registerBulkImportTemp(app);
   // SEO: sitemap.xml and robots.txt
   const { registerSeoRoutes } = await import("../seo");
   registerSeoRoutes(app);

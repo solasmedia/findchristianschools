@@ -8,19 +8,7 @@ import { and, eq, gt } from "drizzle-orm";
 import { router, publicProcedure } from "./_core/trpc";
 import { getDb } from "./db";
 import { adminUsers, twoFASessions } from "../drizzle/schema";
-
-const ADMIN_SESSION_COOKIE = "admin_session";
-const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
-
-function setAdminSessionCookie(res: Response, adminId: number) {
-  res.cookie(ADMIN_SESSION_COOKIE, String(adminId), {
-    httpOnly: true,
-    path: "/",
-    maxAge: SESSION_MAX_AGE_MS,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
-}
+import { setAdminSessionCookie, clearAdminSessionCookie } from "./_core/adminSession";
 
 export const adminAuthRouter = router({
   login: publicProcedure
@@ -52,6 +40,11 @@ export const adminAuthRouter = router({
       setAdminSessionCookie(ctx.res, admin.id);
       return { success: true };
     }),
+
+  logout: publicProcedure.mutation(async ({ ctx }) => {
+    clearAdminSessionCookie(ctx.res);
+    return { success: true };
+  }),
 
   verify2FA: publicProcedure
     .input(

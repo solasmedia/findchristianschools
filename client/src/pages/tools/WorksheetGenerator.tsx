@@ -10,7 +10,6 @@ import {
   type GradeKey, type SubjectKey, type Difficulty, type MathOp, type MathProblem,
 } from "@/lib/worksheetEngine";
 import { SPELLING_WORDS, READING_PASSAGES, GRADE_LABELS } from "@/data/worksheetData";
-import { sanitizeHtml } from "@/lib/sanitize";
 
 const OP_LABELS: Record<MathOp, string> = {
   addition: "Addition", subtraction: "Subtraction", multiplication: "Multiplication",
@@ -140,25 +139,25 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
     const gradeLabel = GRADE_LABELS[grade];
     let html = "";
     if (subject === "math" && customProblems) {
-      const problemHtml = customProblems.map(p => `<div class="problem">${p.question}</div>`).join("");
-      const answerHtml = customProblems.map(p => `<div class="problem">${p.answer}</div>`).join("");
+      const problemHtml = customProblems.map(p => `<div class="problem">${escapeHtml(p.question)}</div>`).join("");
+      const answerHtml = customProblems.map(p => `<div class="problem">${escapeHtml(p.answer)}</div>`).join("");
       const body = `<div class="problems">${problemHtml}</div><div class="answer-key"><h2>Answer Key</h2><div class="problems">${answerHtml}</div></div>`;
       html = getSheetHtml(`${gradeLabel} ${OP_LABELS[op]} Worksheet`, `${customProblems.length} problems · ${difficulty} · Answer key included`, body);
     } else if (subject === "spelling" && customWords) {
-      // Build preview via the engine's internal format
-      const rows = customWords.map((w, i) => `<div class="problem"><span class="spell-word">${i + 1}. ${w}</span><div style="font-family:-apple-system,sans-serif;font-size:12px;color:#64748b;margin-top:4px">Write it 3 times: ____________________ &nbsp; ____________________ &nbsp; ____________________</div></div>`).join("");
+      const rows = customWords.map((w, i) => `<div class="problem"><span class="spell-word">${i + 1}. ${escapeHtml(w)}</span><div style="font-family:-apple-system,sans-serif;font-size:12px;color:#64748b;margin-top:4px">Write it 3 times: ____________________ &nbsp; ____________________ &nbsp; ____________________</div></div>`).join("");
       const body = `<div class="problems single">${rows}</div>`;
       html = getSheetHtml(`${gradeLabel} Spelling Practice`, `${customWords.length} words · Write 3x + fill-in-the-blank`, body);
     }
-    // Extract just the body content for inline preview (strip html/head/body tags)
-    const bodyMatch = html.match(/<body>([\s\S]*)<\/body>/);
-    const bodyContent = bodyMatch ? bodyMatch[1] : html;
-    // Extract styles
-    const styleMatch = html.match(/<style>([\s\S]*)<\/style>/);
-    const styles = styleMatch ? styleMatch[1] : "";
-    setPreviewHtml(`<style>${styles}</style><div style="max-width:780px;margin:0 auto;padding:20px;background:white;">${bodyContent}</div>`);
+    // Ensure the footer branding is present
+    if (html && !html.includes("findchristianschools.com/tools")) {
+      html = html.replace("</body>", '<div class="footer"><strong>FindChristianSchools.com</strong> — Free printable — findchristianschools.com/tools</div></body>');
+    }
+    setPreviewHtml(html);
     setShowPreview(true);
   };
+
+  const escapeHtml = (s: string) =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
   // Editing helpers
   const updateProblem = (idx: number, field: "question" | "answer", value: string) => {
@@ -430,7 +429,14 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
                     </button>
                   </div>
                 </div>
-                <div className="overflow-y-auto flex-1" dangerouslySetInnerHTML={{ __html: sanitizeHtml(previewHtml) }} />
+                <div className="overflow-y-auto flex-1 bg-gray-100">
+                  <iframe
+                    srcDoc={previewHtml}
+                    title="Worksheet Preview"
+                    className="w-full h-full min-h-[60vh] border-0"
+                    sandbox="allow-same-origin"
+                  />
+                </div>
               </div>
             </div>
           )}

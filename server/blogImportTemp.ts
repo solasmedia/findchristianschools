@@ -18,12 +18,12 @@ const MIGRATION_STATEMENTS: string[] = [
 ];
 
 const ALTER_STATEMENTS: string[] = [
-  "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS isPremiumResource boolean NOT NULL DEFAULT false",
-  "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS resourcePriceCents int NULL",
-  "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS resourcePageCount int NULL",
-  "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS resourcePreviewContent text NULL",
-  "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS heroImageUrl varchar(512) NULL",
-  "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS seoTitle varchar(255) NULL",
+  "ALTER TABLE blog_posts ADD COLUMN isPremiumResource boolean NOT NULL DEFAULT false",
+  "ALTER TABLE blog_posts ADD COLUMN resourcePriceCents int NULL",
+  "ALTER TABLE blog_posts ADD COLUMN resourcePageCount int NULL",
+  "ALTER TABLE blog_posts ADD COLUMN resourcePreviewContent text NULL",
+  "ALTER TABLE blog_posts ADD COLUMN heroImageUrl varchar(512) NULL",
+  "ALTER TABLE blog_posts ADD COLUMN seoTitle varchar(255) NULL",
 ];
 
 export function registerBlogImportTemp(app: Express) {
@@ -34,7 +34,7 @@ export function registerBlogImportTemp(app: Express) {
       if (!db) { res.status(500).json({ error: "No DB" }); return; }
       for (const stmt of ALTER_STATEMENTS) {
         try { await db.execute(sql.raw(stmt)); } catch (e: any) {
-          if (!e.message?.includes("Duplicate")) throw e;
+          if (!e.message?.includes("Duplicate") && !e.message?.includes("duplicate")) throw e;
         }
       }
       res.json({ ok: true });

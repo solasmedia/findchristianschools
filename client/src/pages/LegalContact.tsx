@@ -102,7 +102,7 @@ export default function LegalContact() {
                   <strong>Operator:</strong> <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a>
                 </p>
                 <p>
-                  <strong>Part of:</strong> <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> Network
+                  <strong>Operated by:</strong> Solas Media LLC
                 </p>
                 <p>
                   <strong>Jurisdiction:</strong> State of Florida

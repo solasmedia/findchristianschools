@@ -72,13 +72,13 @@ export default function Welcome() {
           <div className="grid md:grid-cols-3 gap-6 md:gap-8 items-start">
             {/* Founder Photo */}
             <div className="flex col-span-full md:col-span-1 flex-col items-center">
-              <div className="w-32 h-32 md:w-full md:max-w-xs rounded-full md:rounded-lg shadow-lg mb-4 md:mb-6 md:h-80 bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#0055A4] flex items-center justify-center">
-                <span className="text-white font-bold text-3xl md:text-5xl tracking-wide">DO</span>
+              <div className="w-32 h-32 md:w-full md:max-w-xs rounded-full md:rounded-lg shadow-lg mb-4 md:mb-6 md:h-80 overflow-hidden">
+                <img src="/images/dave-oriordan.jpg" alt="David O'Riordan" className="w-full h-full object-cover" />
               </div>
               <div className="text-center mb-4 md:mb-8">
                 <h3 className="text-sm md:text-lg font-bold text-[#002855]">David O'Riordan</h3>
                 <p className="text-xs md:text-sm text-[#6EBE44] font-semibold">Founder & Executive Director</p>
-                <p className="text-xs text-gray-600 mt-1">Find Christian Schools<span className="trademark">™</span>.org</p>
+                <p className="text-xs text-gray-600 mt-1">FindChristianSchools.com</p>
               </div>
               {/* Timeline - hidden on mobile */}
               <div className="hidden md:block w-full pt-4 md:pt-8 border-t border-gray-200">

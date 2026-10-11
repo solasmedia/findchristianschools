@@ -91,7 +91,7 @@ export default function Footer() {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-blue-300 border-t border-blue-800 pt-4">
             <p>
-              Part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="hover:text-white underline">FindChristian.org</a> network
+              FindChristianSchools.com — Your Community for Christian Education
             </p>
             <p>
               Operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="hover:text-white underline">Solas Media LLC</a>

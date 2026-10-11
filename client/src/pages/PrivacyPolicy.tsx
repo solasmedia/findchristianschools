@@ -190,7 +190,7 @@ export default function PrivacyPolicy() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">About This Service</h2>
               <p className="text-gray-700 leading-relaxed">
-                FindChristianSchools.com is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> network, dedicated to connecting families with faith-based education worldwide.
+                FindChristianSchools.com is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is dedicated to connecting families with faith-based education worldwide.
               </p>
             </section>
 

@@ -48,7 +48,7 @@ export default function TermsOfService() {
               <li>The content complies with all applicable laws and regulations</li>
             </ul>
             <p className="text-gray-700 mb-4">
-              <strong>License to FindChristianSchools.com:</strong> By submitting content, the school grants FindChristianSchools.com a non-exclusive, royalty-free, perpetual license to display, reproduce, and distribute the content on the Service and in connection with FindChristian.org and related services.
+              <strong>License to FindChristianSchools.com:</strong> By submitting content, the school grants FindChristianSchools.com a non-exclusive, royalty-free, perpetual license to display, reproduce, and distribute the content on the Service and in connection with related services.
             </p>
             <p className="text-gray-700 mb-4">
               <strong>Removal & Refusal:</strong> FindChristianSchools.com reserves the right to remove, refuse, or modify any listing or content at its sole discretion, including for violations of these Terms, inaccuracy, or legal concerns. Removal does not entitle the school to a refund of any premium listing fees.
@@ -173,7 +173,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">15. About This Service</h2>
             <p className="text-gray-700">
-              FindChristianSchools.com is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> network, dedicated to connecting families with faith-based education worldwide.
+              FindChristianSchools.com is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is dedicated to connecting families with faith-based education worldwide.
             </p>
           </section>
 

@@ -137,11 +137,16 @@ export function blankOut(word: string): string {
 
 // ---------- Handwriting ----------
 export const HANDWRITING_SETS = [
-  { id: "upper", label: "Uppercase A–Z", items: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("") },
-  { id: "lower", label: "Lowercase a–z", items: "abcdefghijklmnopqrstuvwxyz".split("") },
-  { id: "numbers", label: "Numbers 0–9", items: "0123456789".split("") },
-  { id: "words", label: "Simple Words", items: ["cat", "dog", "sun", "mom", "dad", "big", "red", "run", "joy", "love", "God", "pray", "kind", "help"] },
-  { id: "verses", label: "Short Verses", items: ["Jesus wept.", "Pray without ceasing.", "God is love.", "Rejoice evermore."] },
+  { id: "upper", label: "Uppercase A–Z (Print)", items: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""), style: "print" },
+  { id: "lower", label: "Lowercase a–z (Print)", items: "abcdefghijklmnopqrstuvwxyz".split(""), style: "print" },
+  { id: "numbers", label: "Numbers 0–9", items: "0123456789".split(""), style: "print" },
+  { id: "words", label: "Simple Words (Print)", items: ["cat", "dog", "sun", "mom", "dad", "big", "red", "run", "joy", "love", "God", "pray", "kind", "help"], style: "print" },
+  { id: "verses", label: "Short Verses (Print)", items: ["Jesus wept.", "Pray without ceasing.", "God is love.", "Rejoice evermore."], style: "print" },
+  { id: "cursive-upper", label: "Uppercase A–Z (Cursive)", items: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""), style: "cursive", grades: "2-5" },
+  { id: "cursive-lower", label: "Lowercase a–z (Cursive)", items: "abcdefghijklmnopqrstuvwxyz".split(""), style: "cursive", grades: "2-5" },
+  { id: "cursive-words", label: "Words (Cursive)", items: ["grace", "mercy", "faith", "hope", "peace", "joy", "love", "pray", "bless", "trust", "serve", "honor"], style: "cursive", grades: "3-6" },
+  { id: "cursive-sentences", label: "Sentences (Cursive)", items: ["God is my shepherd.", "I will praise the Lord.", "Walk by faith each day.", "Love one another deeply.", "Give thanks to God always."], style: "cursive", grades: "4-8" },
+  { id: "cursive-verses", label: "Bible Verses (Cursive)", items: ["The Lord is my shepherd. — Psalm 23:1", "I can do all things through Christ. — Phil 4:13", "Be still and know that I am God. — Psalm 46:10", "Trust in the Lord with all thine heart. — Prov 3:5"], style: "cursive", grades: "4-8" },
 ];
 
 // ---------- Word search ----------
@@ -211,6 +216,7 @@ const PRINT_CSS = `
   .problem { font-size: 18px; padding: 10px 14px; background: #f8fafc; border-radius: 10px; border-left: 4px solid #6EBE44; }
   .spell-word { font-size: 20px; font-weight: bold; letter-spacing: 2px; color: #002855; }
   .trace { font-size: 42px; color: #93c5fd; letter-spacing: 6px; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; border-bottom: 3px dashed #6EBE44; margin: 12px 0; padding: 6px 0; text-align: center; }
+  .trace-cursive { font-size: 44px; color: #93c5fd; letter-spacing: 3px; font-family: 'Brush Script MT', 'Segoe Script', 'Apple Chancery', cursive; border-bottom: 3px dashed #6EBE44; margin: 14px 0; padding: 8px 0; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .trace-sm { font-size: 30px; color: #93c5fd; letter-spacing: 4px; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; border-bottom: 3px dashed #6EBE44; margin: 10px 0; padding: 4px 0; text-align: center; }
   .write-lines { margin: 14px 0; }
   .write-line { border-bottom: 2px solid #cbd5e1; height: 36px; border-radius: 2px; }
@@ -303,9 +309,10 @@ export function buildSpellingSheet(words: string[], title: string, subtitle: str
   openPrintSheet(title, subtitle, body);
 }
 
-export function buildHandwritingSheet(items: string[], label: string, title: string, subtitle: string) {
+export function buildHandwritingSheet(items: string[], label: string, title: string, subtitle: string, style: string = "print") {
+  const traceCls = style === "cursive" ? "trace-cursive" : "trace";
   const rows = items.map(it => `
-    <div style="margin-bottom:6px"><div class="trace">${it}</div><div class="write-line"></div><div class="write-line"></div></div>`).join("");
+    <div style="margin-bottom:8px"><div class="${traceCls}">${it}</div><div class="write-line"></div><div class="write-line"></div></div>`).join("");
   const body = `<div class="section-title">Trace, then practice: ${label}</div>${rows}`;
   openPrintSheet(title, subtitle, body);
 }

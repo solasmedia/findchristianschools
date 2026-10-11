@@ -26,7 +26,7 @@ export default function Disclaimer() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">General Information</h2>
               <p className="text-gray-700 leading-relaxed">
-                FindChristianSchools.org is an informational directory service designed to help families find Christian and faith-based educational institutions across America. The information provided on this website is for general informational purposes only.
+                FindChristianSchools.com is an informational directory service designed to help families find Christian and faith-based educational institutions across America. The information provided on this website is for general informational purposes only.
               </p>
             </section>
 
@@ -55,7 +55,7 @@ export default function Disclaimer() {
                 Some school listings on this website are sourced from the <strong>National Center for Education Statistics (NCES) Private School Universe Survey (PSS)</strong>, a publicly available federal database. These listings are clearly identified with an "Unverified" badge and a data source indicator.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                Schools listed from public data sources have not been contacted by or verified through FindChristianSchools.org. The information reflects what was reported to the federal government at the time of the survey and may not reflect current conditions.
+                Schools listed from public data sources have not been contacted by or verified through FindChristianSchools.com. The information reflects what was reported to the federal government at the time of the survey and may not reflect current conditions.
               </p>
               <p className="text-gray-700 leading-relaxed">
                 School representatives may <strong>claim their listing</strong> to verify and update information, or <strong>request removal</strong> if they prefer not to be listed in our directory. We respect every school's right to control their public presence.
@@ -72,7 +72,7 @@ export default function Disclaimer() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">No Endorsement</h2>
               <p className="text-gray-700 leading-relaxed">
-                Inclusion in our directory does not constitute an endorsement or recommendation of any school. We do not evaluate schools or verify their credentials, accreditation, or educational quality. Listing a school does not imply that FindChristianSchools.org endorses their doctrinal positions, teaching methods, or institutional practices.
+                Inclusion in our directory does not constitute an endorsement or recommendation of any school. We do not evaluate schools or verify their credentials, accreditation, or educational quality. Listing a school does not imply that FindChristianSchools.com endorses their doctrinal positions, teaching methods, or institutional practices.
               </p>
             </section>
 
@@ -89,7 +89,7 @@ export default function Disclaimer() {
 
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">Limitation of Liability</h2>
-              <p className="text-gray-700 leading-relaxed">To the fullest extent permitted by law, FindChristianSchools.org shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from:</p>
+              <p className="text-gray-700 leading-relaxed">To the fullest extent permitted by law, FindChristianSchools.com shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages arising from:</p>
               <ul className="list-disc pl-6 space-y-2 text-gray-700">
                 <li>Use of or inability to use this website</li>
                 <li>Reliance on information provided on this website</li>
@@ -121,7 +121,7 @@ export default function Disclaimer() {
                 Schools marked as <strong>Unverified Listing</strong> are included from public directory data and have not yet affirmed our Statement of Faith. We encourage these schools to claim their listing and complete verification. If you represent a school, you can start this process by claiming your listing.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                Any school that is found to violate or no longer uphold the Statement of Faith may be withdrawn from the FindChristianSchools.org directory at any time, without prior notice. By listing a school on this platform, the submitter acknowledges and accepts this policy. FindChristianSchools.org reserves sole discretion in determining compliance with the Statement of Faith.
+                Any school that is found to violate or no longer uphold the Statement of Faith may be withdrawn from the FindChristianSchools.com directory at any time, without prior notice. By listing a school on this platform, the submitter acknowledges and accepts this policy. FindChristianSchools.com reserves sole discretion in determining compliance with the Statement of Faith.
               </p>
             </section>
 
@@ -131,7 +131,7 @@ export default function Disclaimer() {
               <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-center gap-3">
                 <Mail className="w-5 h-5 text-[#0055A4]" />
                 <div>
-                  <p className="font-semibold text-[#002855]">FindChristianSchools.org</p>
+                  <p className="font-semibold text-[#002855]">FindChristianSchools.com</p>
                   
                 </div>
               </div>

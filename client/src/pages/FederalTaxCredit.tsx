@@ -279,6 +279,91 @@ export default function FederalTaxCredit() {
           </div>
         </section>
 
+        {/* State Directory */}
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-[#002855] mb-2">Is Your State Participating?</h2>
+          <p className="text-gray-600 mb-6">
+            Thirty states have officially opted in as of September 2026. Each participating state will publish its certified SGO registry — click your state to go directly to its Department of Education where the list will appear. States must submit SGO lists by <strong>February 15, 2027</strong>.
+          </p>
+
+          <h3 className="text-lg font-bold text-[#6EBE44] mb-3 flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-[#6EBE44] inline-block"></span>
+            Participating States (30)
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-8">
+            {[
+              { name: "Alabama", url: "https://www.alabamaachieves.org" },
+              { name: "Alaska", url: "https://education.alaska.gov" },
+              { name: "Arkansas", url: "https://dese.ade.arkansas.gov" },
+              { name: "Colorado", url: "https://www.cde.state.co.us" },
+              { name: "Florida", url: "https://www.fldoe.org" },
+              { name: "Georgia", url: "https://www.gadoe.org" },
+              { name: "Idaho", url: "https://www.sde.idaho.gov" },
+              { name: "Indiana", url: "https://www.in.gov/doe" },
+              { name: "Iowa", url: "https://educate.iowa.gov" },
+              { name: "Kansas", url: "https://www.ksde.org" },
+              { name: "Kentucky", url: "https://education.ky.gov" },
+              { name: "Louisiana", url: "https://www.louisianabelieves.com" },
+              { name: "Mississippi", url: "https://www.mdek12.org" },
+              { name: "Missouri", url: "https://dese.mo.gov" },
+              { name: "Montana", url: "https://opi.mt.gov" },
+              { name: "Nebraska", url: "https://www.education.ne.gov" },
+              { name: "Nevada", url: "https://doe.nv.gov" },
+              { name: "New Hampshire", url: "https://www.education.nh.gov" },
+              { name: "North Carolina", url: "https://www.dpi.nc.gov" },
+              { name: "North Dakota", url: "https://www.nd.gov/dpi" },
+              { name: "Ohio", url: "https://education.ohio.gov" },
+              { name: "Oklahoma", url: "https://sde.ok.gov" },
+              { name: "South Carolina", url: "https://ed.sc.gov" },
+              { name: "South Dakota", url: "https://doe.sd.gov" },
+              { name: "Tennessee", url: "https://www.tn.gov/education" },
+              { name: "Texas", url: "https://tea.texas.gov" },
+              { name: "Utah", url: "https://www.schools.utah.gov" },
+              { name: "Virginia", url: "https://www.doe.virginia.gov" },
+              { name: "West Virginia", url: "https://wvde.us" },
+              { name: "Wyoming", url: "https://edu.wyoming.gov" },
+            ].map((s) => (
+              <a
+                key={s.name}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-4 py-3 hover:border-[#6EBE44] hover:shadow-sm transition group"
+              >
+                <span className="font-medium text-[#002855] text-sm sm:text-base">{s.name}</span>
+                <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-[#6EBE44] transition" />
+              </a>
+            ))}
+          </div>
+
+          <h3 className="text-lg font-bold text-amber-600 mb-3 flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+            Not Participating (6)
+          </h3>
+          <p className="text-gray-600 text-sm mb-3">
+            These states have said they will not participate. Donors in these states can still claim the credit by donating to SGOs in participating states — but students here cannot receive scholarships.
+          </p>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {["Arizona", "Hawaii", "Minnesota", "New Mexico", "Oregon", "Wisconsin"].map((s) => (
+              <span key={s} className="bg-gray-100 text-gray-600 rounded-full px-4 py-2 text-sm font-medium">{s}</span>
+            ))}
+          </div>
+
+          <h3 className="text-lg font-bold text-gray-500 mb-3 flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-gray-400 inline-block"></span>
+            Status Pending (14)
+          </h3>
+          <p className="text-gray-600 text-sm mb-3">
+            These states haven't announced a decision yet. Check back — we'll update this list as states opt in.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {["California", "Connecticut", "Delaware", "Illinois", "Maine", "Maryland", "Massachusetts", "Michigan", "New Jersey", "New York", "Pennsylvania", "Rhode Island", "Vermont", "Washington"].map((s) => (
+              <span key={s} className="bg-gray-50 border border-gray-200 text-gray-500 rounded-full px-4 py-2 text-sm">{s}</span>
+            ))}
+          </div>
+          <p className="text-gray-400 text-xs mt-6 italic">State participation data as of September 2026, sourced from Ballotpedia. We'll update this directory as SGO registries are published.</p>
+        </section>
+
         {/* Share */}
         <section className="mb-10 bg-gradient-to-br from-[#6EBE44]/10 to-[#002855]/5 rounded-2xl p-6 sm:p-8 text-center border border-[#6EBE44]/20">
           <h2 className="text-xl font-bold text-[#002855] mb-3">Know Someone Who Needs to See This?</h2>

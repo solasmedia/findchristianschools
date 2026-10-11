@@ -92,4 +92,15 @@ export function registerBlogImportTemp(app: Express) {
       res.status(500).json({ error: (e.message || "unknown").slice(0, 500) });
     }
   });
+
+  app.post("/api/admin/news-refresh-temp", async (req: Request, res: Response) => {
+    if (!ADMIN_KEY || req.headers["x-admin-key"] !== ADMIN_KEY) { res.status(403).json({ error: "Forbidden" }); return; }
+    try {
+      const { triggerNewsRefresh } = await import("./db.js");
+      const result = await triggerNewsRefresh();
+      res.json({ ok: true, result });
+    } catch (e: any) {
+      res.status(500).json({ error: (e.message || "unknown").slice(0, 500) });
+    }
+  });
 }

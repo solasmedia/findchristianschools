@@ -5,58 +5,58 @@ import { sql } from "drizzle-orm";
 
 const ADMIN_KEY = process.env.ADMIN_IMPORT_KEY || "fcs-temp-import-2026";
 
-const MIGRATION_SQL = `
-CREATE TABLE IF NOT EXISTS `blog_posts` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `title` varchar(255) NOT NULL,
-  `slug` varchar(255) NOT NULL UNIQUE,
-  `excerpt` text NULL,
-  `category` enum('bible_lessons','classroom_activities','crafts','critical_thinking','character_education','seasonal','chapel','teaching_tips') NOT NULL DEFAULT 'teaching_tips',
-  `ageGroup` varchar(64) NULL,
-  `content` text NOT NULL,
-  `readingTimeMinutes` int NULL DEFAULT 5,
-  `status` enum('draft','scheduled','published') NOT NULL DEFAULT 'draft',
-  `scheduledFor` timestamp NULL,
-  `publishedAt` timestamp NULL,
-  `featured` boolean NOT NULL DEFAULT false,
-  `viewCount` int NOT NULL DEFAULT 0,
-  `seoTitle` varchar(255) NULL,
-  `heroImageUrl` varchar(512) NULL,
-  `resourceTitle` varchar(255) NULL,
-  `resourceDescription` text NULL,
-  `resourceContent` text NULL,
-  `resourceType` varchar(64) NULL,
-  `downloadCount` int NOT NULL DEFAULT 0,
-  `isPremiumResource` boolean NOT NULL DEFAULT false,
-  `resourcePriceCents` int NULL,
-  `resourcePageCount` int NULL,
-  `resourcePreviewContent` text NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  INDEX `idx_blog_status_published` (`status`, `publishedAt`),
-  INDEX `idx_blog_scheduled` (`status`, `scheduledFor`),
-  INDEX `idx_blog_category` (`category`)
+const MIGRATION_SQL = 
+CREATE TABLE IF NOT EXISTS blog_posts (
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title varchar(255) NOT NULL,
+  slug varchar(255) NOT NULL UNIQUE,
+  excerpt text NULL,
+  category enum('bible_lessons','classroom_activities','crafts','critical_thinking','character_education','seasonal','chapel','teaching_tips') NOT NULL DEFAULT 'teaching_tips',
+  ageGroup varchar(64) NULL,
+  content text NOT NULL,
+  readingTimeMinutes int NULL DEFAULT 5,
+  status enum('draft','scheduled','published') NOT NULL DEFAULT 'draft',
+  scheduledFor timestamp NULL,
+  publishedAt timestamp NULL,
+  featured boolean NOT NULL DEFAULT false,
+  viewCount int NOT NULL DEFAULT 0,
+  seoTitle varchar(255) NULL,
+  heroImageUrl varchar(512) NULL,
+  resourceTitle varchar(255) NULL,
+  resourceDescription text NULL,
+  resourceContent text NULL,
+  resourceType varchar(64) NULL,
+  downloadCount int NOT NULL DEFAULT 0,
+  isPremiumResource boolean NOT NULL DEFAULT false,
+  resourcePriceCents int NULL,
+  resourcePageCount int NULL,
+  resourcePreviewContent text NULL,
+  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_blog_status_published (status, publishedAt),
+  INDEX idx_blog_scheduled (status, scheduledFor),
+  INDEX idx_blog_category (category)
 );
-CREATE TABLE IF NOT EXISTS `resource_downloads` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `postId` int NOT NULL,
-  `email` varchar(320) NOT NULL,
-  `firstName` varchar(255) NULL,
-  `userType` varchar(32) DEFAULT 'other',
-  `downloadedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX `idx_dl_post` (`postId`)
+CREATE TABLE IF NOT EXISTS resource_downloads (
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  postId int NOT NULL,
+  email varchar(320) NOT NULL,
+  firstName varchar(255) NULL,
+  userType varchar(32) DEFAULT 'other',
+  downloadedAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_dl_post (postId)
 );
-CREATE TABLE IF NOT EXISTS `resource_purchases` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `postId` int NOT NULL,
-  `email` varchar(320) NOT NULL,
-  `stripeSessionId` varchar(255) NULL,
-  `amount` decimal(10,2) NULL,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY `uq_purchase_post_email` (`postId`, `email`),
-  INDEX `idx_purch_post` (`postId`)
+CREATE TABLE IF NOT EXISTS resource_purchases (
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  postId int NOT NULL,
+  email varchar(320) NOT NULL,
+  stripeSessionId varchar(255) NULL,
+  amount decimal(10,2) NULL,
+  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_purchase_post_email (postId, email),
+  INDEX idx_purch_post (postId)
 );
-`;
+;
 
 export function registerBlogImportTemp(app: Express) {
   app.post("/api/admin/blog-alter-temp", async (req: Request, res: Response) => {
@@ -65,12 +65,12 @@ export function registerBlogImportTemp(app: Express) {
       const db = await getDb();
       if (!db) { res.status(500).json({ error: "No DB" }); return; }
       const alters = [
-        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `isPremiumResource` boolean NOT NULL DEFAULT false",
-        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `resourcePriceCents` int NULL",
-        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `resourcePageCount` int NULL",
-        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `resourcePreviewContent` text NULL",
-        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `heroImageUrl` varchar(512) NULL",
-        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `seoTitle` varchar(255) NULL",
+        "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS isPremiumResource boolean NOT NULL DEFAULT false",
+        "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS resourcePriceCents int NULL",
+        "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS resourcePageCount int NULL",
+        "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS resourcePreviewContent text NULL",
+        "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS heroImageUrl varchar(512) NULL",
+        "ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS seoTitle varchar(255) NULL",
       ];
       for (const stmt of alters) {
         try { await db.execute(sql.raw(stmt)); } catch (e: any) {

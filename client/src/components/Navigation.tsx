@@ -45,7 +45,6 @@ const navItems: NavItem[] = [
       { href: "/resources", label: "Resource Hub" },
       { href: "/blog", label: "Teacher Blog" },
       { href: "/news", label: "Education News" },
-      { href: "/tools", label: "Free Teacher Tools" },
       { href: "/teacher-resources", label: "Teacher Resources" },
       { href: "/book-club", label: "Book Club" },
       { href: "/videos", label: "Videos" },

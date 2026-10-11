@@ -116,7 +116,7 @@ export default function Navigation() {
           </Link>
 
           {/* Desktop Nav - absolutely centered */}
-          <nav className="hidden lg:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-full px-1.5 py-0.5 shadow-sm">
+          <nav className="hidden lg:flex items-center gap-0.5 absolute left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-full px-1.5 py-0.5 shadow-sm max-w-[65vw] overflow-x-auto">
             {navItems.slice(0, -1).map((item) =>
               item.children ? (
                 <DropdownNav key={item.href} item={item} location={location} />
@@ -124,7 +124,7 @@ export default function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${
+                  className={`px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors whitespace-nowrap flex-shrink-0 ${
                     location === item.href || location.startsWith(item.href + "/")
                       ? "text-[#0055A4] bg-blue-50"
                       : "text-[#002855] hover:text-[#0055A4] hover:bg-gray-50"

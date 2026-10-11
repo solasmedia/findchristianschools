@@ -1,0 +1,61 @@
+// 50 popular Bible memory verses for kids — King James Version (public domain)
+export interface MemoryVerse {
+  reference: string;
+  text: string;
+  theme: string;
+}
+
+export const MEMORY_VERSES: MemoryVerse[] = [
+  { reference: "Genesis 1:1", text: "In the beginning God created the heaven and the earth.", theme: "Creation" },
+  { reference: "Exodus 20:12", text: "Honour thy father and thy mother: that thy days may be long upon the land which the LORD thy God giveth thee.", theme: "Family" },
+  { reference: "Psalm 19:1", text: "The heavens declare the glory of God; and the firmament sheweth his handywork.", theme: "Creation" },
+  { reference: "Psalm 23:1", text: "The LORD is my shepherd; I shall not want.", theme: "Trust" },
+  { reference: "Psalm 46:10", text: "Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth.", theme: "Trust" },
+  { reference: "Psalm 56:3", text: "What time I am afraid, I will trust in thee.", theme: "Courage" },
+  { reference: "Psalm 100:3", text: "Know ye that the LORD he is God: it is he that hath made us, and not we ourselves; we are his people, and the sheep of his pasture.", theme: "Identity" },
+  { reference: "Psalm 118:24", text: "This is the day which the LORD hath made; we will rejoice and be glad in it.", theme: "Joy" },
+  { reference: "Psalm 119:11", text: "Thy word have I hid in mine heart, that I might not sin against thee.", theme: "Scripture" },
+  { reference: "Psalm 119:105", text: "Thy word is a lamp unto my feet, and a light unto my path.", theme: "Scripture" },
+  { reference: "Psalm 136:1", text: "O give thanks unto the LORD; for he is good: for his mercy endureth for ever.", theme: "Gratitude" },
+  { reference: "Proverbs 3:5", text: "Trust in the LORD with all thine heart; and lean not unto thine own understanding.", theme: "Trust" },
+  { reference: "Proverbs 3:6", text: "In all thy ways acknowledge him, and he shall direct thy paths.", theme: "Trust" },
+  { reference: "Proverbs 15:1", text: "A soft answer turneth away wrath: but grievous words stir up anger.", theme: "Kindness" },
+  { reference: "Proverbs 22:6", text: "Train up a child in the way he should go: and when he is old, he will not depart from it.", theme: "Family" },
+  { reference: "Isaiah 40:31", text: "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint.", theme: "Strength" },
+  { reference: "Isaiah 41:10", text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.", theme: "Courage" },
+  { reference: "Jeremiah 29:11", text: "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.", theme: "Hope" },
+  { reference: "Micah 6:8", text: "He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?", theme: "Character" },
+  { reference: "Matthew 5:16", text: "Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.", theme: "Character" },
+  { reference: "Matthew 6:33", text: "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you.", theme: "Priorities" },
+  { reference: "Matthew 7:7", text: "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you.", theme: "Prayer" },
+  { reference: "Matthew 11:28", text: "Come unto me, all ye that labour and are heavy laden, and I will give you rest.", theme: "Comfort" },
+  { reference: "Matthew 19:26", text: "With men this is impossible; but with God all things are possible.", theme: "Faith" },
+  { reference: "Matthew 22:37", text: "Thou shalt love the Lord thy God with all thy heart, and with all thy soul, and with all thy mind.", theme: "Love" },
+  { reference: "Matthew 28:20", text: "Teaching them to observe all things whatsoever I have commanded you: and, lo, I am with you alway, even unto the end of the world. Amen.", theme: "Comfort" },
+  { reference: "Luke 2:11", text: "For unto you is born this day in the city of David a Saviour, which is Christ the Lord.", theme: "Christmas" },
+  { reference: "John 1:1", text: "In the beginning was the Word, and the Word was with God, and the Word was God.", theme: "Jesus" },
+  { reference: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.", theme: "Salvation" },
+  { reference: "John 8:12", text: "I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.", theme: "Jesus" },
+  { reference: "John 10:10", text: "I am come that they might have life, and that they might have it more abundantly.", theme: "Jesus" },
+  { reference: "John 11:35", text: "Jesus wept.", theme: "Jesus" },
+  { reference: "John 13:34", text: "A new commandment I give unto you, That ye love one another; as I have loved you, that ye also love one another.", theme: "Love" },
+  { reference: "John 14:6", text: "Jesus saith unto him, I am the way, the truth, and the life: no man cometh unto the Father, but by me.", theme: "Salvation" },
+  { reference: "Acts 16:31", text: "Believe on the Lord Jesus Christ, and thou shalt be saved, and thy house.", theme: "Salvation" },
+  { reference: "Romans 3:23", text: "For all have sinned, and come short of the glory of God;", theme: "Salvation" },
+  { reference: "Romans 5:8", text: "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us.", theme: "Love" },
+  { reference: "Romans 6:23", text: "For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.", theme: "Salvation" },
+  { reference: "Romans 8:28", text: "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.", theme: "Trust" },
+  { reference: "Romans 10:9", text: "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved.", theme: "Salvation" },
+  { reference: "1 Corinthians 10:31", text: "Whether therefore ye eat, or drink, or whatsoever ye do, do all to the glory of God.", theme: "Character" },
+  { reference: "1 Corinthians 16:14", text: "Let all your things be done with charity.", theme: "Love" },
+  { reference: "Galatians 5:22", text: "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,", theme: "Character" },
+  { reference: "Ephesians 4:32", text: "And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you.", theme: "Kindness" },
+  { reference: "Ephesians 6:1", text: "Children, obey your parents in the Lord: for this is right.", theme: "Family" },
+  { reference: "Philippians 4:4", text: "Rejoice in the Lord alway: and again I say, Rejoice.", theme: "Joy" },
+  { reference: "Philippians 4:6", text: "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.", theme: "Prayer" },
+  { reference: "Philippians 4:13", text: "I can do all things through Christ which strengtheneth me.", theme: "Strength" },
+  { reference: "Colossians 3:20", text: "Children, obey your parents in all things: for this is well pleasing unto the Lord.", theme: "Family" },
+  { reference: "Colossians 3:23", text: "And whatsoever ye do, do it heartily, as to the Lord, and not unto men;", theme: "Character" },
+];
+
+export const VERSE_THEMES = Array.from(new Set(MEMORY_VERSES.map(v => v.theme))).sort();

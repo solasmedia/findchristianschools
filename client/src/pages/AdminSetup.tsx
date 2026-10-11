@@ -10,7 +10,7 @@ import { trpc } from '@/lib/trpc';
 
 export default function AdminSetup() {
   const [, navigate] = useLocation();
-  const [email, setEmail] = useState('office@findchristianschools.org');
+  const [email, setEmail] = useState('office@findchristianschools.com');
   const [password, setPassword] = useState('Daith1982!');
   const [name, setName] = useState('Office Admin');
   const [isLoading, setIsLoading] = useState(false);
@@ -113,7 +113,7 @@ export default function AdminSetup() {
                   </label>
                   <Input
                     type="email"
-                    placeholder="office@findchristianschools.org"
+                    placeholder="office@findchristianschools.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="border-gray-300 focus:border-[#0055A4] focus:ring-[#0055A4]"

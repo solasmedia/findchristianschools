@@ -106,4 +106,16 @@ export function registerBlogImportTemp(app: Express) {
       res.status(500).json({ error: (e.message || "unknown").slice(0, 500) });
     }
   });
+
+  app.post("/api/admin/publish-all-temp", async (req: Request, res: Response) => {
+    if (!ADMIN_KEY || req.headers["x-admin-key"] !== ADMIN_KEY) { res.status(403).json({ error: "Forbidden" }); return; }
+    try {
+      const db = await getDb();
+      if (!db) { res.status(500).json({ error: "No DB" }); return; }
+      await db.execute(sql.raw("UPDATE blog_posts SET status='published', publishedAt=NOW() WHERE status='scheduled'"));
+      res.json({ ok: true });
+    } catch (e: any) {
+      res.status(500).json({ error: (e.message || "unknown").slice(0, 500) });
+    }
+  });
 }

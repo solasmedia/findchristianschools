@@ -92,6 +92,18 @@ export function registerBulkImportTemp(app: Express) {
         return;
       }
 
+
+      // Apply SoF attestation columns (from migration 0017) if missing
+      const sofTables = ["jobs", "events", "schools", "international_schools"];
+      for (const tbl of sofTables) {
+        try {
+          await db.execute(sql.raw(`ALTER TABLE \`${tbl}\` ADD COLUMN IF NOT EXISTS \`sofAttested\` boolean NOT NULL DEFAULT false`));
+        } catch (e) { /* column may already exist */ }
+        try {
+          await db.execute(sql.raw(`ALTER TABLE \`${tbl}\` ADD COLUMN IF NOT EXISTS \`sofAttestedAt\` timestamp NULL`));
+        } catch (e) { /* column may already exist */ }
+      }
+
       // Ensure tables exist
       if (type === "colleges") {
         await db.execute(sql.raw(CREATE_COLLEGES));

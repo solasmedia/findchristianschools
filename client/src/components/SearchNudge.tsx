@@ -45,7 +45,7 @@ export function SearchNudge({ onDonate }: { onDonate?: () => void }) {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-white text-sm font-medium">
-            Enjoying FindChristianSchools.org?
+            Enjoying FindChristianSchools.com?
           </p>
           <p className="text-blue-100 text-xs mt-0.5">
             Your support helps us connect more families with Christian education worldwide.

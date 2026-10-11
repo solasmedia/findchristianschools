@@ -59,6 +59,30 @@ CREATE TABLE IF NOT EXISTS `resource_purchases` (
 `;
 
 export function registerBlogImportTemp(app: Express) {
+  app.post("/api/admin/blog-alter-temp", async (req: Request, res: Response) => {
+    if (req.headers["x-admin-key"] !== ADMIN_KEY) { res.status(403).json({ error: "Forbidden" }); return; }
+    try {
+      const db = await getDb();
+      if (!db) { res.status(500).json({ error: "No DB" }); return; }
+      const alters = [
+        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `isPremiumResource` boolean NOT NULL DEFAULT false",
+        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `resourcePriceCents` int NULL",
+        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `resourcePageCount` int NULL",
+        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `resourcePreviewContent` text NULL",
+        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `heroImageUrl` varchar(512) NULL",
+        "ALTER TABLE `blog_posts` ADD COLUMN IF NOT EXISTS `seoTitle` varchar(255) NULL",
+      ];
+      for (const stmt of alters) {
+        try { await db.execute(sql.raw(stmt)); } catch (e: any) {
+          if (!e.message?.includes("Duplicate")) throw e;
+        }
+      }
+      res.json({ ok: true });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message?.slice(0, 500) });
+    }
+  });
+
   app.post("/api/admin/blog-migrate-temp", async (req: Request, res: Response) => {
     if (req.headers["x-admin-key"] !== ADMIN_KEY) { res.status(403).json({ error: "Forbidden" }); return; }
     try {

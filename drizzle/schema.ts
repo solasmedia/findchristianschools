@@ -626,3 +626,68 @@ export const races = mysqlTable("races", {
 
 export type Race = typeof races.$inferSelect;
 export type InsertRace = typeof races.$inferInsert;
+
+// ============ BLOG (Teacher Resource Hub) ============
+export const blogPosts = mysqlTable("blog_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  excerpt: text("excerpt"), // meta description / card preview
+  category: mysqlEnum("category", [
+    "bible_lessons", "classroom_activities", "crafts", "critical_thinking",
+    "character_education", "seasonal", "chapel", "teaching_tips",
+  ]).default("teaching_tips").notNull(),
+  ageGroup: varchar("ageGroup", { length: 64 }), // e.g. "K-2", "3-5", "6-8", "9-12", "All ages"
+  content: text("content").notNull(), // HTML article body
+  readingTimeMinutes: int("readingTimeMinutes").default(5),
+  status: mysqlEnum("status", ["draft", "scheduled", "published"]).default("draft").notNull(),
+  scheduledFor: timestamp("scheduledFor"), // auto-publish when this passes
+  publishedAt: timestamp("publishedAt"),
+  featured: boolean("featured").default(false).notNull(),
+  viewCount: int("viewCount").default(0).notNull(),
+  // SEO
+  seoTitle: varchar("seoTitle", { length: 255 }),
+  heroImageUrl: varchar("heroImageUrl", { length: 512 }), // Unsplash hero image
+  // Downloadable resource attached to this post
+  resourceTitle: varchar("resourceTitle", { length: 255 }),
+  resourceDescription: text("resourceDescription"),
+  resourceContent: text("resourceContent"), // printable HTML for the download
+  resourceType: varchar("resourceType", { length: 64 }), // "lesson_plan", "worksheet", "activity_packet", "craft_guide"
+  downloadCount: int("downloadCount").default(0).notNull(),
+  // Freemium: free resources are email-gated; premium resources are purchased
+  isPremiumResource: boolean("isPremiumResource").default(false).notNull(),
+  resourcePriceCents: int("resourcePriceCents"), // e.g. 700 = $7.00
+  resourcePageCount: int("resourcePageCount"), // for display ("12-page unit")
+  resourcePreviewContent: text("resourcePreviewContent"), // free preview HTML (first pages)
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
+// Email-gated download log (feeds newsletter list)
+export const resourceDownloads = mysqlTable("resource_downloads", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("postId").notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  firstName: varchar("firstName", { length: 255 }),
+  userType: varchar("userType", { length: 32 }).default("other"), // teacher, parent, school, other
+  downloadedAt: timestamp("downloadedAt").defaultNow().notNull(),
+});
+
+export type ResourceDownload = typeof resourceDownloads.$inferSelect;
+export type InsertResourceDownload = typeof resourceDownloads.$inferInsert;
+
+// One-time purchases of premium resource packets
+export const resourcePurchases = mysqlTable("resource_purchases", {
+  id: int("id").autoincrement().primaryKey(),
+  postId: int("postId").notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  stripeSessionId: varchar("stripeSessionId", { length: 255 }),
+  amountCents: int("amountCents").notNull(),
+  purchasedAt: timestamp("purchasedAt").defaultNow().notNull(),
+});
+
+export type ResourcePurchase = typeof resourcePurchases.$inferSelect;
+export type InsertResourcePurchase = typeof resourcePurchases.$inferInsert;

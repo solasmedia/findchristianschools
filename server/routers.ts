@@ -35,6 +35,9 @@ import {
   getSchoolCountsByState,
   searchColleges, getCollegeBySlug, getCollegesByState, getCollegeCountsByState,
   searchRaces, getRaceBySlug, getRaceCountsByState,
+  getBlogPosts, getBlogPostBySlug, getRelatedBlogPosts,
+  getAllBlogPostsAdmin, createBlogPost, updateBlogPost, deleteBlogPost,
+  logResourceDownload, getBlogStats, hasPurchasedResource, getBlogPostForPurchase,
 } from "./db";
 import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
@@ -611,6 +614,119 @@ export const appRouter = router({
     delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => deleteEvent(input.id)),
     listPending: adminProcedure.query(() => getPendingEvents()),
     listAll: adminProcedure.input(z.object({ limit: z.number().optional(), offset: z.number().optional() }).optional()).query(({ input }) => getAllEventsAdmin(input || {})),
+  }),
+
+  // ============ BLOG (Teacher Resource Hub) ============
+  blog: router({
+    list: publicProcedure.input(z.object({
+      category: z.string().optional(),
+      limit: z.number().optional(), offset: z.number().optional(),
+    })).query(({ input }) => getBlogPosts(input)),
+    bySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {
+      const post = await getBlogPostBySlug(input.slug);
+      if (!post) throw new TRPCError({ code: 'NOT_FOUND', message: 'Post not found' });
+      return post;
+    }),
+    related: publicProcedure.input(z.object({
+      postId: z.number(), category: z.string(), limit: z.number().optional(),
+    })).query(({ input }) => getRelatedBlogPosts(input.postId, input.category, input.limit)),
+    // Email-gated download: logs the download + subscribes to newsletter
+    downloadResource: publicProcedure.input(z.object({
+      postId: z.number(),
+      email: z.string().email(),
+      firstName: z.string().max(255).optional(),
+      userType: z.enum(['teacher', 'parent', 'school', 'other']).optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const key = getRateLimitKey('blog_download', undefined, ctx.req.ip);
+      if (!checkRateLimit(key, { maxRequests: 10, windowMs: 60 * 60 * 1000 })) {
+        throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many download attempts. Please try again later.' });
+      }
+      return logResourceDownload(input);
+    }),
+    // Premium purchase: create Stripe checkout for a resource packet
+    purchaseResource: publicProcedure.input(z.object({
+      postId: z.number(),
+      email: z.string().email(),
+      origin: z.string().url(),
+    })).mutation(async ({ input }) => {
+      const post = await getBlogPostForPurchase(input.postId);
+      if (!post || !post.isPremiumResource || !post.resourcePriceCents) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Premium resource not found' });
+      }
+      const { createResourceCheckout } = await import("./stripe/checkout");
+      return createResourceCheckout({
+        postId: post.id,
+        postSlug: post.slug,
+        postTitle: post.title,
+        resourceTitle: post.resourceTitle || post.title,
+        priceCents: post.resourcePriceCents,
+        userEmail: input.email,
+        origin: input.origin,
+      });
+    }),
+    // Check if an email has purchased a resource (unlocks full download)
+    checkPurchase: publicProcedure.input(z.object({
+      postId: z.number(),
+      email: z.string().email(),
+    })).query(({ input }) => hasPurchasedResource(input.postId, input.email)),
+    // Admin
+    listAll: adminProcedure.input(z.object({ limit: z.number().optional(), offset: z.number().optional() }).optional()).query(({ input }) => getAllBlogPostsAdmin(input || {})),
+    stats: adminProcedure.query(() => getBlogStats()),
+    create: adminProcedure.input(z.object({
+      title: z.string().min(1).max(255),
+      slug: z.string().min(1).max(255),
+      excerpt: z.string().optional(),
+      category: z.enum(["bible_lessons", "classroom_activities", "crafts", "critical_thinking", "character_education", "seasonal", "chapel", "teaching_tips"]).optional(),
+      ageGroup: z.string().max(64).optional(),
+      content: z.string().min(1),
+      readingTimeMinutes: z.number().optional(),
+      status: z.enum(["draft", "scheduled", "published"]).optional(),
+      scheduledFor: z.date().optional(),
+      featured: z.boolean().optional(),
+      seoTitle: z.string().max(255).optional(),
+      resourceTitle: z.string().max(255).optional(),
+      resourceDescription: z.string().optional(),
+      resourceContent: z.string().optional(),
+      resourceType: z.string().max(64).optional(),
+      heroImageUrl: z.string().max(512).optional(),
+      isPremiumResource: z.boolean().optional(),
+      resourcePriceCents: z.number().optional(),
+      resourcePageCount: z.number().optional(),
+      resourcePreviewContent: z.string().optional(),
+    })).mutation(({ input }) => createBlogPost({
+      ...input,
+      publishedAt: input.status === "published" ? new Date() : null,
+    })),
+    update: adminProcedure.input(z.object({
+      id: z.number(),
+      data: z.object({
+        title: z.string().min(1).max(255).optional(),
+        slug: z.string().min(1).max(255).optional(),
+        excerpt: z.string().optional(),
+        category: z.enum(["bible_lessons", "classroom_activities", "crafts", "critical_thinking", "character_education", "seasonal", "chapel", "teaching_tips"]).optional(),
+        ageGroup: z.string().max(64).optional(),
+        content: z.string().min(1).optional(),
+        readingTimeMinutes: z.number().optional(),
+        status: z.enum(["draft", "scheduled", "published"]).optional(),
+        scheduledFor: z.date().optional().nullable(),
+        publishedAt: z.date().optional().nullable(),
+        featured: z.boolean().optional(),
+        seoTitle: z.string().max(255).optional(),
+        resourceTitle: z.string().max(255).optional(),
+        resourceDescription: z.string().optional(),
+        resourceContent: z.string().optional(),
+        resourceType: z.string().max(64).optional(),
+        heroImageUrl: z.string().max(512).optional(),
+        isPremiumResource: z.boolean().optional(),
+        resourcePriceCents: z.number().optional(),
+        resourcePageCount: z.number().optional(),
+        resourcePreviewContent: z.string().optional(),
+      }),
+    })).mutation(({ input }) => updateBlogPost(input.id, {
+      ...input.data,
+      ...(input.data.status === "published" ? { publishedAt: new Date() } : {}),
+    })),
+    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => deleteBlogPost(input.id)),
   }),
 
   // ============ IMPACT ============

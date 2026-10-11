@@ -142,6 +142,36 @@ export default function FederalTaxCredit() {
           </p>
         </section>
 
+        {/* Explain Like I'm 11 */}
+        <section className="mb-10 bg-gradient-to-br from-[#f0fdf4] to-[#eff6ff] rounded-2xl p-6 sm:p-8 border-2 border-[#6EBE44]/30">
+          <h2 className="text-2xl font-bold text-[#002855] mb-2">Explain It Like I'm 11</h2>
+          <p className="text-gray-500 text-sm mb-6 italic">For kids, grandparents, and anyone who wants the simple version.</p>
+
+          <div className="bg-white rounded-xl p-6 shadow-sm">
+            <p className="text-lg text-gray-800 leading-relaxed mb-4">
+              Imagine your neighbor wants to help you go to a Christian school, but they don't have extra money to give.
+            </p>
+            <p className="text-lg text-gray-800 leading-relaxed mb-4">
+              Now imagine the government says: <em>"If you give $1,700 to help kids pay for school, we'll lower your taxes by $1,700."</em> So it doesn't actually cost your neighbor anything — the money just goes to help kids instead of going to the government.
+            </p>
+            <p className="text-lg text-gray-800 leading-relaxed mb-4">
+              That money goes into a big piggy bank called a <strong>Scholarship Granting Organization</strong>. Then that piggy bank gives scholarships to families who need help paying for things like tuition, books, and tutoring.
+            </p>
+            <div className="bg-[#002855] rounded-xl p-5 mt-6">
+              <p className="text-white text-lg font-semibold mb-2">The simple version:</p>
+              <ul className="text-blue-100 space-y-2 text-base">
+                <li>Someone donates money to help kids go to school</li>
+                <li>The government gives them that money back on their taxes</li>
+                <li>Kids get scholarships to help pay for Christian education</li>
+                <li>Everybody wins</li>
+              </ul>
+            </div>
+            <p className="text-gray-600 mt-6 text-base">
+              Starting January 1, 2027, this is real. If your family needs help paying for school, this program might be for you. Ask your parents to check if your state is participating!
+            </p>
+          </div>
+        </section>
+
         {/* Key dates */}
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-[#002855] mb-4">Key Dates</h2>

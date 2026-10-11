@@ -408,7 +408,7 @@ export default function SubmitSchool() {
                 <h2 className="text-lg font-semibold text-[#002855] mb-4">Statement of Faith</h2>
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
                   <p className="text-sm text-amber-800">
-                    <strong>Required:</strong> All schools listed on FindChristianSchools.org must affirm our Statement of Faith. 
+                    <strong>Required:</strong> All schools listed on FindChristianSchools.com must affirm our Statement of Faith. 
                     This ensures families can trust that every school in our directory is committed to Christ-centered education.
                   </p>
                 </div>
@@ -423,7 +423,7 @@ export default function SubmitSchool() {
                   />
                   <div className="flex-1">
                     <label htmlFor="agree-faith" className="text-sm font-medium text-[#002855] cursor-pointer">
-                      I agree with the FindChristianSchools.org Statement of Faith *
+                      I agree with the FindChristianSchools.com Statement of Faith *
                     </label>
                     <p className="text-xs text-gray-500 mt-1">Your school must uphold these core Christian beliefs to be listed in our directory.</p>
                   </div>
@@ -544,7 +544,7 @@ export default function SubmitSchool() {
                   <button onClick={() => setShowFaithModal(false)} className="p-1 hover:bg-gray-100 rounded-full"><X className="w-5 h-5" /></button>
                 </div>
                 <div className="px-6 py-5 space-y-4 text-sm text-gray-700 leading-relaxed">
-                  <p className="text-gray-500 italic">FindChristianSchools.org affirms the following core Christian beliefs. All listed schools must be in agreement with these tenets.</p>
+                  <p className="text-gray-500 italic">FindChristianSchools.com affirms the following core Christian beliefs. All listed schools must be in agreement with these tenets.</p>
                   
                   <div className="space-y-3">
                     <div>
@@ -588,7 +588,7 @@ export default function SubmitSchool() {
                   <div className="mt-6 bg-red-50 border border-red-200 rounded-lg p-4">
                     <p className="text-sm text-red-800 font-medium">Compliance & Withdrawal Notice</p>
                     <p className="text-sm text-red-700 mt-1">
-                      Any school that is found to violate or no longer uphold this Statement of Faith may be withdrawn from the FindChristianSchools.org directory at any time, without prior notice. By listing your school, you acknowledge and accept this policy.
+                      Any school that is found to violate or no longer uphold this Statement of Faith may be withdrawn from the FindChristianSchools.com directory at any time, without prior notice. By listing your school, you acknowledge and accept this policy.
                     </p>
                   </div>
                 </div>

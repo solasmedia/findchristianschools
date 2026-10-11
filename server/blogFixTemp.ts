@@ -22,19 +22,14 @@ export function registerBlogFixTemp(app: Express) {
         return;
       }
       let updated = 0;
-      const errors: string[] = [];
       for (const item of items) {
-        try {
-          await db.execute(sql`
-            UPDATE blog_posts SET content = ${item.content}, updatedAt = NOW()
-            WHERE slug = ${item.slug}
-          `);
-          updated++;
-        } catch (e: any) {
-          errors.push(`${item.slug}: ${e.message}`);
-        }
+        await db.execute(sql`
+          UPDATE blog_posts SET content = ${item.content}, updatedAt = NOW()
+          WHERE slug = ${item.slug}
+        `);
+        updated++;
       }
-      res.json({ updated, total: items.length, errors: errors.slice(0, 10) });
+      res.json({ updated });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

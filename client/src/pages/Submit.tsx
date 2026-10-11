@@ -544,7 +544,7 @@ export default function Submit() {
                     <h2 className="text-lg font-semibold text-[#002855] mb-4">Statement of Faith</h2>
                     <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
                       <p className="text-sm text-amber-800">
-                        <strong>Required:</strong> All schools listed on FindChristianSchools.org must affirm our Statement of Faith.
+                        <strong>Required:</strong> All schools listed on FindChristianSchools.com must affirm our Statement of Faith.
                       </p>
                     </div>
 
@@ -558,7 +558,7 @@ export default function Submit() {
                       />
                       <div className="flex-1">
                         <label htmlFor="agree-faith" className="text-sm font-medium text-[#002855] cursor-pointer">
-                          I agree with the FindChristianSchools.org Statement of Faith *
+                          I agree with the FindChristianSchools.com Statement of Faith *
                         </label>
                         <button
                           type="button"

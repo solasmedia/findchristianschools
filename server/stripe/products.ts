@@ -1,7 +1,7 @@
 export const PRODUCTS = {
   premiumMembership: {
     name: "Premium School Listing - Annual",
-    description: "Premium listing on FindChristianSchools.org for one year. Includes full description, photos, map, testimonials, job postings, events, and priority placement.",
+    description: "Premium listing on FindChristianSchools.com for one year. Includes full description, photos, map, testimonials, job postings, events, and priority placement.",
     priceAmount: 9900, // $99.00 in cents
     currency: "usd",
     interval: "year" as const,

@@ -16,7 +16,7 @@ export default function SaveToHomeScreen() {
             </div>
             <h1 className="text-3xl font-bold text-[#002855]">Save to Home Screen</h1>
             <p className="text-gray-600 mt-2 max-w-lg mx-auto">
-              Access FindChristianSchools.org instantly from your phone or tablet — just like an app, no download required.
+              Access FindChristianSchools.com instantly from your phone or tablet — just like an app, no download required.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export default function SaveToHomeScreen() {
               <ol className="space-y-3 text-sm text-gray-700">
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-[#0055A4] text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                  <span>Open <strong>FindChristianSchools.org</strong> in Safari</span>
+                  <span>Open <strong>FindChristianSchools.com</strong> in Safari</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-[#0055A4] text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
@@ -49,7 +49,7 @@ export default function SaveToHomeScreen() {
                 </li>
               </ol>
               <p className="mt-4 text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
-                The app icon will appear on your home screen with our logo. Tap it anytime to open FindChristianSchools.org instantly!
+                The app icon will appear on your home screen with our logo. Tap it anytime to open FindChristianSchools.com instantly!
               </p>
             </div>
 
@@ -64,7 +64,7 @@ export default function SaveToHomeScreen() {
               <ol className="space-y-3 text-sm text-gray-700">
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-[#6EBE44] text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                  <span>Open <strong>FindChristianSchools.org</strong> in Chrome</span>
+                  <span>Open <strong>FindChristianSchools.com</strong> in Chrome</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-[#6EBE44] text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
@@ -95,7 +95,7 @@ export default function SaveToHomeScreen() {
               <ol className="space-y-3 text-sm text-gray-700">
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-[#002855] text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
-                  <span>Visit <strong>FindChristianSchools.org</strong></span>
+                  <span>Visit <strong>FindChristianSchools.com</strong></span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-6 h-6 bg-[#002855] text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>

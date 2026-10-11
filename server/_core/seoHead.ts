@@ -108,6 +108,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "Free Flashcard Maker for Teachers | FindChristianSchools.com",
     description: "Create printable flashcards and study in interactive mode. Perfect for vocabulary, Bible verses, math facts, and any subject. Free, no account needed.",
   },
+  "/book-club": {
+    title: "Book Club & Recommended Resources | FindChristianSchools.com",
+    description: "Hand-picked books and teaching products recommended by Christian educators. Honest reviews, no fluff — every item earns its place.",
+  },
   "/classical-christian-schools": {
     title: "Classical Christian Schools — Find One Near You | FindChristianSchools.com",
     description: "Find classical Christian schools near you. The trivium method — grammar, logic, rhetoric — grounded in a biblical worldview. Search our directory of classical Christian academies.",

@@ -112,6 +112,13 @@ const contentResources = [
     desc: "Side-by-side comparison of popular Christian curricula to help you choose.",
     tag: "Free",
   },
+  {
+    href: "/book-club",
+    icon: BookOpen,
+    title: "Book Club & Resources",
+    desc: "Hand-picked books and teaching products with honest reviews. Supports the site at no cost to you.",
+    tag: "New",
+  },
 ];
 
 function ResourceCard({ item }: { item: typeof worksheetTools[0] }) {

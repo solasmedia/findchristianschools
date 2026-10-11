@@ -35,7 +35,9 @@ export function registerBlogImportTemp(app: Express) {
       if (!db) { res.status(500).json({ error: "No DB" }); return; }
       for (const stmt of ALTER_STATEMENTS) {
         try { await db.execute(sql.raw(stmt)); } catch (e: any) {
-          if (!e.message?.includes("Duplicate") && !e.message?.includes("duplicate")) throw e;
+          const msg = (e.message || "") + " " + (e.cause?.message || "") + " " + JSON.stringify(e.cause || {});
+          if (!/duplicate/i.test(msg) && !/already exists/i.test(msg)) throw e;
+          // else: column already exists, skip silently
         }
       }
       res.json({ ok: true });

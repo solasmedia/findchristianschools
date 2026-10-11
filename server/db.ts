@@ -89,6 +89,9 @@ import {
   funnelEvents,
   colleges,
   races,
+  blogPosts,
+  resourceDownloads,
+  resourcePurchases,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -1705,4 +1708,238 @@ export async function deleteContactMessage(id: number) {
   const db = await conn();
   await db.delete(contactMessages).where(eq(contactMessages.id, id));
   return { success: true };
+}
+
+// ============ BLOG (Teacher Resource Hub) ============
+
+// Auto-publish: flip any scheduled posts whose time has come. Called on every
+// public blog read so the blog updates itself with zero cron dependency.
+export async function autoPublishScheduledPosts() {
+  const db = await conn();
+  try {
+    await db
+      .update(blogPosts)
+      .set({ status: "published", publishedAt: sql`NOW()` })
+      .where(
+        and(
+          eq(blogPosts.status, "scheduled"),
+          lte(blogPosts.scheduledFor, sql`NOW()`)
+        )
+      );
+  } catch {
+    // table may not exist yet if migration hasn't run
+  }
+}
+
+export async function getBlogPosts(params: {
+  category?: string;
+  limit?: number;
+  offset?: number;
+  includeUnpublished?: boolean;
+}) {
+  const db = await conn();
+  await autoPublishScheduledPosts();
+  const conditions = params.includeUnpublished
+    ? []
+    : [eq(blogPosts.status, "published")];
+  if (params.category) conditions.push(eq(blogPosts.category, params.category as typeof blogPosts.category.enumValues[number]));
+  // Never leak full content in list view — select summary fields only
+  const rows = await db
+    .select({
+      id: blogPosts.id,
+      title: blogPosts.title,
+      slug: blogPosts.slug,
+      excerpt: blogPosts.excerpt,
+      category: blogPosts.category,
+      ageGroup: blogPosts.ageGroup,
+      readingTimeMinutes: blogPosts.readingTimeMinutes,
+      publishedAt: blogPosts.publishedAt,
+      featured: blogPosts.featured,
+      viewCount: blogPosts.viewCount,
+      resourceTitle: blogPosts.resourceTitle,
+      resourceType: blogPosts.resourceType,
+      downloadCount: blogPosts.downloadCount,
+      heroImageUrl: blogPosts.heroImageUrl,
+      isPremiumResource: blogPosts.isPremiumResource,
+      resourcePriceCents: blogPosts.resourcePriceCents,
+      resourcePageCount: blogPosts.resourcePageCount,
+      status: blogPosts.status,
+      scheduledFor: blogPosts.scheduledFor,
+    })
+    .from(blogPosts)
+    .where(conditions.length ? and(...conditions) : undefined)
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(params.limit ?? 20)
+    .offset(params.offset ?? 0);
+  return { posts: rows };
+}
+
+export async function getBlogPostBySlug(slug: string) {
+  const db = await conn();
+  await autoPublishScheduledPosts();
+  const rows = await db
+    .select()
+    .from(blogPosts)
+    .where(and(eq(blogPosts.slug, slug), eq(blogPosts.status, "published")))
+    .limit(1);
+  const post = rows[0];
+  if (!post) return null;
+  // bump view count (fire and forget)
+  db.update(blogPosts)
+    .set({ viewCount: sql`${blogPosts.viewCount} + 1` })
+    .where(eq(blogPosts.id, post.id))
+    .catch(() => {});
+  return post;
+}
+
+export async function getRelatedBlogPosts(postId: number, category: string, limit = 3) {
+  const db = await conn();
+  const rows = await db
+    .select({
+      id: blogPosts.id,
+      title: blogPosts.title,
+      slug: blogPosts.slug,
+      excerpt: blogPosts.excerpt,
+      category: blogPosts.category,
+      publishedAt: blogPosts.publishedAt,
+    })
+    .from(blogPosts)
+    .where(
+      and(
+        eq(blogPosts.status, "published"),
+        eq(blogPosts.category, category as typeof blogPosts.category.enumValues[number]),
+        ne(blogPosts.id, postId)
+      )
+    )
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(limit);
+  return rows;
+}
+
+// --- Admin ---
+export async function getAllBlogPostsAdmin(params: { limit?: number; offset?: number }) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(blogPosts)
+    .orderBy(desc(blogPosts.createdAt))
+    .limit(params.limit ?? 50)
+    .offset(params.offset ?? 0);
+  const [countRow] = await db
+    .select({ n: count() })
+    .from(blogPosts);
+  return { posts: rows, total: Number(countRow.n) };
+}
+
+export async function createBlogPost(data: typeof blogPosts.$inferInsert) {
+  const db = await conn();
+  const result = await db.insert(blogPosts).values(data);
+  return { success: true, id: Number(result[0].insertId) };
+}
+
+export async function updateBlogPost(id: number, data: Partial<typeof blogPosts.$inferInsert>) {
+  const db = await conn();
+  await db.update(blogPosts).set(data).where(eq(blogPosts.id, id));
+  return { success: true };
+}
+
+export async function deleteBlogPost(id: number) {
+  const db = await conn();
+  await db.delete(blogPosts).where(eq(blogPosts.id, id));
+  return { success: true };
+}
+
+// --- Email-gated downloads ---
+export async function logResourceDownload(data: {
+  postId: number;
+  email: string;
+  firstName?: string;
+  userType?: string;
+}) {
+  const db = await conn();
+  await db.insert(resourceDownloads).values({
+    postId: data.postId,
+    email: data.email,
+    firstName: data.firstName,
+    userType: data.userType ?? "other",
+  });
+  // bump download count + subscribe to newsletter (best effort)
+  await db
+    .update(blogPosts)
+    .set({ downloadCount: sql`${blogPosts.downloadCount} + 1` })
+    .where(eq(blogPosts.id, data.postId))
+    .catch(() => {});
+  try {
+    await subscribeNewsletter({
+      email: data.email,
+      firstName: data.firstName,
+      userType: "other",
+      source: "blog-download",
+    });
+  } catch { /* already subscribed or rate-limited */ }
+  return { success: true };
+}
+
+export async function getBlogStats() {
+  const db = await conn();
+  try {
+    const [totalRow] = await db.select({ n: count() }).from(blogPosts);
+    const [pubRow] = await db
+      .select({ n: count() })
+      .from(blogPosts)
+      .where(eq(blogPosts.status, "published"));
+    const [schedRow] = await db
+      .select({ n: count() })
+      .from(blogPosts)
+      .where(eq(blogPosts.status, "scheduled"));
+    const [dlRow] = await db
+      .select({ n: sum(blogPosts.downloadCount) })
+      .from(blogPosts);
+    return {
+      total: Number(totalRow.n),
+      published: Number(pubRow.n),
+      scheduled: Number(schedRow.n),
+      downloads: Number(dlRow.n ?? 0),
+    };
+  } catch {
+    return { total: 0, published: 0, scheduled: 0, downloads: 0 };
+  }
+}
+
+// --- Premium resource purchases ---
+export async function hasPurchasedResource(postId: number, email: string) {
+  const db = await conn();
+  try {
+    const rows = await db
+      .select()
+      .from(resourcePurchases)
+      .where(
+        and(
+          eq(resourcePurchases.postId, postId),
+          eq(resourcePurchases.email, email.toLowerCase())
+        )
+      )
+      .limit(1);
+    return rows.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+export async function getBlogPostForPurchase(postId: number) {
+  const db = await conn();
+  const rows = await db
+    .select({
+      id: blogPosts.id,
+      slug: blogPosts.slug,
+      title: blogPosts.title,
+      resourceTitle: blogPosts.resourceTitle,
+      resourcePriceCents: blogPosts.resourcePriceCents,
+      isPremiumResource: blogPosts.isPremiumResource,
+      status: blogPosts.status,
+    })
+    .from(blogPosts)
+    .where(eq(blogPosts.id, postId))
+    .limit(1);
+  return rows[0] ?? null;
 }

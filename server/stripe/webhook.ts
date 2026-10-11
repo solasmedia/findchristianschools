@@ -1,8 +1,8 @@
 import Stripe from "stripe";
 import type { Request, Response } from "express";
 import { getDb } from "../db";
-import { schools, colleges } from "../../drizzle/schema";
-import { eq } from "drizzle-orm";
+import { schools, colleges, resourcePurchases } from "../../drizzle/schema";
+import { eq, and } from "drizzle-orm";
 import { notifyPremiumPurchase } from "../_core/emailNotifications";
 
 let _stripe: Stripe | null = null;
@@ -41,6 +41,40 @@ export async function handleStripeWebhook(req: Request, res: Response) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
+
+      // --- Blog resource purchase (one-time) ---
+      if (session.metadata?.purchase_type === "blog_resource") {
+        const db = await getDb();
+        if (db) {
+          const postId = parseInt(session.metadata.post_id || "0");
+          const email = session.metadata.customer_email || session.customer_email || "";
+          const amountCents = session.amount_total ?? 0;
+          if (postId && email) {
+            // Idempotent: skip if already recorded
+            const existing = await db
+              .select()
+              .from(resourcePurchases)
+              .where(
+                and(
+                  eq(resourcePurchases.postId, postId),
+                  eq(resourcePurchases.email, email)
+                )
+              )
+              .limit(1);
+            if (existing.length === 0) {
+              await db.insert(resourcePurchases).values({
+                postId,
+                email,
+                stripeSessionId: session.id,
+                amountCents,
+              });
+              console.log(`[Webhook] Resource purchase recorded: post ${postId}, ${email}, $${(amountCents / 100).toFixed(2)}`);
+            }
+          }
+        }
+        return res.json({ received: true });
+      }
+
       const schoolId = session.metadata?.school_id;
       const schoolName = session.metadata?.schoolName;
       const listingType = session.metadata?.listingType;

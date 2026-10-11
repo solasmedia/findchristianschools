@@ -353,7 +353,7 @@ export default function LessonPlanner() {
 </div>
 ${dayHtmlSections}
 <div class="footer">
-  &copy; Find Christian Schools&trade; Lesson Plan Builder | findchristianschools.org
+  &copy; Find Christian Schools&trade; Lesson Plan Builder | findchristianschools.com
 </div>
 </body></html>`;
 

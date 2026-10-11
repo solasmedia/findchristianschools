@@ -311,7 +311,7 @@ export default function Home() {
                 Every Search, Every Listing &mdash; Advancing the Gospel
               </h2>
               <p className="text-blue-200 mb-4 leading-relaxed">
-                When you use FindChristianSchools.org, you are directly impacting lives &mdash; both here in the United States and around the world. A portion of every premium listing and donation goes toward bringing the Gospel and Christian education to children in underserved communities who would otherwise never have access.
+                When you use FindChristianSchools.com, you are directly impacting lives &mdash; both here in the United States and around the world. A portion of every premium listing and donation goes toward bringing the Gospel and Christian education to children in underserved communities who would otherwise never have access.
               </p>
               <p className="text-blue-200 mb-6 leading-relaxed">
                 From funding teachers in developing nations to providing curriculum and school supplies, your engagement is the bridge between a child and the hope of Christ. Together, we are building a generation rooted in faith.

@@ -75,9 +75,9 @@ export function registerBlogImportTemp(app: Express) {
             `INSERT INTO blog_posts (title, slug, excerpt, category, ageGroup, content, readingTimeMinutes, status, scheduledFor, featured, seoTitle) VALUES (${[
               item.title, item.slug, item.excerpt || null, item.category || "teaching_tips",
               item.ageGroup || null, item.content, item.readingTimeMinutes || 5,
-              item.status || "scheduled", item.scheduledFor ? `'${item.scheduledFor}'` : "NULL",
+              item.status || "scheduled", item.scheduledFor || null,
               item.featured ? 1 : 0, item.seoTitle || null
-            ].map(v => v === null || v === "NULL" ? "NULL" : `'${String(v).replace(/'/g, "''")}'`).join(", ")}) ON DUPLICATE KEY UPDATE title=VALUES(title), content=VALUES(content), excerpt=VALUES(excerpt), status=VALUES(status), scheduledFor=VALUES(scheduledFor)`
+            ].map(v => v === null ? "NULL" : `'${String(v).replace(/'/g, "''")}'`).join(", ")}) ON DUPLICATE KEY UPDATE title=VALUES(title), content=VALUES(content), excerpt=VALUES(excerpt), status=VALUES(status), scheduledFor=VALUES(scheduledFor)`
           ));
           imported++;
         } catch (e: any) {

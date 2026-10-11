@@ -122,7 +122,7 @@ function DownloadGate({ post }: { post: any }) {
         <h1>${post.resourceTitle || post.title}</h1>
         ${post.resourceDescription ? `<p><em>${post.resourceDescription}</em></p>` : ""}
         ${post.resourceContent || ""}
-        <div class="footer">Premium resource from FindChristianSchools.org — Teacher Resource Blog. FindChristianSchools.org</div>
+        <div class="footer">Premium resource from FindChristianSchools.com — Teacher Resource Blog. FindChristianSchools.com</div>
       </body></html>
     `);
     printWindow.document.close();
@@ -282,10 +282,10 @@ export default function BlogPost() {
 
   useEffect(() => {
     if (post) {
-      document.title = `${post.seoTitle || post.title} | FindChristianSchools.org`;
+      document.title = `${post.seoTitle || post.title} | FindChristianSchools.com`;
       window.scrollTo(0, 0);
     }
-    return () => { document.title = "FindChristianSchools.org | Faith · Education · Future"; };
+    return () => { document.title = "FindChristianSchools.com | Faith · Education · Future"; };
   }, [post?.slug]);
 
   if (isLoading) {
@@ -335,10 +335,10 @@ export default function BlogPost() {
           url: `https://www.findchristianschools.com/blog/${post.slug}`,
           datePublished: post.publishedAt,
           dateModified: post.updatedAt,
-          author: { "@type": "Organization", name: "FindChristianSchools.org" },
+          author: { "@type": "Organization", name: "FindChristianSchools.com" },
           publisher: {
             "@type": "Organization",
-            name: "FindChristianSchools.org",
+            name: "FindChristianSchools.com",
             url: "https://www.findchristianschools.com",
           },
         }}
@@ -399,7 +399,7 @@ export default function BlogPost() {
           {/* Statement of faith note */}
           <div className="mt-10 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
             <p>
-              All resources on FindChristianSchools.org align with our{" "}
+              All resources on FindChristianSchools.com align with our{" "}
               <Link href="/statement-of-faith" className="text-[#0055A4] hover:underline">
                 Statement of Faith
               </Link>

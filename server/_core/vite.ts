@@ -70,7 +70,9 @@ export function serveStatic(app: Express) {
     return cachedTemplate;
   };
 
-  app.use("*", async (req, res) => {
+  // NOTE: no mount path on purpose — app.use("*") strips req.path to "/"
+  // inside the handler (Express 4 mount behavior), which broke route matching.
+  app.use(async (req, res) => {
     // Lazy import to avoid circular deps at module load
     const { matchRoute, resolveMeta, injectHead } = await import("./seoHead");
 
@@ -84,7 +86,7 @@ export function serveStatic(app: Express) {
     if (match.kind === "unknown") {
       try {
         const html = injectHead(getTemplate(), {
-          title: "Page Not Found | FindChristianSchools.org",
+          title: "Page Not Found | FindChristianSchools.com",
           description: "The page you are looking for doesn't exist.",
           canonical: `${process.env.SITE_URL || "https://www.findchristianschools.com"}/404`,
         });
@@ -101,7 +103,7 @@ export function serveStatic(app: Express) {
       if (!meta) {
         // Valid route pattern but entity doesn't exist (bad slug) → 404
         const html = injectHead(getTemplate(), {
-          title: "Page Not Found | FindChristianSchools.org",
+          title: "Page Not Found | FindChristianSchools.com",
           description: "The page you are looking for doesn't exist.",
           canonical: `${process.env.SITE_URL || "https://www.findchristianschools.com"}/404`,
         });

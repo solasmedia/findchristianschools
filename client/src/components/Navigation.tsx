@@ -14,7 +14,18 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { href: "/search", label: "Find a School" },
+  {
+    href: "/search",
+    label: "Find a School",
+    children: [
+      { href: "/search", label: "K-12 Schools" },
+      { href: "/classical-christian-schools", label: "Classical Christian Schools" },
+      { href: "/colleges", label: "Colleges & Universities" },
+      { href: "/colleges?type=bible", label: "Bible Colleges & Seminaries" },
+      { href: "/search?programType=technical", label: "Technical & Trade Schools" },
+      { href: "/search?international=true", label: "International Schools" },
+    ],
+  },
   { href: "/colleges", label: "Colleges" },
   { href: "/states", label: "States" },
   { href: "/jobs", label: "Jobs" },

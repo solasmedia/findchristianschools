@@ -96,7 +96,7 @@ export default function SchoolProfile() {
       <Navigation />
 
       {/* Schema.org JSON-LD */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg).replace(/</g, "\u003c") }} />
 
       {/* Hero with cover image */}
       <section className="bg-gradient-to-r from-[#002855] to-[#0055A4] py-12 relative overflow-hidden">
@@ -365,9 +365,16 @@ export default function SchoolProfile() {
                   <h2 className="text-lg font-semibold text-[#002855] mb-4 flex items-center gap-2">
                     <Image className="w-5 h-5 text-[#0055A4]" /> Photo Gallery
                   </h2>
-                  {school.galleryImages && school.galleryImages.length > 0 ? (
+                  {(() => {
+                    let galleryUrls: string[] = [];
+                    try {
+                      galleryUrls = typeof school.galleryImages === 'string'
+                        ? JSON.parse(school.galleryImages)
+                        : Array.isArray(school.galleryImages) ? school.galleryImages : [];
+                    } catch { galleryUrls = []; }
+                    return galleryUrls.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {school.galleryImages.map((imageUrl: string, i: number) => (
+                      {galleryUrls.map((imageUrl: string, i: number) => (
                         <div key={i} className="aspect-[4/3] rounded-lg overflow-hidden border border-gray-100 bg-gray-50">
                           <img src={imageUrl} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover" />
                         </div>
@@ -384,7 +391,7 @@ export default function SchoolProfile() {
                         </div>
                       ))}
                     </div>
-                  )}
+                    ); })()}
                   <p className="text-xs text-gray-400 mt-3 text-center">Up to 20 photos can be uploaded by school administrators</p>
                 </div>
               )}

@@ -13,14 +13,14 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">1. Agreement to Terms</h2>
             <p className="text-gray-700">
-              By accessing and using FindChristianSchools.org (the "Service"), you agree to be bound by these Terms of Service. If you do not agree to abide by these terms, please do not use this service. These terms apply to all users, including schools that claim listings, submit jobs/events/courses, make donations, or otherwise interact with the Service.
+              By accessing and using FindChristianSchools.com (the "Service"), you agree to be bound by these Terms of Service. If you do not agree to abide by these terms, please do not use this service. These terms apply to all users, including schools that claim listings, submit jobs/events/courses, make donations, or otherwise interact with the Service.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">2. Use License</h2>
             <p className="text-gray-700 mb-4">
-              Permission is granted to temporarily download one copy of the materials (information or software) on FindChristianSchools.org for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
+              Permission is granted to temporarily download one copy of the materials (information or software) on FindChristianSchools.com for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-2">
               <li>Modify or copy the materials</li>
@@ -36,7 +36,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">3. School Listings & User-Submitted Content</h2>
             <p className="text-gray-700 mb-4">
-              <strong>Data Sources:</strong> FindChristianSchools.org includes school listings sourced from the U.S. Department of Education's National Center for Education Statistics (NCES) Private School Universe Survey, which is public-domain government data. These listings are marked as "Unverified" until claimed and verified by the school.
+              <strong>Data Sources:</strong> FindChristianSchools.com includes school listings sourced from the U.S. Department of Education's National Center for Education Statistics (NCES) Private School Universe Survey, which is public-domain government data. These listings are marked as "Unverified" until claimed and verified by the school.
             </p>
             <p className="text-gray-700 mb-4">
               <strong>School Submissions & Claims:</strong> When a school claims a listing or submits information (including logos, photos, descriptions, contact information, or other content), the school represents and warrants that:
@@ -48,17 +48,17 @@ export default function TermsOfService() {
               <li>The content complies with all applicable laws and regulations</li>
             </ul>
             <p className="text-gray-700 mb-4">
-              <strong>License to FindChristianSchools.org:</strong> By submitting content, the school grants FindChristianSchools.org a non-exclusive, royalty-free, perpetual license to display, reproduce, and distribute the content on the Service and in connection with FindChristian.org and related services.
+              <strong>License to FindChristianSchools.com:</strong> By submitting content, the school grants FindChristianSchools.com a non-exclusive, royalty-free, perpetual license to display, reproduce, and distribute the content on the Service and in connection with FindChristian.org and related services.
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>Removal & Refusal:</strong> FindChristianSchools.org reserves the right to remove, refuse, or modify any listing or content at its sole discretion, including for violations of these Terms, inaccuracy, or legal concerns. Removal does not entitle the school to a refund of any premium listing fees.
+              <strong>Removal & Refusal:</strong> FindChristianSchools.com reserves the right to remove, refuse, or modify any listing or content at its sole discretion, including for violations of these Terms, inaccuracy, or legal concerns. Removal does not entitle the school to a refund of any premium listing fees.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">4. Statement of Faith Affirmation</h2>
             <p className="text-gray-700 mb-4">
-              Schools that submit listings affirm that their educational mission aligns with Christian principles. This affirmation is a contractual representation by the school. Misrepresentation of faith alignment or deliberate submission of false information is grounds for immediate listing removal without refund and potential legal action. FindChristianSchools.org reserves the right to update Statement of Faith requirements at any time.
+              Schools that submit listings affirm that their educational mission aligns with Christian principles. This affirmation is a contractual representation by the school. Misrepresentation of faith alignment or deliberate submission of false information is grounds for immediate listing removal without refund and potential legal action. FindChristianSchools.com reserves the right to update Statement of Faith requirements at any time.
             </p>
           </section>
 
@@ -93,17 +93,17 @@ export default function TermsOfService() {
               <li>Event and course information is truthful and not misleading</li>
             </ul>
             <p className="text-gray-700">
-              FindChristianSchools.org is not responsible for employment disputes, misrepresentation of job terms, or accuracy of event/course information. Submitters are solely responsible for compliance with all applicable laws.
+              FindChristianSchools.com is not responsible for employment disputes, misrepresentation of job terms, or accuracy of event/course information. Submitters are solely responsible for compliance with all applicable laws.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">7. Donations</h2>
             <p className="text-gray-700 mb-4">
-              <strong>Non-Refundable:</strong> All donations are non-refundable. Donations support FindChristianSchools.org's mission to connect families with faith-based education.
+              <strong>Non-Refundable:</strong> All donations are non-refundable. Donations support FindChristianSchools.com's mission to connect families with faith-based education.
             </p>
             <p className="text-gray-700 mb-4">
-              <strong>Tax Implications:</strong> Donors are responsible for understanding the tax implications of their donations. Consult a tax professional regarding deductibility. FindChristianSchools.org will provide donation receipts upon request.
+              <strong>Tax Implications:</strong> Donors are responsible for understanding the tax implications of their donations. Consult a tax professional regarding deductibility. FindChristianSchools.com will provide donation receipts upon request.
             </p>
             <p className="text-gray-700 mb-4">
               <strong>No Auto-Renewal:</strong> Donations are one-time payments. There is no automatic renewal or recurring charge unless you explicitly choose a recurring donation option at checkout.
@@ -113,53 +113,53 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">8. Disclaimer of Warranties</h2>
             <p className="text-gray-700 mb-4">
-              The materials on FindChristianSchools.org are provided on an "as is" basis. FindChristianSchools.org makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+              The materials on FindChristianSchools.com are provided on an "as is" basis. FindChristianSchools.com makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
             </p>
             <p className="text-gray-700">
-              FindChristianSchools.org does not warrant that school listings are complete, accurate, or current. School information may change without notice. Parents and students should verify all information directly with schools before making educational decisions.
+              FindChristianSchools.com does not warrant that school listings are complete, accurate, or current. School information may change without notice. Parents and students should verify all information directly with schools before making educational decisions.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">9. Limitation of Liability</h2>
             <p className="text-gray-700">
-              In no event shall FindChristianSchools.org or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on FindChristianSchools.org, even if we or an authorized representative has been notified orally or in writing of the possibility of such damage. This limitation applies to all claims, whether based on warranty, contract, tort, or any other legal theory.
+              In no event shall FindChristianSchools.com or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on FindChristianSchools.com, even if we or an authorized representative has been notified orally or in writing of the possibility of such damage. This limitation applies to all claims, whether based on warranty, contract, tort, or any other legal theory.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">10. Accuracy of Materials</h2>
             <p className="text-gray-700">
-              The materials appearing on FindChristianSchools.org could include technical, typographical, or photographic errors. FindChristianSchools.org does not warrant that any of the materials on its website are accurate, complete, or current. FindChristianSchools.org may make changes to the materials contained on its website at any time without notice.
+              The materials appearing on FindChristianSchools.com could include technical, typographical, or photographic errors. FindChristianSchools.com does not warrant that any of the materials on its website are accurate, complete, or current. FindChristianSchools.com may make changes to the materials contained on its website at any time without notice.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">11. Links</h2>
             <p className="text-gray-700">
-              FindChristianSchools.org has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by FindChristianSchools.org of the site. Use of any such linked website is at the user's own risk.
+              FindChristianSchools.com has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by FindChristianSchools.com of the site. Use of any such linked website is at the user's own risk.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">12. DMCA Takedown Procedure</h2>
             <p className="text-gray-700 mb-4">
-              <strong>Copyright Claims:</strong> If you believe that content on FindChristianSchools.org infringes your copyright or other intellectual property rights, you may submit a DMCA takedown notice to our designated agent:
+              <strong>Copyright Claims:</strong> If you believe that content on FindChristianSchools.com infringes your copyright or other intellectual property rights, you may submit a DMCA takedown notice to our designated agent:
             </p>
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 my-4">
               <p className="text-gray-700"><strong>DMCA Agent:</strong></p>
-              <p className="text-gray-700">Email: dmca@findchristianschools.org</p>
+              <p className="text-gray-700">Email: dmca@findchristianschools.com</p>
               <p className="text-gray-700 text-sm mt-2">Please include: (1) your contact information, (2) description of the copyrighted work, (3) URL of the infringing content, (4) statement under penalty of perjury that you own the copyright, and (5) your signature.</p>
             </div>
             <p className="text-gray-700">
-              FindChristianSchools.org will investigate and remove infringing content upon receipt of a valid DMCA notice. Repeat infringers will have their accounts terminated. For the full procedure, including counter-notifications, see our <a href="/dmca" className="text-[#0055A4] hover:underline font-medium">DMCA Copyright Policy</a>.
+              FindChristianSchools.com will investigate and remove infringing content upon receipt of a valid DMCA notice. Repeat infringers will have their accounts terminated. For the full procedure, including counter-notifications, see our <a href="/dmca" className="text-[#0055A4] hover:underline font-medium">DMCA Copyright Policy</a>.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">13. Modifications</h2>
             <p className="text-gray-700">
-              FindChristianSchools.org may revise these terms of service at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.
+              FindChristianSchools.com may revise these terms of service at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.
             </p>
           </section>
 
@@ -173,7 +173,7 @@ export default function TermsOfService() {
           <section>
             <h2 className="text-2xl font-bold text-[#002855] mb-4">15. About This Service</h2>
             <p className="text-gray-700">
-              FindChristianSchools.org is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> network, dedicated to connecting families with faith-based education worldwide.
+              FindChristianSchools.com is operated by <a href="https://solasmedia.com" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Solas Media LLC</a> and is part of the <a href="https://findchristian.org" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">FindChristian.org</a> network, dedicated to connecting families with faith-based education worldwide.
             </p>
           </section>
 
@@ -183,9 +183,9 @@ export default function TermsOfService() {
               If you have any questions about these Terms of Service, please contact us:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
-              <li><strong>Legal:</strong> legal@findchristianschools.org</li>
-              <li><strong>Support:</strong> support@findchristianschools.org</li>
-              <li><strong>DMCA:</strong> dmca@findchristianschools.org</li>
+              <li><strong>Legal:</strong> legal@findchristianschools.com</li>
+              <li><strong>Support:</strong> support@findchristianschools.com</li>
+              <li><strong>DMCA:</strong> dmca@findchristianschools.com</li>
             </ul>
           </section>
         </div>

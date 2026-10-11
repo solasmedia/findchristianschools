@@ -249,22 +249,30 @@ ${bodyHtml}
 </body></html>`;
 }
 
+export function getSheetHtml(title: string, subtitle: string, bodyHtml: string): string {
+  return sheetShell(title, subtitle, bodyHtml);
+}
+
 export function openPrintSheet(title: string, subtitle: string, bodyHtml: string) {
   const html = sheetShell(title, subtitle, bodyHtml);
-  const w = window.open("", "_blank", "width=900,height=700");
+  // Mobile-friendly: open in new tab via blob URL (works on iOS Safari where window.open("", "_blank") is blocked)
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const w = window.open(url, "_blank");
   if (w) {
-    w.document.write(html);
-    w.document.close();
-    setTimeout(() => w.print(), 500);
+    // New tab opened successfully — trigger print after load
+    setTimeout(() => { try { w.print(); } catch (e) {} }, 800);
+    // Clean up blob URL after a delay
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   } else {
-    // Popup blocked — download as file instead
-    const blob = new Blob([html], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
+    // Popup blocked — trigger download instead
     const a = document.createElement("a");
     a.href = url;
     a.download = title.toLowerCase().replace(/[^a-z0-9]+/g, "-") + ".html";
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   }
 }
 

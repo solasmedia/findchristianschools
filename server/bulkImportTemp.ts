@@ -1,10 +1,11 @@
 // TEMPORARY bulk import for colleges and races. DELETE AFTER USE.
 // POST /api/admin/bulk-import-temp with { type: 'colleges'|'races', items: [...] }
-// Requires admin auth via existing adminImport auth check.
+// Creates tables if they don't exist, then bulk inserts.
 
 import type { Express, Request, Response } from "express";
 import { getDb } from "./db";
 import { colleges, races } from "../drizzle/schema";
+import { sql } from "drizzle-orm";
 
 const ADMIN_KEY = process.env.ADMIN_IMPORT_KEY || "fcs-temp-import-2026";
 
@@ -14,6 +15,61 @@ function slugify(value: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
+
+const CREATE_COLLEGES = `
+CREATE TABLE IF NOT EXISTS \`colleges\` (
+  \`id\` int AUTO_INCREMENT NOT NULL,
+  \`name\` varchar(255) NOT NULL,
+  \`slug\` varchar(255) NOT NULL,
+  \`city\` varchar(128) NOT NULL,
+  \`state\` varchar(64) NOT NULL,
+  \`stateCode\` varchar(2) NOT NULL,
+  \`zip\` varchar(10),
+  \`address\` varchar(512),
+  \`phone\` varchar(20),
+  \`website\` varchar(512),
+  \`denomination\` varchar(128),
+  \`ipedsUnitId\` varchar(16),
+  \`enrollment\` int,
+  \`latitude\` decimal(10,7),
+  \`longitude\` decimal(10,7),
+  \`source\` varchar(64) NOT NULL DEFAULT 'ipeds',
+  \`sourceUrl\` varchar(512),
+  \`importDate\` timestamp,
+  \`listingStatus\` enum('verified','unverified','pending','claimed','removed','suspended','community_submitted') NOT NULL DEFAULT 'unverified',
+  \`isApproved\` boolean NOT NULL DEFAULT true,
+  \`featured\` boolean NOT NULL DEFAULT false,
+  \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT \`colleges_id\` PRIMARY KEY(\`id\`),
+  CONSTRAINT \`colleges_slug_unique\` UNIQUE(\`slug\`)
+)`;
+
+const CREATE_RACES = `
+CREATE TABLE IF NOT EXISTS \`races\` (
+  \`id\` int AUTO_INCREMENT NOT NULL,
+  \`name\` varchar(255) NOT NULL,
+  \`slug\` varchar(255) NOT NULL,
+  \`raceDate\` date,
+  \`city\` varchar(128),
+  \`state\` varchar(64),
+  \`stateCode\` varchar(2),
+  \`zip\` varchar(10),
+  \`distances\` varchar(512),
+  \`summary\` text,
+  \`signupUrl\` varchar(512),
+  \`runsignupId\` varchar(64),
+  \`source\` varchar(64) NOT NULL DEFAULT 'runsignup',
+  \`sourceUrl\` varchar(512),
+  \`importDate\` timestamp,
+  \`listingStatus\` enum('verified','unverified','pending','claimed','removed','suspended','community_submitted') NOT NULL DEFAULT 'unverified',
+  \`isApproved\` boolean NOT NULL DEFAULT true,
+  \`featured\` boolean NOT NULL DEFAULT false,
+  \`createdAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  \`updatedAt\` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT \`races_id\` PRIMARY KEY(\`id\`),
+  CONSTRAINT \`races_slug_unique\` UNIQUE(\`slug\`)
+)`;
 
 export function registerBulkImportTemp(app: Express) {
   app.post("/api/admin/bulk-import-temp", async (req: Request, res: Response) => {
@@ -36,6 +92,16 @@ export function registerBulkImportTemp(app: Express) {
         return;
       }
 
+      // Ensure tables exist
+      if (type === "colleges") {
+        await db.execute(sql.raw(CREATE_COLLEGES));
+      } else if (type === "races") {
+        await db.execute(sql.raw(CREATE_RACES));
+      } else {
+        res.status(400).json({ error: "Type must be colleges or races" });
+        return;
+      }
+
       let imported = 0;
       const errors: string[] = [];
 
@@ -55,8 +121,8 @@ export function registerBulkImportTemp(app: Express) {
               denomination: item.denomination || null,
               ipedsUnitId: item.ipedsUnitId || null,
               enrollment: item.enrollment || null,
-              latitude: item.latitude || null,
-              longitude: item.longitude || null,
+              latitude: item.latitude ? String(item.latitude) : null,
+              longitude: item.longitude ? String(item.longitude) : null,
               source: item.source || "ipeds",
               sourceUrl: item.sourceUrl || null,
               listingStatus: "unverified",
@@ -64,7 +130,7 @@ export function registerBulkImportTemp(app: Express) {
             });
             imported++;
           } catch (e: any) {
-            errors.push(`${item.name}: ${(e.cause?.message || e.message)?.slice(0, 500)}`);
+            errors.push(`${item.name}: ${(e.cause?.message || e.message)?.slice(0, 300)}`);
           }
         }
       } else if (type === "races") {
@@ -89,12 +155,9 @@ export function registerBulkImportTemp(app: Express) {
             });
             imported++;
           } catch (e: any) {
-            errors.push(`${item.name}: ${(e.cause?.message || e.message)?.slice(0, 500)}`);
+            errors.push(`${item.name}: ${(e.cause?.message || e.message)?.slice(0, 300)}`);
           }
         }
-      } else {
-        res.status(400).json({ error: "Type must be colleges or races" });
-        return;
       }
 
       res.json({ imported, total: items.length, errors: errors.slice(0, 20) });

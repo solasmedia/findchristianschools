@@ -38,6 +38,9 @@ import {
   getBlogPosts, getBlogPostBySlug, getRelatedBlogPosts,
   getAllBlogPostsAdmin, createBlogPost, updateBlogPost, deleteBlogPost,
   logResourceDownload, getBlogStats, hasPurchasedResource, getBlogPostForPurchase,
+  getNewsItems, getNewsItemBySlug, getRelatedNewsItems,
+  getAllNewsItemsAdmin, updateNewsItem, deleteNewsItem, getNewsStats,
+  triggerNewsRefresh,
 } from "./db";
 import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
@@ -727,6 +730,40 @@ export const appRouter = router({
       ...(input.data.status === "published" ? { publishedAt: new Date() } : {}),
     })),
     delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => deleteBlogPost(input.id)),
+  }),
+
+  // ============ NEWS (Christian education news aggregation) ============
+  news: router({
+    list: publicProcedure.input(z.object({
+      category: z.enum(["national", "state", "policy", "school_choice", "curriculum"]).optional(),
+      stateCode: z.string().max(2).optional(),
+      search: z.string().max(200).optional(),
+      limit: z.number().min(1).max(100).optional(),
+      offset: z.number().min(0).optional(),
+    })).query(({ input }) => getNewsItems(input)),
+    bySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ input }) => {
+      const item = await getNewsItemBySlug(input.slug);
+      if (!item) throw new TRPCError({ code: 'NOT_FOUND', message: 'News item not found' });
+      return item;
+    }),
+    related: publicProcedure.input(z.object({
+      itemId: z.number(), category: z.string(), limit: z.number().optional(),
+    })).query(({ input }) => getRelatedNewsItems(input.itemId, input.category, input.limit)),
+    // Admin
+    listAll: adminProcedure.input(z.object({ limit: z.number().optional(), offset: z.number().optional() }).optional()).query(({ input }) => getAllNewsItemsAdmin(input || {})),
+    stats: adminProcedure.query(() => getNewsStats()),
+    refresh: adminProcedure.mutation(() => triggerNewsRefresh()),
+    update: adminProcedure.input(z.object({
+      id: z.number(),
+      data: z.object({
+        title: z.string().min(1).max(255).optional(),
+        summary: z.string().optional(),
+        category: z.enum(["national", "state", "policy", "school_choice", "curriculum"]).optional(),
+        stateCode: z.string().max(2).optional().nullable(),
+        isActive: z.boolean().optional(),
+      }),
+    })).mutation(({ input }) => updateNewsItem(input.id, input.data)),
+    delete: adminProcedure.input(z.object({ id: z.number() })).mutation(({ input }) => deleteNewsItem(input.id)),
   }),
 
   // ============ IMPACT ============

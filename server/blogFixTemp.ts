@@ -25,11 +25,9 @@ export function registerBlogFixTemp(app: Express) {
       const errors: string[] = [];
       for (const item of items) {
         try {
-          // Use parameterized query to safely handle content
-          await db.execute(sql`DELETE FROM blog_posts WHERE slug = ${item.slug}`);
-          // Extract first image URL for heroImageUrl
           const imgMatch = (item.content || "").match(/<img[^>]+src="([^"]+)"/);
           const heroUrl = imgMatch ? imgMatch[1] : null;
+          await db.execute(sql`DELETE FROM blog_posts WHERE slug = ${item.slug}`);
           await db.execute(sql`
             INSERT INTO blog_posts (title, slug, excerpt, content, category, status, publishedAt, createdAt, heroImageUrl)
             VALUES (${item.title}, ${item.slug}, ${item.excerpt || ""}, ${item.content || ""}, ${item.category || "teaching_tips"}, 'published', NOW(), NOW(), ${heroUrl})
@@ -43,15 +41,5 @@ export function registerBlogFixTemp(app: Express) {
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }
-
-  app.get("/api/admin/blog-check-temp", async (req: Request, res: Response) => {
-    if (req.headers["x-admin-key"] !== ADMIN_KEY) {
-      res.status(403).json({ error: "Forbidden" });
-      return;
-    }
-    const db = await getDb();
-    const result: any = await db.execute(sql`SELECT slug, LENGTH(content) as len, LEFT(content, 100) as preview FROM blog_posts LIMIT 3`);
-    res.json(result.rows || result);
-  });
   });
 }

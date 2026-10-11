@@ -40,5 +40,15 @@ export function registerBlogFixTemp(app: Express) {
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }
+
+  app.get("/api/admin/blog-check-temp", async (req: Request, res: Response) => {
+    if (req.headers["x-admin-key"] !== ADMIN_KEY) {
+      res.status(403).json({ error: "Forbidden" });
+      return;
+    }
+    const db = await getDb();
+    const result: any = await db.execute(sql`SELECT slug, LENGTH(content) as len, LEFT(content, 100) as preview FROM blog_posts LIMIT 3`);
+    res.json(result.rows || result);
+  });
   });
 }

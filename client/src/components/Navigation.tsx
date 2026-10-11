@@ -26,7 +26,7 @@ const navItems: NavItem[] = [
       { href: "/races", label: "Christian Races" },
     ],
   },
-  { href: "/planner", label: "Lesson Plan Builder" },
+  { href: "/lesson-planner", label: "Lesson Plan Builder" },
   {
     href: "/resources",
     label: "Resources",

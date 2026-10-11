@@ -119,33 +119,6 @@ export default function Colleges() {
         </div>
       </section>
 
-      {/* Browse by State with flags */}
-      {!searchQuery && !searchState && !searchZip && stateCounts && (
-        <section className="bg-gray-50 border-b border-gray-200 py-6 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-lg font-semibold text-[#002855] mb-4">Browse Colleges by State</h2>
-            <div className="flex flex-wrap gap-2">
-              {US_STATES.filter(s => (stateCounts as Record<string, number>)[s.code] > 0).map(s => (
-                <button
-                  key={s.code}
-                  onClick={() => handleFilterChange(setSearchState)(s.code)}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-[#0055A4] hover:shadow-sm transition-all text-sm"
-                >
-                  <img
-                    src={`https://flagcdn.com/w40/us-${s.code.toLowerCase()}.png`}
-                    alt={`${s.name} flag`}
-                    className="w-5 h-auto rounded-sm"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
-                  <span className="font-medium text-gray-700">{s.name}</span>
-                  <span className="text-xs text-gray-500">({(stateCounts as Record<string, number>)[s.code]})</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Listings */}
       <section className="flex-1 bg-gray-50 py-8 px-4">
         <div className="max-w-7xl mx-auto">

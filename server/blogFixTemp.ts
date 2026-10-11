@@ -21,23 +21,21 @@ export function registerBlogFixTemp(app: Express) {
         res.status(500).json({ error: "No database" });
         return;
       }
-      let imported = 0;
+      let updated = 0;
       const errors: string[] = [];
       for (const item of items) {
         try {
-          const imgMatch = (item.content || "").match(/<img[^>]+src="([^"]+)"/);
-          const heroUrl = imgMatch ? imgMatch[1] : null;
-          await db.execute(sql`DELETE FROM blog_posts WHERE slug = ${item.slug}`);
+          // Only update content, leave heroImageUrl as-is (it's already correct)
           await db.execute(sql`
-            INSERT INTO blog_posts (title, slug, excerpt, content, category, status, publishedAt, createdAt, heroImageUrl)
-            VALUES (${item.title}, ${item.slug}, ${item.excerpt || ""}, ${item.content || ""}, ${item.category || "teaching_tips"}, 'published', NOW(), NOW(), ${heroUrl})
+            UPDATE blog_posts SET content = ${item.content || ""}, updatedAt = NOW()
+            WHERE slug = ${item.slug}
           `);
-          imported++;
+          updated++;
         } catch (e: any) {
           errors.push(`${item.slug}: ${e.message}`);
         }
       }
-      res.json({ imported, total: items.length, errors: errors.slice(0, 10) });
+      res.json({ updated, total: items.length, errors: errors.slice(0, 10) });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

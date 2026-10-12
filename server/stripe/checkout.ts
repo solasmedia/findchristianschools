@@ -18,16 +18,21 @@ export async function createPremiumCheckout(params: {
   userEmail: string;
   userId: number;
   origin: string;
-  promoCode?: string;
+  // App-level promo discount (0-100), already validated by the caller against
+  // the schools.promoCode / promoDiscountPercent columns. Applied by adjusting
+  // the price_data amount — app promo codes are NOT Stripe coupons.
+  discountPercent?: number;
 }) {
   const listingType = params.collegeId ? 'college' : 'school';
   const listingId = params.collegeId || params.schoolId || 0;
+  const product = params.collegeId ? PRODUCTS.premiumCollegeListing : PRODUCTS.premiumMembership;
+  const discountPercent = Math.min(100, Math.max(0, params.discountPercent ?? 0));
+  const unitAmount = Math.round(product.priceAmount * (100 - discountPercent) / 100);
   const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
     customer_email: params.userEmail,
     client_reference_id: params.userId.toString(),
     allow_promotion_codes: true,
-    discounts: params.promoCode ? [{ coupon: params.promoCode }] : undefined,
     metadata: {
       school_id: listingId.toString(),
       listing_type: listingType,
@@ -37,13 +42,13 @@ export async function createPremiumCheckout(params: {
     line_items: [
       {
         price_data: {
-          currency: PRODUCTS.premiumMembership.currency,
+          currency: product.currency,
           product_data: {
-            name: PRODUCTS.premiumMembership.name,
+            name: product.name,
             description: `Premium listing for ${params.schoolName}`,
           },
-          unit_amount: PRODUCTS.premiumMembership.priceAmount,
-          recurring: { interval: PRODUCTS.premiumMembership.interval },
+          unit_amount: unitAmount,
+          recurring: { interval: product.interval },
         },
         quantity: 1,
       },

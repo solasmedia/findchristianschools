@@ -6,6 +6,13 @@ export const PRODUCTS = {
     currency: "usd",
     interval: "year" as const,
   },
+  premiumCollegeListing: {
+    name: "Premium College Listing - Annual",
+    description: "Premium college listing on FindChristianSchools.com for one year. Includes full description, photos, map, testimonials, job postings, events, and priority placement.",
+    priceAmount: 50000, // $500.00 in cents
+    currency: "usd",
+    interval: "year" as const,
+  },
   donationRecurring: {
     name: "Monthly Mission Support",
     description: "Recurring monthly donation to support Christian education missions worldwide. Every dollar helps send a student to school.",

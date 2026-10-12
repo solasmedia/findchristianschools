@@ -1,4 +1,7 @@
 import Stripe from 'stripe';
+import { eq } from 'drizzle-orm';
+import { getDb } from '../db';
+import { schools } from '../../drizzle/schema';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
@@ -8,10 +11,46 @@ export interface CheckoutSessionRequest {
   donationAmount?: number;
   schoolName: string;
   contactEmail: string;
+  // App-level promo code (schools.promoCode / promoDiscountPercent). Only the
+  // school that owns the code can use it. 100% codes skip Stripe entirely.
+  promoCode?: string;
 }
 
-export async function createCheckoutSession(req: CheckoutSessionRequest) {
-  const { amount, listingType, schoolName, contactEmail } = req;
+export interface CheckoutSessionResult {
+  sessionId?: string;
+  free?: boolean;
+}
+
+export async function createCheckoutSession(req: CheckoutSessionRequest): Promise<CheckoutSessionResult> {
+  const { listingType, schoolName, contactEmail } = req;
+  let amount = req.amount;
+
+  // Resolve app-level promo codes for premium listings.
+  if (req.promoCode && listingType === 'premium') {
+    const db = await getDb();
+    if (!db) throw new Error('Database unavailable');
+    const rows = await db.select().from(schools).where(eq(schools.promoCode, req.promoCode.toUpperCase())).limit(1);
+    const promoSchool = rows[0];
+    if (!promoSchool) throw new Error('Invalid promo code');
+    if (promoSchool.name.trim().toLowerCase() !== schoolName.trim().toLowerCase()) {
+      throw new Error('Promo code is not valid for this school');
+    }
+    const discountPercent = promoSchool.promoDiscountPercent ?? 0;
+    if (discountPercent >= 100) {
+      // 100% promo: activate premium directly — no Stripe session, no card.
+      const premiumExpiresAt = new Date();
+      premiumExpiresAt.setFullYear(premiumExpiresAt.getFullYear() + 1);
+      await db.update(schools).set({
+        isPremium: true,
+        listingType: 'premium',
+        premiumExpiresAt,
+      }).where(eq(schools.id, promoSchool.id));
+      return { free: true };
+    }
+    if (discountPercent > 0) {
+      amount = Math.round(amount * (100 - discountPercent) / 100);
+    }
+  }
 
   // Create line item based on listing type
   let lineItems: Stripe.Checkout.SessionCreateParams['line_items'] = [];

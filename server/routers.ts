@@ -798,14 +798,35 @@ export const appRouter = router({
       if (!input.schoolId && !input.collegeId) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'schoolId or collegeId required' });
       }
-      if (input.promoCode && input.schoolId) {
+      const origin = ctx.req.headers.origin || 'https://findchristianschools.com';
+      // App-level promo codes live on the schools row (promoCode /
+      // promoDiscountPercent). A code only applies to the school that owns it.
+      let discountPercent = 0;
+      if (input.promoCode) {
+        if (!input.schoolId) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Promo codes can only be applied to school listings' });
+        }
         const db = await getDb();
         if (!db) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database unavailable' });
         const result = await db.select().from(schools).where(eq(schools.promoCode, input.promoCode.toUpperCase())).limit(1);
-        if (!result[0]) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid promo code' });
+        const promoSchool = result[0];
+        if (!promoSchool) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Invalid promo code' });
+        if (promoSchool.id !== input.schoolId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Promo code is not valid for this school' });
+        discountPercent = promoSchool.promoDiscountPercent ?? 0;
+        if (discountPercent >= 100) {
+          // 100% promo: activate premium directly. No Stripe checkout and no
+          // card required; premium runs for one year from today.
+          const premiumExpiresAt = new Date();
+          premiumExpiresAt.setFullYear(premiumExpiresAt.getFullYear() + 1);
+          await db.update(schools).set({
+            isPremium: true,
+            listingType: 'premium',
+            premiumExpiresAt,
+          }).where(eq(schools.id, input.schoolId));
+          return { url: `${origin}/membership/success?school_id=${input.schoolId}&type=school&promo=${encodeURIComponent(input.promoCode.toUpperCase())}` };
+        }
       }
-      const origin = ctx.req.headers.origin || 'https://findchristianschools.com';
-      return createPremiumCheckout({ schoolId: input.schoolId, collegeId: input.collegeId, schoolName: input.schoolName, userEmail: ctx.user.email || '', userId: ctx.user.id, origin, promoCode: input.promoCode });
+      return createPremiumCheckout({ schoolId: input.schoolId, collegeId: input.collegeId, schoolName: input.schoolName, userEmail: ctx.user.email || '', userId: ctx.user.id, origin, discountPercent });
     }),
     createDonation: publicProcedure.input(z.object({
       amount: z.number().min(100), // minimum $1.00 in cents

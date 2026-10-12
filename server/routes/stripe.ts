@@ -6,7 +6,7 @@ const router = Router();
 // POST /api/stripe/checkout - Create a checkout session
 router.post('/checkout', async (req: Request, res: Response) => {
   try {
-    const { amount, listingType, donationAmount, schoolName, contactEmail } = req.body;
+    const { amount, listingType, donationAmount, schoolName, contactEmail, promoCode } = req.body;
 
     // Validate required fields
     if (!amount || !listingType || !schoolName || !contactEmail) {
@@ -18,16 +18,21 @@ router.post('/checkout', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid amount' });
     }
 
-    // Create checkout session
-    const { sessionId } = await createCheckoutSession({
+    // Create checkout session (a 100% app-level promo code returns free:true
+    // instead of a Stripe session — premium is activated server-side)
+    const result = await createCheckoutSession({
       amount,
       listingType,
       donationAmount,
       schoolName,
       contactEmail,
+      promoCode: promoCode || undefined,
     });
 
-    res.json({ sessionId });
+    if (result.free) {
+      return res.json({ free: true, promoApplied: true });
+    }
+    res.json({ sessionId: result.sessionId });
   } catch (error: any) {
     console.error('Checkout endpoint error:', error);
     res.status(500).json({ error: error.message || 'Failed to create checkout session' });

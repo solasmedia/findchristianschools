@@ -195,6 +195,11 @@ export interface PageMeta {
   canonical: string;
   ogType?: string;
   ogImage?: string;
+  /** JSON-LD objects to inject as structured data (AI search / rich results). */
+  jsonLd?: unknown[];
+  /** Server-rendered text content injected into #root for non-JS crawlers.
+   *  React (createRoot) replaces it on mount for real users. */
+  bodyHtml?: string;
 }
 
 /**
@@ -300,6 +305,333 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
   };
 }
 
+
+// ---------------------------------------------------------------------------
+// AI-search visibility: structured data + server-rendered content blocks.
+// GPTBot / ClaudeBot / PerplexityBot / ChatGPT-Search do not execute JS, so the
+// SPA shell alone is invisible to them. resolveSeoContent() builds real text
+// content + JSON-LD that injectHead() merges into the served HTML. React uses
+// createRoot (not hydration), so injected #root content is replaced on mount.
+// ---------------------------------------------------------------------------
+
+export const US_STATE_NAMES: Record<string, string> = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+  CO: "Colorado", CT: "Connecticut", DE: "Delaware", DC: "District of Columbia",
+  FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois",
+  IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+  ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+  MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+  NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York",
+  NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma",
+  OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+  VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin",
+  WY: "Wyoming",
+};
+
+// Verified against IRS announcements (IR-2026-76 + Oct 2026 Treasury update),
+// matching the state directory on /federal-tax-credit. Arizona is NOT a
+// participant (governor vetoed the opt-in legislation).
+export const FSTC_PARTICIPATING_STATES: string[] = [
+  "Alabama", "Alaska", "Arkansas", "Colorado", "Florida", "Georgia", "Idaho",
+  "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Mississippi",
+  "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+  "North Carolina", "North Dakota", "Ohio", "Oklahoma", "South Carolina",
+  "South Dakota", "Tennessee", "Texas", "Utah", "Virginia", "West Virginia",
+  "Wyoming",
+];
+
+// FAQ answers use only facts already verified on /federal-tax-credit.
+// The $3,400 joint amount is from Oct 2026 PROPOSED regulations — labeled as such.
+export const FSTC_FAQS: { q: string; a: string }[] = [
+  {
+    q: "What is the Federal Scholarship Tax Credit?",
+    a: "The Education Freedom Tax Credit (also called the Federal Scholarship Tax Credit) is a federal program signed into law on July 4, 2025. It lets taxpayers donate to Scholarship Granting Organizations (SGOs) that fund K-12 scholarships, and receive a dollar-for-dollar federal tax credit for their donation. The program takes effect January 1, 2027.",
+  },
+  {
+    q: "Which states participate in the Federal Scholarship Tax Credit?",
+    a: "As of October 2026, 30 states have opted in, according to the IRS: Alabama, Alaska, Arkansas, Colorado, Florida, Georgia, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, North Carolina, North Dakota, Ohio, Oklahoma, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, West Virginia, and Wyoming. Arizona is not participating. Students must live in a participating state to receive a scholarship, though donors can give from any state.",
+  },
+  {
+    q: "How much is the Federal Scholarship Tax Credit?",
+    a: "Individual taxpayers can donate up to $1,700 per year to a qualified Scholarship Granting Organization and claim a dollar-for-dollar, nonrefundable federal tax credit. Under the U.S. Treasury's October 2026 proposed regulations (not yet final), married couples filing jointly can donate up to $3,400. The $1,700 figure is the donor's tax credit limit — it is not the scholarship amount a student receives.",
+  },
+  {
+    q: "When does the Federal Scholarship Tax Credit start?",
+    a: "The program takes effect January 1, 2027. The U.S. Treasury released proposed regulations on October 1, 2026, and states must submit their lists of qualifying Scholarship Granting Organizations by February 15, 2027.",
+  },
+  {
+    q: "Who qualifies for Federal Scholarship Tax Credit scholarships?",
+    a: "Students from households earning up to 300% of the area median gross income who are eligible to enroll in K-12 school and live in a state that has opted into the program. Scholarship funds can be used for tuition, fees, tutoring, books, curriculum materials, special needs services, technology, and transportation.",
+  },
+];
+
+function breadcrumbJsonLd(items: { name: string; url: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((it, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: it.name,
+      item: it.url,
+    })),
+  };
+}
+
+function faqPageJsonLd(faqs: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}
+
+function stripText(s: string, max = 400): string {
+  const t = s.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return t.length > max ? t.slice(0, max - 1).trimEnd() + "…" : t;
+}
+
+function faqBodyHtml(heading: string, intro: string, faqs: { q: string; a: string }[]): string {
+  const parts = [
+    `<main><h1>${escapeHtml(heading)}</h1>`,
+    `<p>${escapeHtml(intro)}</p>`,
+    `<h2>Frequently Asked Questions</h2>`,
+  ];
+  for (const f of faqs) {
+    parts.push(`<h3>${escapeHtml(f.q)}</h3><p>${escapeHtml(f.a)}</p>`);
+  }
+  parts.push(`</main>`);
+  return parts.join("");
+}
+
+// Small in-memory cache so state/city pages don't re-query the full state
+// school list on every crawler hit.
+const stateSchoolsCache = new Map<string, { at: number; rows: any[] }>();
+const STATE_CACHE_TTL = 10 * 60 * 1000;
+async function getStateSchoolsCached(code: string): Promise<any[]> {
+  const hit = stateSchoolsCache.get(code);
+  if (hit && Date.now() - hit.at < STATE_CACHE_TTL) return hit.rows;
+  const { getSchoolsByState } = await import("../db");
+  const rows = await getSchoolsByState(code);
+  stateSchoolsCache.set(code, { at: Date.now(), rows });
+  return rows;
+}
+
+function citySlugOf(city: string): string {
+  return city.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Build JSON-LD + crawler-visible body content for a route.
+ * Returns empty object for routes without server content. Never throws.
+ */
+export async function resolveSeoContent(
+  match: RouteMatch
+): Promise<{ jsonLd?: unknown[]; bodyHtml?: string }> {
+  try {
+    if (match.kind === "static" && match.path === "/") {
+      const org = {
+        "@type": "Organization",
+        name: "Find Christian Schools",
+        url: `${SITE_URL}/`,
+        logo: `${SITE_URL}/logo-new.jpg`,
+        description:
+          "A searchable directory of 9,000+ Christian schools across all 50 US states, plus Christian colleges, races, jobs, and events.",
+      };
+      const website = {
+        "@type": "WebSite",
+        name: "Find Christian Schools",
+        url: `${SITE_URL}/`,
+        publisher: { "@type": "Organization", name: "Find Christian Schools" },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${SITE_URL}/search?query={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      };
+      return {
+        jsonLd: [{ "@context": "https://schema.org", "@graph": [org, website] }],
+        bodyHtml:
+          `<main><h1>Find Christian Schools</h1>` +
+          `<p>Find Christian Schools is a free directory of 9,000+ Christian schools across all 50 US states, plus Christian colleges, Christian running races, education jobs, and events. Search by ZIP code, city, state, denomination, and program type to find faith-based education for your family.</p>` +
+          `<p><a href="${SITE_URL}/states">Browse Christian schools by state</a> · ` +
+          `<a href="${SITE_URL}/federal-tax-credit">Federal Scholarship Tax Credit</a> · ` +
+          `<a href="${SITE_URL}/colleges">Christian colleges</a> · ` +
+          `<a href="${SITE_URL}/classical-christian-schools">Classical Christian schools</a> · ` +
+          `<a href="${SITE_URL}/search">Search Christian schools</a></p></main>`,
+      };
+    }
+
+    if (match.kind === "static" && match.path === "/federal-tax-credit") {
+      return {
+        jsonLd: [faqPageJsonLd(FSTC_FAQS)],
+        bodyHtml: faqBodyHtml(
+          "Federal Scholarship Tax Credit",
+          "The Education Freedom Tax Credit (Federal Scholarship Tax Credit) is the first federal tax credit for K-12 education scholarships. It was signed into law on July 4, 2025 and takes effect January 1, 2027. Taxpayers can donate up to $1,700 per year to Scholarship Granting Organizations and receive a dollar-for-dollar federal tax credit.",
+          FSTC_FAQS
+        ),
+      };
+    }
+
+    if (match.kind === "school") {
+      const { getSchoolBySlug } = await import("../db");
+      const school: any = await getSchoolBySlug(match.slug);
+      if (!school) return {};
+      const url = `${SITE_URL}/school/${school.slug}`;
+      const stateName = US_STATE_NAMES[school.stateCode] || school.state;
+      const loc = [school.city, school.state].filter(Boolean).join(", ");
+      const grades =
+        school.gradeStart && school.gradeEnd
+          ? ` Grades ${school.gradeStart}–${school.gradeEnd}.`
+          : "";
+      const denom = school.denomination ? ` ${school.denomination}.` : "";
+      const desc = school.description ? stripText(String(school.description)) : "";
+      const lat = Number(school.latitude);
+      const lng = Number(school.longitude);
+      const schoolLd: Record<string, unknown> = {
+        "@context": "https://schema.org",
+        "@type": "School",
+        name: school.name,
+        url,
+        description:
+          desc ||
+          `${school.name} is a Christian school in ${loc}.${grades}${denom}`,
+        address: {
+          "@type": "PostalAddress",
+          ...(school.address ? { streetAddress: school.address } : {}),
+          addressLocality: school.city,
+          addressRegion: school.stateCode,
+          ...(school.zip ? { postalCode: school.zip } : {}),
+          addressCountry: "US",
+        },
+      };
+      if (Number.isFinite(lat) && Number.isFinite(lng) && (lat !== 0 || lng !== 0)) {
+        schoolLd.geo = { "@type": "GeoCoordinates", latitude: lat, longitude: lng };
+      }
+      if (school.phone) schoolLd.telephone = school.phone;
+      if (school.website) schoolLd.sameAs = school.website;
+      if (desc) schoolLd.description = desc;
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: `Christian Schools in ${stateName}`, url: `${SITE_URL}/state/${school.stateCode}` },
+        { name: school.name, url },
+      ]);
+      const bodyHtml =
+        `<main><h1>${escapeHtml(school.name)}</h1>` +
+        `<p>${escapeHtml(school.name)} is a Christian school in ${escapeHtml(loc)}.${escapeHtml(grades)}${escapeHtml(denom)}</p>` +
+        (desc ? `<p>${escapeHtml(desc)}</p>` : "") +
+        `<p><a href="${SITE_URL}/state/${school.stateCode}">More Christian schools in ${escapeHtml(stateName)}</a></p></main>`;
+      return { jsonLd: [schoolLd, crumbs], bodyHtml };
+    }
+
+    if (match.kind === "college") {
+      const { getCollegeBySlug } = await import("../db");
+      const college: any = await getCollegeBySlug(match.slug);
+      if (!college) return {};
+      const url = `${SITE_URL}/college/${college.slug}`;
+      const loc = [college.city, college.state].filter(Boolean).join(", ");
+      const denom = college.denomination ? ` (${college.denomination})` : "";
+      const collegeLd: Record<string, unknown> = {
+        "@context": "https://schema.org",
+        "@type": "CollegeOrUniversity",
+        name: college.name,
+        url,
+        description: `${college.name} is a Christian college in ${loc}${denom}.`,
+        address: {
+          "@type": "PostalAddress",
+          ...(college.address ? { streetAddress: college.address } : {}),
+          addressLocality: college.city,
+          addressRegion: college.stateCode,
+          ...(college.zip ? { postalCode: college.zip } : {}),
+          addressCountry: "US",
+        },
+      };
+      if (college.phone) collegeLd.telephone = college.phone;
+      if (college.website) collegeLd.sameAs = college.website;
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "Christian Colleges", url: `${SITE_URL}/colleges` },
+        { name: college.name, url },
+      ]);
+      const bodyHtml =
+        `<main><h1>${escapeHtml(college.name)}</h1>` +
+        `<p>${escapeHtml(college.name)} is a Christian college in ${escapeHtml(loc)}${escapeHtml(denom)}.</p>` +
+        `<p><a href="${SITE_URL}/colleges">Browse Christian colleges</a></p></main>`;
+      return { jsonLd: [collegeLd, crumbs], bodyHtml };
+    }
+
+    if (match.kind === "state") {
+      const stateName = US_STATE_NAMES[match.code] || match.code;
+      const rows = await getStateSchoolsCached(match.code);
+      const count = rows.length;
+      const top = rows.slice(0, 10);
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "Browse by State", url: `${SITE_URL}/states` },
+        { name: `Christian Schools in ${stateName}`, url: `${SITE_URL}/state/${match.code}` },
+      ]);
+      const fstcNote = FSTC_PARTICIPATING_STATES.includes(stateName)
+        ? `<p>${escapeHtml(stateName)} is one of 30 states participating in the <a href="${SITE_URL}/federal-tax-credit">Federal Scholarship Tax Credit</a>, which takes effect January 1, 2027.</p>`
+        : "";
+      const list = top.length
+        ? `<ul>${top
+            .map(
+              (s: any) =>
+                `<li><a href="${SITE_URL}/school/${escapeHtml(s.slug)}">${escapeHtml(s.name)}</a> — ${escapeHtml(s.city)}, ${escapeHtml(stateName)}</li>`
+            )
+            .join("")}</ul>`
+        : "";
+      const bodyHtml =
+        `<main><h1>Christian Schools in ${escapeHtml(stateName)}</h1>` +
+        `<p>Find Christian Schools lists ${count} Christian school${count === 1 ? "" : "s"} in ${escapeHtml(stateName)}. Search by city, denomination, grade level, and program type to compare faith-based education options for your family.</p>` +
+        fstcNote +
+        list +
+        `</main>`;
+      return { jsonLd: [crumbs], bodyHtml };
+    }
+
+    if (match.kind === "city") {
+      const stateName = US_STATE_NAMES[match.code] || match.code;
+      const cityName = match.city
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+      const rows = await getStateSchoolsCached(match.code);
+      const inCity = rows.filter((s: any) => citySlugOf(String(s.city)) === match.city.toLowerCase());
+      const top = inCity.slice(0, 10);
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: `Christian Schools in ${stateName}`, url: `${SITE_URL}/state/${match.code}` },
+        { name: `Christian Schools in ${cityName}, ${match.code}`, url: `${SITE_URL}/city/${match.code}/${match.city}` },
+      ]);
+      const countSentence = inCity.length
+        ? `Find Christian Schools lists ${inCity.length} Christian school${inCity.length === 1 ? "" : "s"} in ${cityName}.`
+        : `Find Christian schools in and around ${cityName}.`;
+      const list = top.length
+        ? `<ul>${top
+            .map(
+              (s: any) =>
+                `<li><a href="${SITE_URL}/school/${escapeHtml(s.slug)}">${escapeHtml(s.name)}</a> — ${escapeHtml(s.city)}, ${escapeHtml(stateName)}</li>`
+            )
+            .join("")}</ul>`
+        : "";
+      const bodyHtml =
+        `<main><h1>Christian Schools in ${escapeHtml(cityName)}, ${escapeHtml(match.code)}</h1>` +
+        `<p>${escapeHtml(countSentence)} Compare denomination, grade levels, and program types to find the right faith-based education for your family.</p>` +
+        list +
+        `<p><a href="${SITE_URL}/state/${match.code}">All Christian schools in ${escapeHtml(stateName)}</a></p></main>`;
+      return { jsonLd: [crumbs], bodyHtml };
+    }
+  } catch (e) {
+    console.error("[seoHead] resolveSeoContent failed:", e);
+  }
+  return {};
+}
+
 /**
  * Inject SEO tags into the HTML shell. Replaces existing title/meta/OG tags
  * and adds a canonical link.
@@ -374,6 +706,29 @@ export function injectHead(html: string, meta: PageMeta): string {
         /<meta property="og:image" content=".*?"\s*\/?>/i,
         `$&\n    ${twitterTag}`
       );
+    }
+  }
+
+  // JSON-LD structured data (AI search + rich results)
+  if (meta.jsonLd && meta.jsonLd.length) {
+    const tags = meta.jsonLd
+      .map(
+        (obj) =>
+          `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, "\\u003c")}</script>`
+      )
+      .join("\n    ");
+    if (/<\/head>/i.test(out)) {
+      out = out.replace(/<\/head>/i, `    ${tags}\n  </head>`);
+    }
+  }
+
+  // Server-rendered body content for non-JS crawlers. React createRoot
+  // replaces #root contents on mount, so real users never see this block.
+  if (meta.bodyHtml) {
+    if (/<div id="root"><\/div>/.test(out)) {
+      out = out.replace(/<div id="root"><\/div>/, `<div id="root">${meta.bodyHtml}</div>`);
+    } else if (/<div id="root">/.test(out)) {
+      out = out.replace(/<div id="root">/, `<div id="root">${meta.bodyHtml}`);
     }
   }
 

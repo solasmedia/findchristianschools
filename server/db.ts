@@ -2542,3 +2542,83 @@ export async function updateTeacherForumWaitlistStatus(
     .where(eq(teacherForumWaitlist.id, id));
   return { success: true };
 }
+
+// ---------------------------------------------------------------------------
+// Family hubs (/homeschool-hub "The Kitchen Table", /parents "The Parent
+// Playbook") — sister dashboards to the Teacher Toolkit. Same truth rules:
+// every number, post, and event below comes from a real query.
+// ---------------------------------------------------------------------------
+
+const hubBlogSummarySelect = {
+  id: blogPosts.id,
+  title: blogPosts.title,
+  slug: blogPosts.slug,
+  excerpt: blogPosts.excerpt,
+  category: blogPosts.category,
+  ageGroup: blogPosts.ageGroup,
+  readingTimeMinutes: blogPosts.readingTimeMinutes,
+  publishedAt: blogPosts.publishedAt,
+  heroImageUrl: blogPosts.heroImageUrl,
+};
+
+/**
+ * Latest published posts for a hub: the hub's own categories first (newest
+ * first), then filled with any remaining published posts so the section
+ * never shows fewer than exist. Mirrors getLatestTeacherBlogPosts.
+ */
+async function getLatestHubBlogPosts(categories: readonly string[], limit: number) {
+  const db = await conn();
+  const typed = [...categories] as (typeof blogPosts.category.enumValues)[number][];
+  const preferred = await db
+    .select(hubBlogSummarySelect)
+    .from(blogPosts)
+    .where(and(eq(blogPosts.status, "published"), inArray(blogPosts.category, typed)))
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(limit);
+  if (preferred.length >= limit) return preferred;
+  const seen = new Set(preferred.map((p) => p.id));
+  const rest = await db
+    .select(hubBlogSummarySelect)
+    .from(blogPosts)
+    .where(eq(blogPosts.status, "published"))
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(limit * 3);
+  return [...preferred, ...rest.filter((p) => !seen.has(p.id))].slice(0, limit);
+}
+
+/** "The Morning Basket" — homeschool ideas series posts for /homeschool-hub. */
+export async function getLatestHomeschoolBlogPosts(limit = 4) {
+  const { HOMESCHOOL_BLOG_CATEGORIES } = await import("../shared/familyHubs");
+  return getLatestHubBlogPosts(HOMESCHOOL_BLOG_CATEGORIES, limit);
+}
+
+/** Parent-relevant posts for /parents. */
+export async function getLatestParentBlogPosts(limit = 4) {
+  const { PARENT_BLOG_CATEGORIES } = await import("../shared/familyHubs");
+  return getLatestHubBlogPosts(PARENT_BLOG_CATEGORIES, limit);
+}
+
+/** Upcoming public events tagged for the family audience (/parents). */
+export async function getFamilyEvents(limit = 6) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(events)
+    .where(and(...publicEventConditions(), eq(events.audience, "families")))
+    .orderBy(asc(events.startDate))
+    .limit(limit);
+  return rows;
+}
+
+/** Live directory counts for the Parent Playbook hero. */
+export async function getParentHubCounts() {
+  const db = await conn();
+  const [schoolRows, collegeRows] = await Promise.all([
+    db.select({ value: count() }).from(schools).where(and(...publicSchoolConditions())),
+    db.select({ value: count() }).from(colleges).where(and(...publicCollegeConditions())),
+  ]);
+  return {
+    schoolCount: Number(schoolRows[0]?.value ?? 0),
+    collegeCount: Number(collegeRows[0]?.value ?? 0),
+  };
+}

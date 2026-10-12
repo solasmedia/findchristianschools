@@ -8,7 +8,7 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 import EnrichmentAdmin from "./admin/EnrichmentAdmin";
-import { CoursesManager, EventsManager, JobsManager, SubmissionsQueue, ContactMessages, SiteInsights, BlogManager } from "./admin/AdminManagers";
+import { CoursesManager, EventsManager, JobsManager, SubmissionsQueue, ContactMessages, SiteInsights, BlogManager, ForumWaitlistManager } from "./admin/AdminManagers";
 
 export default function Admin() {
   const { user, loading } = useAuth();
@@ -56,6 +56,7 @@ export default function Admin() {
             <TabsTrigger value="messages" className="text-xs md:text-sm py-2"><Mail className="w-4 h-4 mr-1" /> Messages</TabsTrigger>
             <TabsTrigger value="insights" className="text-xs md:text-sm py-2"><TrendingUp className="w-4 h-4 mr-1" /> Insights</TabsTrigger>
             <TabsTrigger value="enrichment" className="text-xs md:text-sm py-2"><ShieldCheck className="w-4 h-4 mr-1" /> Enrichment</TabsTrigger>
+            <TabsTrigger value="forum" className="text-xs md:text-sm py-2"><Users className="w-4 h-4 mr-1" /> Forum Waitlist</TabsTrigger>
           </TabsList>
 
           <TabsContent value="analytics"><AnalyticsDashboard /></TabsContent>
@@ -76,6 +77,7 @@ export default function Admin() {
           <TabsContent value="messages"><ContactMessages /></TabsContent>
           <TabsContent value="insights"><SiteInsights /></TabsContent>
           <TabsContent value="enrichment"><EnrichmentAdmin /></TabsContent>
+          <TabsContent value="forum"><ForumWaitlistManager /></TabsContent>
         </Tabs>
       </div>
     </div>

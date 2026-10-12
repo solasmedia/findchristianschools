@@ -81,6 +81,23 @@ export async function getZipsWithinRadius(zip: string, miles: number = 25): Prom
   return result.length > 0 ? result : [zip.slice(0, 5)];
 }
 
+/**
+ * Radius lookup against the COMPLETE ZIP dataset (not just ZIPs that have
+ * schools). Enrichment listings can sit in ZIPs with no school, so the
+ * schoolZips-based lookup above would miss them.
+ */
+export async function getZipsWithinRadiusAll(zip: string, miles: number = 25): Promise<string[]> {
+  const target = await geocodeZip(zip.slice(0, 5));
+  if (!target) return [zip.slice(0, 5)];
+  const result: string[] = [];
+  for (const [z, lat, lon] of zipCoords) {
+    if (haversineMiles(target[0], target[1], lat, lon) <= miles) {
+      result.push(z);
+    }
+  }
+  return result.length > 0 ? result : [zip.slice(0, 5)];
+}
+
 import * as schema from "../drizzle/schema";
 import {
   users,
@@ -105,6 +122,8 @@ import {
   funnelEvents,
   colleges,
   races,
+  enrichmentListings,
+  enrichmentReports,
   blogPosts,
   resourceDownloads,
   resourcePurchases,
@@ -2157,3 +2176,231 @@ export async function triggerNewsRefresh() {
   const { fetchAllNewsFeeds } = await import("./newsFetcher");
   return fetchAllNewsFeeds();
 }
+
+// ---------------------------------------------------------------------------
+// Enrichment & Activities — tutors, classes, sports, camps, youth groups,
+// music & arts, homeschool co-ops/resources.
+// Public visibility rule: only admin-approved listings (isApproved = true)
+// that are not removed/suspended. Verification badges are admin-reviewed:
+// a badge shows only when verificationStatus = "approved".
+// ---------------------------------------------------------------------------
+
+type EnrichmentCategory = typeof enrichmentListings.$inferSelect.category;
+type EnrichmentListerType = typeof enrichmentListings.$inferSelect.listerType;
+type EnrichmentListingStatus = typeof enrichmentListings.$inferSelect.listingStatus;
+type EnrichmentVerificationStatus = typeof enrichmentListings.$inferSelect.verificationStatus;
+type EnrichmentReportStatus = typeof enrichmentReports.$inferSelect.status;
+
+function publicEnrichmentConditions() {
+  return [
+    eq(enrichmentListings.isApproved, true),
+    ne(enrichmentListings.listingStatus, "removed"),
+    ne(enrichmentListings.listingStatus, "suspended"),
+  ];
+}
+
+export interface SearchEnrichmentParams {
+  query?: string;
+  category?: string;
+  state?: string;
+  city?: string;
+  zip?: string;
+  radius?: number;
+  limit?: number;
+  offset?: number;
+}
+
+export async function searchEnrichmentListings(params: SearchEnrichmentParams) {
+  const db = await conn();
+  // Same rule as schools: a bare 5-digit ZIP in the free-text box behaves
+  // exactly like a ZIP search with the 25-mile radius fallback.
+  const queryTrimmed = params.query?.trim();
+  if (!params.zip && queryTrimmed && /^\d{5}$/.test(queryTrimmed)) {
+    params = { ...params, zip: queryTrimmed, query: undefined };
+  }
+  const conditions: any[] = [...publicEnrichmentConditions()];
+
+  if (params.query) {
+    const q = `%${params.query}%`;
+    const clause = or(
+      like(enrichmentListings.name, q),
+      like(enrichmentListings.city, q),
+      like(enrichmentListings.state, q),
+      like(enrichmentListings.zip, q),
+      like(enrichmentListings.subcategory, q),
+      like(enrichmentListings.description, q),
+    );
+    if (clause) conditions.push(clause);
+  }
+  if (params.category) {
+    conditions.push(eq(enrichmentListings.category, params.category as EnrichmentCategory));
+  }
+  if (params.state) {
+    const code = stateToCode(params.state);
+    const clause = or(eq(enrichmentListings.state, params.state), eq(enrichmentListings.stateCode, code));
+    if (clause) conditions.push(clause);
+  }
+  if (params.city) conditions.push(like(enrichmentListings.city, `%${params.city}%`));
+  if (params.zip) {
+    const zip5 = params.zip.slice(0, 5);
+    const radiusMiles = params.radius ?? 25;
+    if (radiusMiles > 0) {
+      const nearbyZips = await getZipsWithinRadiusAll(zip5, radiusMiles);
+      if (nearbyZips.length > 1) {
+        const zipConditions = nearbyZips.map((z) => like(enrichmentListings.zip, `${z}%`));
+        const zipOr = or(...zipConditions);
+        if (zipOr) conditions.push(zipOr);
+        (params as any)._radiusApplied = true;
+        (params as any)._searchZip = zip5;
+        (params as any)._radiusMiles = radiusMiles;
+      } else {
+        conditions.push(like(enrichmentListings.zip, `${zip5}%`));
+      }
+    } else {
+      conditions.push(like(enrichmentListings.zip, `${zip5}%`));
+    }
+  }
+
+  const where = and(...conditions);
+  const limit = params.limit ?? 24;
+  const offset = params.offset ?? 0;
+
+  // Premium (Featured) listings first, then alphabetical — same ordering
+  // convention as school search.
+  const rows = await db
+    .select()
+    .from(enrichmentListings)
+    .where(where)
+    .orderBy(desc(enrichmentListings.isPremium), asc(enrichmentListings.name))
+    .limit(limit)
+    .offset(offset);
+
+  const totalRows = await db
+    .select({ total: count() })
+    .from(enrichmentListings)
+    .where(where);
+  const total = Number(totalRows[0]?.total ?? 0);
+
+  const counts = await db
+    .select({ category: enrichmentListings.category, total: count() })
+    .from(enrichmentListings)
+    .where(where)
+    .groupBy(enrichmentListings.category);
+  const categoryCounts: Record<string, number> = {};
+  for (const c of counts) categoryCounts[c.category] = Number(c.total);
+
+  return {
+    listings: rows,
+    total,
+    categoryCounts,
+    radiusFallback: (params as any)._radiusApplied === true,
+    searchZip: (params as any)._searchZip,
+    radiusMiles: (params as any)._radiusMiles,
+  };
+}
+
+/** Public detail lookup — returns null for unapproved/removed listings. */
+export async function getEnrichmentBySlug(slug: string) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(enrichmentListings)
+    .where(and(eq(enrichmentListings.slug, slug), ...publicEnrichmentConditions()))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+/** Admin/detail lookup without the public visibility filter. */
+export async function getEnrichmentBySlugAny(slug: string) {
+  const db = await conn();
+  const rows = await db.select().from(enrichmentListings).where(eq(enrichmentListings.slug, slug)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function getEnrichmentCountsByCategory() {
+  const db = await conn();
+  const rows = await db
+    .select({ category: enrichmentListings.category, total: count() })
+    .from(enrichmentListings)
+    .where(and(...publicEnrichmentConditions()))
+    .groupBy(enrichmentListings.category);
+  const out: Record<string, number> = {};
+  for (const r of rows) out[r.category] = Number(r.total);
+  return out;
+}
+
+export async function createEnrichmentListing(data: Record<string, unknown>) {
+  const db = await conn();
+  const result = await db.insert(enrichmentListings).values(data as typeof enrichmentListings.$inferInsert);
+  return { success: true, id: Number((result as any)[0].insertId), slug: String((data as any).slug ?? "") };
+}
+
+export async function updateEnrichmentListing(id: number, data: Record<string, unknown>) {
+  const db = await conn();
+  await db.update(enrichmentListings).set(data as any).where(eq(enrichmentListings.id, id));
+  const rows = await db.select().from(enrichmentListings).where(eq(enrichmentListings.id, id)).limit(1);
+  return rows[0];
+}
+
+export async function deleteEnrichmentListing(id: number) {
+  const db = await conn();
+  await db.delete(enrichmentListings).where(eq(enrichmentListings.id, id));
+  return { success: true };
+}
+
+/** Admin queue: listings awaiting publication approval. */
+export async function getPendingEnrichmentListings() {
+  const db = await conn();
+  return db
+    .select()
+    .from(enrichmentListings)
+    .where(and(eq(enrichmentListings.isApproved, false), ne(enrichmentListings.listingStatus, "removed")))
+    .orderBy(desc(enrichmentListings.createdAt));
+}
+
+/** Admin queue: verification requests awaiting review. */
+export async function getPendingEnrichmentVerifications() {
+  const db = await conn();
+  return db
+    .select()
+    .from(enrichmentListings)
+    .where(eq(enrichmentListings.verificationStatus, "pending"))
+    .orderBy(desc(enrichmentListings.updatedAt));
+}
+
+export async function getAllEnrichmentAdmin(params: { limit?: number; offset?: number }) {
+  const db = await conn();
+  return db
+    .select()
+    .from(enrichmentListings)
+    .orderBy(desc(enrichmentListings.createdAt))
+    .limit(params.limit ?? 200)
+    .offset(params.offset ?? 0);
+}
+
+export async function createEnrichmentReport(data: Record<string, unknown>) {
+  const db = await conn();
+  await db.insert(enrichmentReports).values(data as any);
+  return { success: true };
+}
+
+export async function getEnrichmentReports(status?: string) {
+  const db = await conn();
+  const where = status ? eq(enrichmentReports.status, status as EnrichmentReportStatus) : undefined;
+  return db
+    .select()
+    .from(enrichmentReports)
+    .where(where)
+    .orderBy(desc(enrichmentReports.createdAt))
+    .limit(200);
+}
+
+export async function updateEnrichmentReport(id: number, data: Record<string, unknown>) {
+  const db = await conn();
+  await db.update(enrichmentReports).set(data as any).where(eq(enrichmentReports.id, id));
+  const rows = await db.select().from(enrichmentReports).where(eq(enrichmentReports.id, id)).limit(1);
+  return rows[0];
+}
+
+// Re-exported literal types for router validation convenience
+export type { EnrichmentCategory, EnrichmentListerType, EnrichmentListingStatus, EnrichmentVerificationStatus };

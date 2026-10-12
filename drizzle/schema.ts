@@ -745,7 +745,7 @@ export const enrichmentListings = mysqlTable("enrichment_listings", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
-  category: mysqlEnum("category", ["tutor", "classes", "sports", "camps", "youth_groups", "music_arts", "homeschool_coop"]).notNull(),
+  category: mysqlEnum("category", ["tutor", "classes", "sports", "camps", "youth_groups", "music_arts", "homeschool_coop", "vbs"]).notNull(),
   // Free-text subcategory / org type, e.g. "American Heritage Girls Troop",
   // "Trail Life USA Troop", "Piano lessons", "Soccer league"
   subcategory: varchar("subcategory", { length: 128 }),

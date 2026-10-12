@@ -156,13 +156,13 @@ Sitemap: ${SITE_URL}/sitemap.xml`
       }
 
       // Enrichment category landing pages (static routes)
-      const enrichmentStaticUrls = ["/enrichment", "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports", "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts", "/enrichment/homeschool", "/enrichment/submit", "/lister-terms"]
+      const enrichmentStaticUrls = ["/enrichment", "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports", "/enrichment/camps", "/enrichment/vbs", "/enrichment/youth-groups", "/enrichment/music-arts", "/enrichment/homeschool", "/enrichment/submit", "/lister-terms"]
         .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
         .join("\n");
 
       // Static pages
       // Static pages
-      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/news", "/traveled", "/classical-christian-schools", "/book-club", "/videos", "/federal-tax-credit", "/teacher-resources", "/teacher-toolkit", "/tools", "/tools/flashcards", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/tools/vocabulary-worksheet-generator", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
+      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/news", "/traveled", "/classical-christian-schools", "/book-club", "/videos", "/federal-tax-credit", "/teacher-resources", "/teacher-toolkit", "/homeschool-hub", "/parents", "/tools", "/tools/flashcards", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/tools/vocabulary-worksheet-generator", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
         .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>${p === "" ? "1.0" : "0.5"}</priority></url>`)
         .join("\n");
 

@@ -40,6 +40,13 @@ export const ENRICHMENT_CATEGORIES = [
       "Christian summer camps, retreats, and day camps where faith and adventure meet.",
   },
   {
+    slug: "vbs",
+    key: "vbs",
+    label: "Vacation Bible School",
+    blurb:
+      "Vacation Bible School programs at local churches — a free week of Bible stories, songs, games, and new friends every summer.",
+  },
+  {
     slug: "youth-groups",
     key: "youth_groups",
     label: "Youth Groups",

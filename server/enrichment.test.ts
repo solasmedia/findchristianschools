@@ -52,17 +52,25 @@ describe("Enrichment premium pricing ladder", () => {
 });
 
 describe("Enrichment categories", () => {
-  it("has the seven approved categories", () => {
-    expect(ENRICHMENT_CATEGORIES).toHaveLength(7);
+  it("has the eight approved categories", () => {
+    expect(ENRICHMENT_CATEGORIES).toHaveLength(8);
     expect(ENRICHMENT_CATEGORY_KEYS).toEqual([
       "tutor",
       "classes",
       "sports",
       "camps",
+      "vbs",
       "youth_groups",
       "music_arts",
       "homeschool_coop",
     ]);
+  });
+
+  it("includes Vacation Bible School as a real category (Dave, 2026-10-12)", () => {
+    const vbs = categoryBySlug("vbs");
+    expect(vbs?.key).toBe("vbs");
+    expect(vbs?.label).toBe("Vacation Bible School");
+    expect(categoryByKey("vbs")?.slug).toBe("vbs");
   });
 
   it("includes youth groups for AHG / Trail Life style organizations", () => {

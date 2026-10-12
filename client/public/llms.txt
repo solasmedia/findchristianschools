@@ -32,7 +32,8 @@ directory does not constitute endorsement.
 ## Enrichment & Activities
 
 Beyond-the-classroom Christian enrichment listings: tutors, classes, sports,
-camps, youth groups, music & arts, and homeschool co-ops. Listings are
+camps, Vacation Bible School, youth groups, music & arts, and homeschool
+co-ops. Listings are
 reviewed before publication. Verification is admin-reviewed and describes
 documents checked only — a badge reads "Documents Verified" (businesses and
 organizations; EIN + legal name reviewed) or "ID & Background Check Verified"
@@ -44,6 +45,8 @@ Inclusion is not an endorsement or recommendation.
 - Classes & Tutoring Centers: https://www.findchristianschools.com/enrichment/classes
 - Sports & Leagues: https://www.findchristianschools.com/enrichment/sports
 - Camps: https://www.findchristianschools.com/enrichment/camps
+- Vacation Bible School (VBS programs at local churches; churches list free):
+  https://www.findchristianschools.com/enrichment/vbs
 - Youth Groups (American Heritage Girls, Trail Life USA, Royal Rangers, Awana):
   https://www.findchristianschools.com/enrichment/youth-groups
 - Music & Arts: https://www.findchristianschools.com/enrichment/music-arts
@@ -74,6 +77,17 @@ Inclusion is not an endorsement or recommendation.
   development, and a founding-teachers waitlist for the upcoming Teacher
   Forum (members verified against a Christian school before access):
   https://www.findchristianschools.com/teacher-toolkit
+- The Kitchen Table — a homeschool hub for Christian families: the same
+  free tools in parent language (worksheet generators, lesson planner,
+  Bible verse maker), The Morning Basket homeschool ideas series, honest
+  Christian curriculum guides and comparisons, and local family activities
+  (co-ops, classes, sports, camps, Vacation Bible School):
+  https://www.findchristianschools.com/homeschool-hub
+- The Parent Playbook — a dashboard for parents: Christian school search
+  by ZIP code, the $1,700 Federal Scholarship Tax Credit family guide,
+  family events, parent reading, and the electives showcase (classes &
+  tutoring, sports, camps, Vacation Bible School, music & arts, youth
+  groups, tutors): https://www.findchristianschools.com/parents
 - Teacher resource blog: https://www.findchristianschools.com/blog
 - Christian education news: https://www.findchristianschools.com/news
 

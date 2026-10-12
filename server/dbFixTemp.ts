@@ -13,6 +13,12 @@
 // Key protection matches the other temp admin endpoints exactly:
 // header "x-admin-key" compared against process.env.ADMIN_IMPORT_KEY with
 // the same fallback used by classicalTagTemp.ts.
+//
+// The same fix can also run once at server startup: when RUN_DB_FIX=yes is
+// set in the environment, startServer() calls runDbFixAtStartupIfFlagged()
+// during boot. That path exists because the key above cannot be retrieved
+// for a manual POST without exposing it; the env flag is set in Railway,
+// the fix runs on the next deploy, and the flag can then be removed.
 import type { Express, Request, Response } from "express";
 import { eq } from "drizzle-orm";
 import { getDb } from "./db";
@@ -57,6 +63,53 @@ const EASTWIND_RECORD = {
   schoolClaimed: false,
 } as const;
 
+export interface DbFixResult {
+  adminUsersDeleted: number;
+  twoFASessionsDeleted: number | null;
+  eastwind: "inserted" | "skipped";
+}
+
+// The fix itself, shared by the POST endpoint and the startup trigger.
+// Idempotent: clearing already-empty tables deletes 0 rows, and the
+// Eastwind insert is skipped when the slug is already present.
+export async function runDbFix(): Promise<DbFixResult> {
+  const db = await getDb();
+  if (!db) throw new Error("No DB");
+
+  // a) Clear admin accounts + 2FA sessions so /admin-setup can run again.
+  const adminRows = await db.select({ id: adminUsers.id }).from(adminUsers);
+  const adminUsersDeleted = adminRows.length;
+  if (adminUsersDeleted > 0) {
+    await db.delete(adminUsers);
+  }
+
+  let twoFASessionsDeleted: number | null = null;
+  try {
+    const sessionRows = await db.select({ id: twoFASessions.id }).from(twoFASessions);
+    twoFASessionsDeleted = sessionRows.length;
+    if (twoFASessionsDeleted > 0) {
+      await db.delete(twoFASessions);
+    }
+  } catch {
+    // Table may not exist in this environment — guarded per instructions.
+    twoFASessionsDeleted = null;
+  }
+
+  // b) Insert Eastwind Christian Academy if the slug is not present.
+  const existing = await db
+    .select({ id: schools.id })
+    .from(schools)
+    .where(eq(schools.slug, EASTWIND_SLUG))
+    .limit(1);
+  let eastwind: "inserted" | "skipped" = "skipped";
+  if (existing.length === 0) {
+    await db.insert(schools).values(EASTWIND_RECORD as any);
+    eastwind = "inserted";
+  }
+
+  return { adminUsersDeleted, twoFASessionsDeleted, eastwind };
+}
+
 export function registerDbFixTemp(app: Express) {
   app.post("/api/admin/db-fix-temp", async (req: Request, res: Response) => {
     if (req.headers["x-admin-key"] !== ADMIN_KEY) {
@@ -64,46 +117,29 @@ export function registerDbFixTemp(app: Express) {
       return;
     }
     try {
-      const db = await getDb();
-      if (!db) {
-        res.status(500).json({ error: "No DB" });
-        return;
-      }
-
-      // a) Clear admin accounts + 2FA sessions so /admin-setup can run again.
-      const adminRows = await db.select({ id: adminUsers.id }).from(adminUsers);
-      const adminUsersDeleted = adminRows.length;
-      if (adminUsersDeleted > 0) {
-        await db.delete(adminUsers);
-      }
-
-      let twoFASessionsDeleted: number | null = null;
-      try {
-        const sessionRows = await db.select({ id: twoFASessions.id }).from(twoFASessions);
-        twoFASessionsDeleted = sessionRows.length;
-        if (twoFASessionsDeleted > 0) {
-          await db.delete(twoFASessions);
-        }
-      } catch {
-        // Table may not exist in this environment — guarded per instructions.
-        twoFASessionsDeleted = null;
-      }
-
-      // b) Insert Eastwind Christian Academy if the slug is not present.
-      const existing = await db
-        .select({ id: schools.id })
-        .from(schools)
-        .where(eq(schools.slug, EASTWIND_SLUG))
-        .limit(1);
-      let eastwind: "inserted" | "skipped" = "skipped";
-      if (existing.length === 0) {
-        await db.insert(schools).values(EASTWIND_RECORD as any);
-        eastwind = "inserted";
-      }
-
-      res.json({ ok: true, adminUsersDeleted, twoFASessionsDeleted, eastwind });
+      const result = await runDbFix();
+      res.json({ ok: true, ...result });
     } catch (e: any) {
       res.status(500).json({ error: e.message?.slice(0, 500) });
     }
   });
+}
+
+// Startup trigger: when RUN_DB_FIX=yes is set in the environment, run the
+// same fix once during server startup. Errors are logged, never thrown, so
+// a failed fix can never block the server from booting. Safe to leave the
+// flag set across restarts — the fix is idempotent.
+let startupFixRan = false;
+export async function runDbFixAtStartupIfFlagged(): Promise<void> {
+  if (process.env.RUN_DB_FIX !== "yes") return;
+  if (startupFixRan) return;
+  startupFixRan = true;
+  try {
+    const r = await runDbFix();
+    console.log(
+      `[db-fix] startup run complete: adminUsersDeleted=${r.adminUsersDeleted} twoFASessionsDeleted=${r.twoFASessionsDeleted} eastwind=${r.eastwind}`
+    );
+  } catch (e: any) {
+    console.error(`[db-fix] startup run failed: ${e?.message?.slice(0, 200) ?? "unknown error"}`);
+  }
 }

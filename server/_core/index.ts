@@ -63,8 +63,11 @@ async function startServer() {
   const { registerAdminImportRoute } = await import("../adminImport");
   registerAdminImportRoute(app);
   // TEMP: one-off DB fix (admin reset + Eastwind insert) — remove after use
-  const { registerDbFixTemp } = await import("../dbFixTemp");
+  const { registerDbFixTemp, runDbFixAtStartupIfFlagged } = await import("../dbFixTemp");
   registerDbFixTemp(app);
+  // TEMP: startup trigger for the same fix — runs once at boot when the
+  // RUN_DB_FIX=yes env flag is set (e.g. in Railway), no-ops otherwise.
+  await runDbFixAtStartupIfFlagged();
   // SEO: sitemap.xml and robots.txt
   const { registerSeoRoutes } = await import("../seo");
   registerSeoRoutes(app);

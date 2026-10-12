@@ -45,6 +45,7 @@ import {
 import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
 import { enrichmentRouter, enrichmentAdminRouter } from "./routers-enrichment";
+import { toolkitRouter, toolkitAdminRouter } from "./routers-toolkit";
 import { adminAuthRouter } from "./adminAuthRouter";
 import { batchUpdatesRouter } from "./routers-batch-updates";
 import { getDb } from "./db";
@@ -562,6 +563,7 @@ export const appRouter = router({
       title: z.string().min(2).max(255),
       description: z.string().max(2000).optional(),
       category: z.enum(["open_house", "conference", "fundraiser", "workshop", "missions", "other"]).optional(),
+      audience: z.enum(["families", "teachers", "students", "pastors", "all"]).optional(),
       location: z.string().max(255).optional(),
       state: z.string().max(64).optional(),
       stateCode: z.string().max(2).optional(),
@@ -595,6 +597,7 @@ export const appRouter = router({
     create: adminProcedure.input(z.object({
       title: z.string().min(1), description: z.string().optional(),
       category: z.enum(["open_house", "conference", "fundraiser", "workshop", "missions", "other"]).optional(),
+      audience: z.enum(["families", "teachers", "students", "pastors", "all"]).optional(),
       location: z.string().optional(), state: z.string().optional(), stateCode: z.string().optional(),
       startDate: z.date(), endDate: z.date().optional(), website: z.string().optional(), schoolId: z.number().optional(),
     })).mutation(async ({ input }) => {
@@ -610,6 +613,7 @@ export const appRouter = router({
       id: z.number(), data: z.object({
         title: z.string().optional(), description: z.string().optional(),
         category: z.enum(["open_house", "conference", "fundraiser", "workshop", "missions", "other"]).optional(),
+        audience: z.enum(["families", "teachers", "students", "pastors", "all"]).optional(),
         location: z.string().optional(), state: z.string().optional(), stateCode: z.string().optional(),
         startDate: z.date().optional(), endDate: z.date().optional(), website: z.string().optional(), isActive: z.boolean().optional(),
         isApproved: z.boolean().optional(),
@@ -1056,6 +1060,8 @@ export const appRouter = router({
   promo: promoRouter,
   enrichment: enrichmentRouter,
   enrichmentAdmin: enrichmentAdminRouter,
+  toolkit: toolkitRouter,
+  toolkitAdmin: toolkitAdminRouter,
 
   // ============ CLAIM & REMOVAL REQUESTS ============
   claimRequests: router({

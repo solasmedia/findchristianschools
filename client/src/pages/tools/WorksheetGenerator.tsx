@@ -44,6 +44,21 @@ const FAQ: Record<SubjectKey, { q: string; a: string }[]> = {
     { q: "Do passages include comprehension questions?", a: "Each passage comes with 4–6 questions and a complete answer key for the teacher or parent." },
     { q: "How do I pick the right level?", a: "Choose the grade band closest to your student. K–1 passages use short sentences; 6–8 passages include inference questions." },
   ],
+  scramble: [
+    { q: "How does the word scramble generator work?", a: "Type in your own words — spelling lists, Bible words, vocabulary terms — and the generator scrambles each one into a printable puzzle. Because you control the word list, it works for any grade or subject." },
+    { q: "Does the scramble print with an answer key?", a: "Yes. Every word scramble prints with a complete answer key showing each word unscrambled." },
+    { q: "Is the word scramble generator really free?", a: "Yes. Create and print unlimited word scrambles — no account, no watermarks." },
+  ],
+  wordsearch: [
+    { q: "How do I make a word search?", a: "Enter your words and the generator hides them in a printable letter grid, with the word list to find and a full answer key. Use Bible terms, vocabulary words, or spelling review lists." },
+    { q: "Does the printed sheet include the solution?", a: "Yes. The printout includes the puzzle grid, the words to find, and an answer key with every word highlighted in place." },
+    { q: "What grades is a word search best for?", a: "Any grade. Younger students enjoy short lists, and older students can handle longer, harder word lists." },
+  ],
+  vocabulary: [
+    { q: "Where do the vocabulary words come from?", a: "Our built-in lists are faith-inflected word lists for grades 3–6 — words like compassion, integrity, and perseverance, each with a kid-friendly definition. You can also edit or replace any word, so the sheet can match any grade or curriculum." },
+    { q: "What's on each vocabulary worksheet?", a: "Each word has a define-it section and a use-it-in-a-sentence line, and the printed sheet includes an answer key with every definition." },
+    { q: "Can I use my own vocabulary words?", a: "Absolutely. Generate a starter list, then edit any word or definition, delete the ones you don't need, and add your own in 'word = definition' format." },
+  ],
 };
 
 const SEO_COPY: Record<SubjectKey, { h1: string; intro: string }> = {
@@ -634,7 +649,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
           <div className="mt-10 bg-white rounded-2xl border border-gray-200 p-5 sm:p-7">
             <h2 className="text-lg font-bold text-[#002855] mb-4">Frequently asked questions</h2>
             <div className="space-y-4">
-              {FAQ[subject].map((f, i) => (
+              {(FAQ[subject] ?? []).map((f, i) => (
                 <details key={i} className="group">
                   <summary className="flex items-center justify-between cursor-pointer text-sm font-semibold text-gray-800 hover:text-[#002855] list-none">
                     {f.q}
@@ -653,7 +668,7 @@ export default function WorksheetGenerator({ presetSubject = "math" }: { presetS
               __html: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "FAQPage",
-                mainEntity: FAQ[subject].map(f => ({
+                mainEntity: (FAQ[subject] ?? []).map(f => ({
                   "@type": "Question",
                   name: f.q,
                   acceptedAnswer: { "@type": "Answer", text: f.a },

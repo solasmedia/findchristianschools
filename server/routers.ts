@@ -46,6 +46,7 @@ import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
 import { enrichmentRouter, enrichmentAdminRouter } from "./routers-enrichment";
 import { toolkitRouter, toolkitAdminRouter } from "./routers-toolkit";
+import { hubsRouter } from "./routers-hubs";
 import { adminAuthRouter } from "./adminAuthRouter";
 import { batchUpdatesRouter } from "./routers-batch-updates";
 import { getDb } from "./db";
@@ -1062,6 +1063,7 @@ export const appRouter = router({
   enrichmentAdmin: enrichmentAdminRouter,
   toolkit: toolkitRouter,
   toolkitAdmin: toolkitAdminRouter,
+  hubs: hubsRouter,
 
   // ============ CLAIM & REMOVAL REQUESTS ============
   claimRequests: router({

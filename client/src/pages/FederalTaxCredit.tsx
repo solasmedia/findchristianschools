@@ -364,6 +364,33 @@ export default function FederalTaxCredit() {
           <p className="text-gray-400 text-xs mt-6 italic">State participation data as of October 2026, per IRS announcements (IR-2026-76 and the Oct 2026 Treasury update). We'll update this directory as SGO registries are published.</p>
         </section>
 
+        {/* FAQ */}
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-[#002855] mb-6">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">What is the Federal Scholarship Tax Credit?</h3>
+              <p className="text-gray-700 leading-relaxed">The Education Freedom Tax Credit (also called the Federal Scholarship Tax Credit) is a federal program signed into law on July 4, 2025. It lets taxpayers donate to Scholarship Granting Organizations (SGOs) that fund K-12 scholarships, and receive a dollar-for-dollar federal tax credit for their donation. The program takes effect January 1, 2027.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Which states participate in the Federal Scholarship Tax Credit?</h3>
+              <p className="text-gray-700 leading-relaxed">As of October 2026, 30 states have opted in, according to the IRS: Alabama, Alaska, Arkansas, Colorado, Florida, Georgia, Idaho, Indiana, Iowa, Kansas, Kentucky, Louisiana, Mississippi, Missouri, Montana, Nebraska, Nevada, New Hampshire, North Carolina, North Dakota, Ohio, Oklahoma, South Carolina, South Dakota, Tennessee, Texas, Utah, Virginia, West Virginia, and Wyoming. Arizona is not participating. Students must live in a participating state to receive a scholarship, though donors can give from any state.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">How much is the Federal Scholarship Tax Credit?</h3>
+              <p className="text-gray-700 leading-relaxed">Individual taxpayers can donate up to $1,700 per year to a qualified Scholarship Granting Organization and claim a dollar-for-dollar, nonrefundable federal tax credit. Under the U.S. Treasury's October 2026 proposed regulations (not yet final), married couples filing jointly can donate up to $3,400. The $1,700 figure is the donor's tax credit limit — it is not the scholarship amount a student receives.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">When does the Federal Scholarship Tax Credit start?</h3>
+              <p className="text-gray-700 leading-relaxed">The program takes effect January 1, 2027. The U.S. Treasury released proposed regulations on October 1, 2026, and states must submit their lists of qualifying Scholarship Granting Organizations by February 15, 2027.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Who qualifies for Federal Scholarship Tax Credit scholarships?</h3>
+              <p className="text-gray-700 leading-relaxed">Students from households earning up to 300% of the area median gross income who are eligible to enroll in K-12 school and live in a state that has opted into the program. Scholarship funds can be used for tuition, fees, tutoring, books, curriculum materials, special needs services, technology, and transportation.</p>
+            </div>
+          </div>
+        </section>
+
         {/* Share */}
         <section className="mb-10 bg-gradient-to-br from-[#6EBE44]/10 to-[#002855]/5 rounded-2xl p-6 sm:p-8 text-center border border-[#6EBE44]/20">
           <h2 className="text-xl font-bold text-[#002855] mb-3">Know Someone Who Needs to See This?</h2>

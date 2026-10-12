@@ -16,6 +16,7 @@ import {
   Presentation,
   Trophy,
   Tent,
+  Sun,
   Users,
   Music,
   Library,
@@ -31,6 +32,7 @@ const CATEGORY_ICONS: Record<string, typeof BookOpen> = {
   classes: Presentation,
   sports: Trophy,
   camps: Tent,
+  vbs: Sun,
   "youth-groups": Users,
   "music-arts": Music,
   homeschool: Library,
@@ -241,13 +243,28 @@ export default function Enrichment({ presetCategory }: { presetCategory?: Enrich
           <p className="text-gray-500 text-sm py-10 text-center">Loading listings…</p>
         ) : listings.length === 0 ? (
           <div className="border border-dashed border-gray-300 rounded-xl py-14 text-center">
-            <p className="text-gray-600 font-medium mb-1">No listings found yet</p>
-            <p className="text-sm text-gray-500 mb-4">
-              Try a different ZIP code or category — or be the first to list in this area.
-            </p>
-            <Link href="/enrichment/submit">
-              <Button className="bg-[#0055A4] hover:bg-[#004483] text-white border-0">List Your Program</Button>
-            </Link>
+            {preset?.key === "vbs" ? (
+              <>
+                <p className="text-gray-600 font-medium mb-1">No VBS programs listed yet</p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Churches list their Vacation Bible School here — list your church's VBS free and
+                  help local families find it by ZIP code.
+                </p>
+                <Link href="/enrichment/submit">
+                  <Button className="bg-[#0055A4] hover:bg-[#004483] text-white border-0">List Your Church's VBS</Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-600 font-medium mb-1">No listings found yet</p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Try a different ZIP code or category — or be the first to list in this area.
+                </p>
+                <Link href="/enrichment/submit">
+                  <Button className="bg-[#0055A4] hover:bg-[#004483] text-white border-0">List Your Program</Button>
+                </Link>
+              </>
+            )}
           </div>
         ) : (
           <>

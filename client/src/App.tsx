@@ -76,12 +76,15 @@ import EnrichmentProfile from "./pages/EnrichmentProfile";
 import SubmitEnrichment from "./pages/SubmitEnrichment";
 import ListerTerms from "./pages/ListerTerms";
 import TeacherToolkit from "./pages/TeacherToolkit";
+import HomeschoolHub from "./pages/HomeschoolHub";
+import ParentsPlaybook from "./pages/ParentsPlaybook";
 
 const EnrichmentHome = () => <Enrichment />;
 const EnrichmentTutors = () => <Enrichment presetCategory="tutors" />;
 const EnrichmentClasses = () => <Enrichment presetCategory="classes" />;
 const EnrichmentSports = () => <Enrichment presetCategory="sports" />;
 const EnrichmentCamps = () => <Enrichment presetCategory="camps" />;
+const EnrichmentVbs = () => <Enrichment presetCategory="vbs" />;
 const EnrichmentYouthGroups = () => <Enrichment presetCategory="youth-groups" />;
 const EnrichmentMusicArts = () => <Enrichment presetCategory="music-arts" />;
 const EnrichmentHomeschool = () => <Enrichment presetCategory="homeschool" />;
@@ -172,11 +175,14 @@ function Router() {
       <Route path="/enrichment/classes" component={EnrichmentClasses} />
       <Route path="/enrichment/sports" component={EnrichmentSports} />
       <Route path="/enrichment/camps" component={EnrichmentCamps} />
+      <Route path="/enrichment/vbs" component={EnrichmentVbs} />
       <Route path="/enrichment/youth-groups" component={EnrichmentYouthGroups} />
       <Route path="/enrichment/music-arts" component={EnrichmentMusicArts} />
       <Route path="/enrichment/homeschool" component={EnrichmentHomeschool} />
       <Route path="/lister-terms" component={ListerTerms} />
       <Route path="/teacher-toolkit" component={TeacherToolkit} />
+      <Route path="/homeschool-hub" component={HomeschoolHub} />
+      <Route path="/parents" component={ParentsPlaybook} />
       {/* Redirect routes for common URL variations */}
       <Route path="/donate" component={Mission} />
       <Route path="/compare-schools" component={Compare} />

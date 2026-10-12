@@ -30,6 +30,10 @@ const STATIC_ROUTES = new Set([
   "/tools/vocabulary-worksheet-generator", "/tools/flashcards",
   "/teacher-resources", "/federal-tax-credit",
   "/classical-christian-schools", "/book-club", "/videos", "/newsletter",
+  "/enrichment", "/enrichment/submit", "/lister-terms",
+  "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports",
+  "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
+  "/enrichment/homeschool",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",
@@ -137,10 +141,51 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "Browse Christian Schools by State | FindChristianSchools.com",
     description: "Explore Christian schools in every US state.",
   },
+  "/enrichment": {
+    title: "Enrichment & Activities — Christian Tutors, Camps, Sports & Youth Groups | FindChristianSchools.com",
+    description: "Find Christian tutors, enrichment classes, sports leagues, camps, youth groups like American Heritage Girls and Trail Life USA, music and arts programs, and homeschool co-ops near you.",
+  },
+  "/enrichment/tutors": {
+    title: "Christian Tutors Near You | FindChristianSchools.com",
+    description: "Find individual Christian tutors for math, reading, writing, science, and test prep. Search by ZIP code with local results.",
+  },
+  "/enrichment/classes": {
+    title: "Christian Classes & Tutoring Centers | FindChristianSchools.com",
+    description: "Find Christian tutoring centers, enrichment classes, and learning programs near you. Search by ZIP code with local results.",
+  },
+  "/enrichment/sports": {
+    title: "Christian Sports Leagues & Programs | FindChristianSchools.com",
+    description: "Find Christian sports leagues, clinics, and athletic programs near you that build character alongside skill.",
+  },
+  "/enrichment/camps": {
+    title: "Christian Camps Near You | FindChristianSchools.com",
+    description: "Find Christian summer camps, retreats, and day camps near you. Search by ZIP code with local results.",
+  },
+  "/enrichment/youth-groups": {
+    title: "Christian Youth Groups — AHG, Trail Life, Royal Rangers, Awana | FindChristianSchools.com",
+    description: "Find American Heritage Girls troops, Trail Life USA troops, Royal Rangers outposts, Awana clubs, and other Christ-centered youth groups near you.",
+  },
+  "/enrichment/music-arts": {
+    title: "Christian Music & Arts Programs | FindChristianSchools.com",
+    description: "Find Christian music lessons, art classes, theater, and creative programs for students of all ages near you.",
+  },
+  "/enrichment/homeschool": {
+    title: "Homeschool Co-ops & Resources | FindChristianSchools.com",
+    description: "Find homeschool co-ops, curriculum resources, testing services, and support for home-educating Christian families near you.",
+  },
+  "/enrichment/submit": {
+    title: "List Your Program — Enrichment & Activities | FindChristianSchools.com",
+    description: "List your tutoring, class, camp, league, youth group, or homeschool program in the Enrichment & Activities directory. Free basic listings; premium featured listings from $49/year.",
+  },
+  "/lister-terms": {
+    title: "Lister Terms | FindChristianSchools.com",
+    description: "Terms for organizations and individuals listing on FindChristianSchools.com, including verification, accuracy, indemnification, and removal policies.",
+  },
 };
 
 export type RouteMatch =
   | { kind: "static"; path: string }
+  | { kind: "enrichment"; slug: string }
   | { kind: "school"; slug: string }
   | { kind: "college"; slug: string }
   | { kind: "race"; slug: string }
@@ -156,6 +201,9 @@ export function matchRoute(rawPath: string): RouteMatch {
   if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
 
   if (STATIC_ROUTES.has(path)) return { kind: "static", path };
+
+  const enrichment = path.match(/^\/enrichment\/listing\/([^/]+)$/);
+  if (enrichment) return { kind: "enrichment", slug: decodeURIComponent(enrichment[1]) };
 
   const school = path.match(/^\/school\/([^/]+)$/);
   if (school) return { kind: "school", slug: decodeURIComponent(school[1]) };
@@ -219,6 +267,18 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
 
   // Detail pages: look up from DB for unique titles
   try {
+    if (match.kind === "enrichment") {
+      const { getEnrichmentBySlug } = await import("../db");
+      const listing = await getEnrichmentBySlug(match.slug);
+      if (!listing) return null;
+      const loc = [listing.city, listing.state].filter(Boolean).join(", ");
+      return {
+        title: `${listing.name} - ${loc} | Enrichment & Activities | FindChristianSchools.com`,
+        description: `${listing.name} is listed in Enrichment & Activities in ${loc}. View details, contact info, and more.`,
+        canonical,
+        ogType: "article",
+      };
+    }
     if (match.kind === "school") {
       const { getSchoolBySlug } = await import("../db");
       const school = await getSchoolBySlug(match.slug);
@@ -476,6 +536,120 @@ export async function resolveSeoContent(
           FSTC_FAQS
         ),
       };
+    }
+
+    if (match.kind === "static" && match.path === "/enrichment") {
+      const { ENRICHMENT_CATEGORIES } = await import("@shared/enrichment");
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Enrichment & Activities Categories",
+        itemListElement: ENRICHMENT_CATEGORIES.map((c, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: c.label,
+          url: `${SITE_URL}/enrichment/${c.slug}`,
+        })),
+      };
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "Enrichment & Activities", url: `${SITE_URL}/enrichment` },
+      ]);
+      const links = ENRICHMENT_CATEGORIES.map(
+        (c) => `<li><a href="${SITE_URL}/enrichment/${c.slug}">${escapeHtml(c.label)}</a> — ${escapeHtml(c.blurb)}</li>`
+      ).join("");
+      const bodyHtml =
+        `<main><h1>Enrichment &amp; Activities</h1>` +
+        `<p>Beyond the classroom: find Christian tutors, enrichment classes and tutoring centers, sports leagues, camps, youth groups like American Heritage Girls and Trail Life USA, music and arts programs, and homeschool co-ops and resources near you. Search by ZIP code for local results.</p>` +
+        `<ul>${links}</ul>` +
+        `<p><a href="${SITE_URL}/enrichment/submit">List your program</a></p></main>`;
+      return { jsonLd: [itemList, crumbs], bodyHtml };
+    }
+
+    if (match.kind === "static" && match.path.startsWith("/enrichment/")) {
+      const { categoryBySlug, listingPath } = await import("@shared/enrichment");
+      const cat = categoryBySlug(match.path.replace("/enrichment/", ""));
+      if (cat) {
+        const { searchEnrichmentListings } = await import("../db");
+        const result: any = await searchEnrichmentListings({ category: cat.key, limit: 10, offset: 0 });
+        const rows: any[] = result?.listings ?? [];
+        const total: number = result?.total ?? 0;
+        const crumbs = breadcrumbJsonLd([
+          { name: "Home", url: `${SITE_URL}/` },
+          { name: "Enrichment & Activities", url: `${SITE_URL}/enrichment` },
+          { name: cat.label, url: `${SITE_URL}/enrichment/${cat.slug}` },
+        ]);
+        const list = rows.length
+          ? `<ul>${rows
+              .map(
+                (l: any) =>
+                  `<li><a href="${SITE_URL}${listingPath(l.slug)}">${escapeHtml(l.name)}</a> — ${escapeHtml(l.city)}, ${escapeHtml(l.state)}</li>`
+              )
+              .join("")}</ul>`
+          : "";
+        const bodyHtml =
+          `<main><h1>${escapeHtml(cat.label)}</h1>` +
+          `<p>${escapeHtml(cat.blurb)}</p>` +
+          `<p>Find Christian Schools lists ${total} ${escapeHtml(cat.label.toLowerCase())} listing${total === 1 ? "" : "s"} in the Enrichment &amp; Activities directory. Search by ZIP code for local results near you.</p>` +
+          list +
+          `<p><a href="${SITE_URL}/enrichment/submit">List your program</a></p></main>`;
+        return { jsonLd: [crumbs], bodyHtml };
+      }
+    }
+
+    if (match.kind === "enrichment") {
+      const { getEnrichmentBySlug } = await import("../db");
+      const { categoryByKey, verificationBadgeLabel } = await import("@shared/enrichment");
+      const listing: any = await getEnrichmentBySlug(match.slug);
+      if (!listing) return {};
+      const url = `${SITE_URL}/enrichment/listing/${listing.slug}`;
+      const cat = categoryByKey(listing.category);
+      const loc = [listing.city, listing.state].filter(Boolean).join(", ");
+      const desc = listing.description ? stripText(String(listing.description)) : "";
+      const lat = Number(listing.latitude);
+      const lng = Number(listing.longitude);
+      // LocalBusiness for individuals/businesses; Organization for orgs/camps.
+      const ld: Record<string, unknown> = {
+        "@context": "https://schema.org",
+        "@type": listing.listerType === "organization" ? "Organization" : "LocalBusiness",
+        name: listing.name,
+        url,
+        description:
+          desc ||
+          `${listing.name} is a ${cat ? cat.label.toLowerCase() : "Christian enrichment"} listing in ${loc}.`,
+        address: {
+          "@type": "PostalAddress",
+          ...(listing.address ? { streetAddress: listing.address } : {}),
+          addressLocality: listing.city,
+          addressRegion: listing.stateCode,
+          ...(listing.zip ? { postalCode: listing.zip } : {}),
+          addressCountry: "US",
+        },
+      };
+      if (Number.isFinite(lat) && Number.isFinite(lng) && (lat !== 0 || lng !== 0)) {
+        ld.geo = { "@type": "GeoCoordinates", latitude: lat, longitude: lng };
+      }
+      if (listing.phone) ld.telephone = listing.phone;
+      if (listing.website) ld.sameAs = listing.website;
+      if (desc) ld.description = desc;
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "Enrichment & Activities", url: `${SITE_URL}/enrichment` },
+        ...(cat ? [{ name: cat.label, url: `${SITE_URL}/enrichment/${cat.slug}` }] : []),
+        { name: listing.name, url },
+      ]);
+      const badge =
+        listing.verificationStatus === "approved"
+          ? verificationBadgeLabel(listing.verificationType, listing.verifiedAt)
+          : null;
+      const bodyHtml =
+        `<main><h1>${escapeHtml(listing.name)}</h1>` +
+        `<p>${escapeHtml(listing.name)} is a ${escapeHtml(cat ? cat.label.toLowerCase() : "Christian enrichment")} listing in ${escapeHtml(loc)}.${listing.subcategory ? ` ${escapeHtml(listing.subcategory)}.` : ""}</p>` +
+        (desc ? `<p>${escapeHtml(desc)}</p>` : "") +
+        (badge ? `<p>${escapeHtml(badge)}</p>` : "") +
+        `<p>Listing is not an endorsement or recommendation. FindChristianSchools verifies documents only as described. Parents should do their own due diligence.</p>` +
+        `<p><a href="${SITE_URL}/enrichment">More Enrichment &amp; Activities listings</a></p></main>`;
+      return { jsonLd: [ld, crumbs], bodyHtml };
     }
 
     if (match.kind === "school") {

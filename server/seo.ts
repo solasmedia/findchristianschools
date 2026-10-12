@@ -132,6 +132,34 @@ Sitemap: ${SITE_URL}/sitemap.xml`
         // news_items table may not exist yet if migration hasn't run
       }
 
+      // --- Enrichment & Activities listings: approved + not removed/suspended ---
+      let enrichmentUrls = "";
+      try {
+        const { enrichmentListings } = await import("../drizzle/schema");
+        const enrichmentRows = await db
+          .select({ slug: enrichmentListings.slug })
+          .from(enrichmentListings)
+          .where(
+            and(
+              eq(enrichmentListings.isApproved, true),
+              ne(enrichmentListings.listingStatus, "removed"),
+              ne(enrichmentListings.listingStatus, "suspended"),
+            )
+          )
+          .limit(5000);
+        enrichmentUrls = enrichmentRows
+          .filter(r => r.slug)
+          .map(r => `  <url><loc>${SITE_URL}/enrichment/listing/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+          .join("\n");
+      } catch {
+        // enrichment_listings table may not exist yet if migration hasn't run
+      }
+
+      // Enrichment category landing pages (static routes)
+      const enrichmentStaticUrls = ["/enrichment", "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports", "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts", "/enrichment/homeschool", "/enrichment/submit", "/lister-terms"]
+        .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
+        .join("\n");
+
       // Static pages
       // Static pages
       const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/news", "/traveled", "/classical-christian-schools", "/book-club", "/videos", "/federal-tax-credit", "/teacher-resources", "/tools", "/tools/flashcards", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/tools/vocabulary-worksheet-generator", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
@@ -180,6 +208,8 @@ ${collegeUrls}
 ${raceUrls}
 ${blogUrls}
 ${newsUrls}
+${enrichmentStaticUrls}
+${enrichmentUrls}
 </urlset>`;
 
       res.header("Content-Type", "application/xml");

@@ -10,8 +10,10 @@ import { Link } from "wouter";
 import InviteSchoolCard from "@/components/InviteSchoolCard";
 import { getProgramsByState } from "@shared/schoolChoicePrograms";
 
-// Federal Scholarship Tax Credit participating states (IRS, as of Sept 2026)
-const FEDERAL_TAX_CREDIT_STATES = new Set(["Alabama","Alaska","Arkansas","Arizona","Colorado","Florida","Georgia","Idaho","Indiana","Iowa","Kansas","Kentucky","Louisiana","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","North Carolina","North Dakota","Ohio","Oklahoma","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","West Virginia","Wyoming"]);
+// Federal Scholarship Tax Credit participating states.
+// IRS official roster: IR-2026-76 (27 states, June 2026) + Oct 2026 Treasury update (30 states).
+// Arizona's governor vetoed the opt-in legislation — Arizona does NOT participate.
+const FEDERAL_TAX_CREDIT_STATES = new Set(["Alabama","Alaska","Arkansas","Colorado","Florida","Georgia","Idaho","Indiana","Iowa","Kansas","Kentucky","Louisiana","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","North Carolina","North Dakota","Ohio","Oklahoma","South Carolina","South Dakota","Tennessee","Texas","Utah","Virginia","West Virginia","Wyoming"]);
 
 const stateNames: Record<string, string> = {
   AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"

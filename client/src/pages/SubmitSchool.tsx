@@ -47,6 +47,7 @@ export default function SubmitSchool() {
   const [currentStep, setCurrentStep] = useState(1);
   const [listingType, setListingType] = useState<'free' | 'donate' | 'premium'>('free');
   const [donationAmount, setDonationAmount] = useState<5 | 10 | 15>(5);
+  const [promoCode, setPromoCode] = useState('');
   const [agreedToFaith, setAgreedToFaith] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToAccuracy, setAgreedToAccuracy] = useState(false);
@@ -152,10 +153,22 @@ export default function SubmitSchool() {
             donationAmount: listingType === 'donate' ? donationAmount : undefined,
             schoolName: form.name,
             contactEmail: form.contactEmail || form.email,
+            promoCode: listingType === 'premium' && promoCode ? promoCode : undefined,
           }),
         });
-        
-        const { sessionId } = await response.json();
+
+        const data = await response.json();
+        if (data.error) {
+          toast.error(data.error);
+          return;
+        }
+        if (data.free) {
+          // 100% promo code: premium activated server-side, no payment needed
+          toast.success("Promo code applied — your Premium listing is free for one year!");
+          navigate(result.slug ? `/school/${result.slug}` : "/");
+          return;
+        }
+        const { sessionId } = data;
         if (sessionId && (window as any).Stripe) {
           const stripe = (window as any).Stripe(process.env.VITE_STRIPE_PUBLISHABLE_KEY);
           await stripe.redirectToCheckout({ sessionId });
@@ -516,6 +529,17 @@ export default function SubmitSchool() {
                           <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#6EBE44]" /> Monthly analytics & inquiry tracking</li>
                           <li className="flex items-center gap-1.5"><Check className="w-3 h-3 text-[#6EBE44]" /> Supports our mission to serve families</li>
                         </ul>
+                        <div className="mt-3 pt-3 border-t border-amber-100" onClick={(e) => e.stopPropagation()}>
+                          <label className="block text-xs font-medium text-gray-700 mb-1">Have a promo code?</label>
+                          <input
+                            type="text"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                            placeholder="Enter promo code"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                          />
+                          {promoCode && <p className="text-xs text-[#6EBE44] mt-1">Promo code {promoCode} will be applied at checkout.</p>}
+                        </div>
                       </div>
                     )}
                   </button>

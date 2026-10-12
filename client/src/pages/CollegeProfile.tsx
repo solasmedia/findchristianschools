@@ -196,7 +196,7 @@ export default function CollegeProfile() {
                       </Button>
                     </Link>
                   </div>
-                  <p className="text-xs text-blue-200 mt-4">Free listing available · Premium from $99/yr · No contracts</p>
+                  <p className="text-xs text-blue-200 mt-4">Free listing available · Premium from $500/yr · No contracts</p>
                 </div>
               )}
 

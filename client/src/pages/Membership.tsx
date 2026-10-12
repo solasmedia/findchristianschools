@@ -200,6 +200,9 @@ export default function Membership() {
             </div>
           </div>
 
+          <p className="text-center text-sm text-gray-500 mt-8">
+            Representing a Christian college? Premium college listings are <span className="font-semibold text-[#002855]">$500/year</span>.
+          </p>
         </div>
       </section>
 

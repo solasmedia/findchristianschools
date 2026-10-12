@@ -44,6 +44,7 @@ import {
 } from "./db";
 import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
+import { enrichmentRouter, enrichmentAdminRouter } from "./routers-enrichment";
 import { adminAuthRouter } from "./adminAuthRouter";
 import { batchUpdatesRouter } from "./routers-batch-updates";
 import { getDb } from "./db";
@@ -1053,6 +1054,8 @@ export const appRouter = router({
 
   // ============ PROMO CODES ============
   promo: promoRouter,
+  enrichment: enrichmentRouter,
+  enrichmentAdmin: enrichmentAdminRouter,
 
   // ============ CLAIM & REMOVAL REQUESTS ============
   claimRequests: router({

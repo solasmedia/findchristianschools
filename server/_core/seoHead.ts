@@ -35,6 +35,7 @@ const STATIC_ROUTES = new Set([
   "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
   "/enrichment/homeschool",
   "/teacher-toolkit",
+  "/homeschool-hub", "/parents", "/enrichment/vbs",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",
@@ -185,6 +186,18 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/teacher-toolkit": {
     title: "Teacher Toolkit — Free Tools for Christian Educators | FindChristianSchools.com",
     description: "A dashboard of free tools built for Christian teachers: worksheet generators with answer keys, a lesson plan builder, Bible verse maker, flashcards, teacher jobs, events, and professional development. No account needed.",
+  },
+  "/homeschool-hub": {
+    title: "The Kitchen Table — Homeschool Hub for Christian Families | FindChristianSchools.com",
+    description: "A free homeschool hub for Christian families: worksheet generators and a lesson planner in parent language, The Morning Basket ideas series, honest Christian curriculum guides, and local co-ops, classes, sports, camps, and Vacation Bible School.",
+  },
+  "/parents": {
+    title: "The Parent Playbook — Christian School & Activities Guide for Parents | FindChristianSchools.com",
+    description: "The Parent Playbook helps Christian parents find the right school, understand the $1,700 federal scholarship tax credit starting January 1, 2027, and fill the week with faith-based electives: classes, sports, camps, Vacation Bible School, music, and youth groups near home.",
+  },
+  "/enrichment/vbs": {
+    title: "Vacation Bible School Near You | FindChristianSchools.com",
+    description: "Find Vacation Bible School programs at churches near you — search VBS by ZIP code, and list your church's VBS free so local families can find it.",
   },
 };
 
@@ -614,6 +627,96 @@ export async function resolveSeoContent(
         `<p>The Teacher Toolkit is a free dashboard for Christian educators on Find Christian Schools: classroom tools that save teachers time, the latest articles from the Teacher Blog (${counts.blogPostCount} published), open teaching jobs (${counts.openJobCount} currently posted), events for teachers, professional development, and a founding-teachers waitlist for the upcoming Teacher Forum. All tools are free and need no account.</p>` +
         `<h2>Free classroom tools</h2><ul>${links}</ul>` +
         `<p><a href="${SITE_URL}/blog">Teacher Blog</a> · <a href="${SITE_URL}/jobs">Teaching jobs</a> · <a href="${SITE_URL}/events">Events</a> · <a href="${SITE_URL}/teacher-resources">Teacher resources</a></p></main>`;
+      return { jsonLd: [webPage, itemList, crumbs], bodyHtml };
+    }
+
+    if (match.kind === "static" && match.path === "/homeschool-hub") {
+      const { homeschoolTools, homeschoolActivityCards, HOMESCHOOL_HUB_URL } = await import("@shared/familyHubs");
+      const tools = homeschoolTools();
+      const activities = homeschoolActivityCards();
+      const webPage = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "The Kitchen Table — Homeschool Hub for Christian Families",
+        url: HOMESCHOOL_HUB_URL,
+        description:
+          "A free homeschool hub for Christian families: worksheet generators and a lesson planner in parent language, The Morning Basket homeschool ideas series, honest Christian curriculum guides, and local co-ops, classes, sports, camps, and Vacation Bible School.",
+        isPartOf: { "@type": "WebSite", name: "Find Christian Schools", url: `${SITE_URL}/` },
+      };
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Free Tools for Homeschool Families",
+        itemListElement: tools.map((t, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: t.title,
+          description: t.payoff,
+          url: `${SITE_URL}${t.href}`,
+        })),
+      };
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "The Kitchen Table — Homeschool Hub", url: HOMESCHOOL_HUB_URL },
+      ]);
+      const toolLinks = tools
+        .map((t) => `<li><a href="${SITE_URL}${t.href}">${escapeHtml(t.title)}</a> — ${escapeHtml(t.payoff)}</li>`)
+        .join("");
+      const activityLinks = activities
+        .map((a) => `<li><a href="${SITE_URL}${a.href}">${escapeHtml(a.label)}</a> — ${escapeHtml(a.payoff)}</li>`)
+        .join("");
+      const bodyHtml =
+        `<main><h1>The Kitchen Table — Homeschool Hub</h1>` +
+        `<p>The Kitchen Table is a free homeschool hub for Christian families on Find Christian Schools: the same worksheet generators and lesson planner Christian teachers use, re-voiced for parents teaching at home; The Morning Basket, a homeschool ideas series for starting the day with Scripture, story, and a hands-on idea; honest Christian curriculum guides and comparisons; and local family activities — homeschool co-ops, classes, sports, camps, and Vacation Bible School — searchable by ZIP code.</p>` +
+        `<h2>Free tools for your table</h2><ul>${toolLinks}</ul>` +
+        `<h2>Family activities near you</h2><ul>${activityLinks}</ul>` +
+        `<p><a href="${SITE_URL}/curriculum-guide">Homeschool curriculum guide</a> · <a href="${SITE_URL}/curriculum-comparison">Curriculum comparison</a> · <a href="${SITE_URL}/blog">The Morning Basket and the blog</a> · <a href="${SITE_URL}/teacher-toolkit">Teacher Toolkit</a> · <a href="${SITE_URL}/parents">The Parent Playbook</a></p></main>`;
+      return { jsonLd: [webPage, itemList, crumbs], bodyHtml };
+    }
+
+    if (match.kind === "static" && match.path === "/parents") {
+      const { parentEnrichmentCards, PARENTS_URL } = await import("@shared/familyHubs");
+      const electives = parentEnrichmentCards();
+      let counts = { schoolCount: 0, collegeCount: 0 };
+      try {
+        const { getParentHubCounts } = await import("../db");
+        counts = await getParentHubCounts();
+      } catch {
+        // counts are best-effort in crawler content; never block the page
+      }
+      const webPage = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "The Parent Playbook — Christian School & Activities Guide for Parents",
+        url: PARENTS_URL,
+        description:
+          "The Parent Playbook helps Christian parents find the right school, understand the $1,700 federal scholarship tax credit starting January 1, 2027, and fill the week with faith-based electives — classes, sports, camps, Vacation Bible School, music and arts, and youth groups near home.",
+        isPartOf: { "@type": "WebSite", name: "Find Christian Schools", url: `${SITE_URL}/` },
+      };
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Electives & Activities for Christian Families",
+        itemListElement: electives.map((c, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: c.label,
+          description: c.payoff,
+          url: `${SITE_URL}${c.href}`,
+        })),
+      };
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "The Parent Playbook", url: PARENTS_URL },
+      ]);
+      const electiveLinks = electives
+        .map((c) => `<li><a href="${SITE_URL}${c.href}">${escapeHtml(c.label)}</a> — ${escapeHtml(c.payoff)}</li>`)
+        .join("");
+      const bodyHtml =
+        `<main><h1>The Parent Playbook</h1>` +
+        `<p>The Parent Playbook is a free dashboard for Christian parents on Find Christian Schools (${counts.schoolCount.toLocaleString()} Christian schools and ${counts.collegeCount.toLocaleString()} Christian colleges listed). It brings together the school search, the $1,700 federal scholarship tax credit that starts January 1, 2027 in 30 participating states, family events, parent reading, and the electives that fill the rest of the week.</p>` +
+        `<h2>Electives &amp; activities near you</h2><ul>${electiveLinks}</ul>` +
+        `<p><a href="${SITE_URL}/search">Search Christian schools</a> · <a href="${SITE_URL}/federal-tax-credit">Federal Scholarship Tax Credit guide</a> · <a href="${SITE_URL}/events">Events for families</a> · <a href="${SITE_URL}/colleges">Christian colleges</a> · <a href="${SITE_URL}/homeschool-hub">The Kitchen Table — homeschool hub</a></p></main>`;
       return { jsonLd: [webPage, itemList, crumbs], bodyHtml };
     }
 

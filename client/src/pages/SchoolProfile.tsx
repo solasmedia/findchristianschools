@@ -248,7 +248,7 @@ export default function SchoolProfile() {
                   <h2 className="text-2xl font-bold mb-2">Is This Your School?</h2>
                   <p className="text-blue-100 mb-6 leading-relaxed">Claim your free listing and upgrade to Premium to showcase photos, testimonials, post open positions, and reach thousands of Christian families searching for the right school.</p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/membership">
+                    <Link href={`/membership?school=${school.slug}`}>
                       <Button className="bg-[#FFC72C] hover:bg-[#e6b228] text-[#002855] font-bold px-6 py-3 text-base border-0">
                         View Premium Options
                       </Button>
@@ -342,7 +342,7 @@ export default function SchoolProfile() {
                       <p className="font-bold text-[#002855] text-base">Premium Content</p>
                       <p className="text-xs text-gray-600 mt-1 max-w-xs">Claim and upgrade this listing to unlock photos, a school description, parent testimonials, open positions, and more.</p>
                     </div>
-                    <Link href="/membership">
+                    <Link href={`/membership?school=${school.slug}`}>
                       <Button size="sm" className="bg-[#002855] hover:bg-[#003d7a] text-white border-0 text-xs mt-1">
                         Learn About Premium →
                       </Button>

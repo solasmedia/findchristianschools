@@ -108,7 +108,7 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       const schoolId = session.metadata?.school_id;
       const schoolName = session.metadata?.schoolName;
       const listingType = session.metadata?.listingType;
-      const stripeListingType = session.metadata?.listing_type; // 'school' or 'college'
+      const stripeListingType = session.metadata?.listing_type; // entity kind: 'school' or 'college'
       const donationAmount = session.metadata?.donationAmount;
       const customerId = session.customer as string;
       const subscriptionId = session.subscription as string;
@@ -117,6 +117,18 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       if (!db) break;
 
       const isCollege = stripeListingType === 'college';
+
+      // createPremiumCheckout (Membership / profile upgrade path) only ever
+      // sells premium, and sessions created before it stamped listingType
+      // into metadata carry only the entity kind (listing_type). Derive
+      // "premium" from the entity kind when listingType is absent, or a
+      // paid upgrade falls through to the free branch and premium never
+      // activates.
+      const effectiveListingType =
+        listingType ??
+        (stripeListingType === "school" || stripeListingType === "college"
+          ? "premium"
+          : undefined);
 
       // Handle both old (school_id) and new (schoolName) metadata formats
       let targetSchoolId: number | null = null;
@@ -131,33 +143,50 @@ export async function handleStripeWebhook(req: Request, res: Response) {
       }
 
       if (targetSchoolId) {
-        const updateData: any = {
-          stripeCustomerId: customerId,
-          stripePaymentIntentId: session.payment_intent as string,
-        };
-
-        if (listingType === "premium") {
-          updateData.isPremium = true;
-          updateData.listingType = "premium";
-          const premiumExpiresAt = new Date();
-          premiumExpiresAt.setFullYear(premiumExpiresAt.getFullYear() + 1);
-          updateData.premiumExpiresAt = premiumExpiresAt;
-          updateData.stripeSubscriptionId = subscriptionId;
-        } else if (listingType === "donate") {
-          updateData.listingType = "donate";
-          if (donationAmount) {
-            updateData.donationAmount = parseInt(donationAmount);
-          }
-        } else {
-          updateData.listingType = "free";
-        }
-
         if (isCollege) {
-          await db.update(colleges).set(updateData).where(eq(colleges.id, targetSchoolId));
-          console.log(`[Webhook] College ${targetSchoolId} payment processed (${listingType})`);
+          // The colleges table has no listingType or donationAmount columns,
+          // so its update payload is built separately — sending the
+          // school-shaped payload would fail the whole update and premium
+          // would never activate.
+          const collegeUpdate: any = {
+            stripeCustomerId: customerId,
+            stripePaymentIntentId: session.payment_intent as string,
+          };
+
+          if (effectiveListingType === "premium") {
+            collegeUpdate.isPremium = true;
+            const premiumExpiresAt = new Date();
+            premiumExpiresAt.setFullYear(premiumExpiresAt.getFullYear() + 1);
+            collegeUpdate.premiumExpiresAt = premiumExpiresAt;
+            collegeUpdate.stripeSubscriptionId = subscriptionId;
+          }
+
+          await db.update(colleges).set(collegeUpdate).where(eq(colleges.id, targetSchoolId));
+          console.log(`[Webhook] College ${targetSchoolId} payment processed (${effectiveListingType})`);
         } else {
+          const updateData: any = {
+            stripeCustomerId: customerId,
+            stripePaymentIntentId: session.payment_intent as string,
+          };
+
+          if (effectiveListingType === "premium") {
+            updateData.isPremium = true;
+            updateData.listingType = "premium";
+            const premiumExpiresAt = new Date();
+            premiumExpiresAt.setFullYear(premiumExpiresAt.getFullYear() + 1);
+            updateData.premiumExpiresAt = premiumExpiresAt;
+            updateData.stripeSubscriptionId = subscriptionId;
+          } else if (effectiveListingType === "donate") {
+            updateData.listingType = "donate";
+            if (donationAmount) {
+              updateData.donationAmount = parseInt(donationAmount);
+            }
+          } else {
+            updateData.listingType = "free";
+          }
+
           await db.update(schools).set(updateData).where(eq(schools.id, targetSchoolId));
-          console.log(`[Webhook] School ${targetSchoolId} payment processed (${listingType})`);
+          console.log(`[Webhook] School ${targetSchoolId} payment processed (${effectiveListingType})`);
         }
 
         // Send email notification
@@ -165,7 +194,7 @@ export async function handleStripeWebhook(req: Request, res: Response) {
           if (!isCollege) {
             const schoolResult = await db.select().from(schools).where(eq(schools.id, targetSchoolId)).limit(1);
             if (schoolResult.length > 0) {
-              const amount = session.amount_total ? session.amount_total / 100 : (listingType === "premium" ? 99 : parseInt(donationAmount || "0"));
+              const amount = session.amount_total ? session.amount_total / 100 : (effectiveListingType === "premium" ? 99 : parseInt(donationAmount || "0"));
               await notifyPremiumPurchase(schoolResult[0], amount).catch(() => {});
             }
           }

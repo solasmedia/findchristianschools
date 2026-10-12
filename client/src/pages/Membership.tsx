@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Check, X, Shield, Star, Heart, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { Check, X, Shield, Star, Heart, Loader2, CheckCircle, XCircle, Search } from "lucide-react";
 import { Link, useSearch } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
@@ -26,6 +26,14 @@ const features = [
 
 ];
 
+type SelectedListing = {
+  kind: "school" | "college";
+  id: number;
+  name: string;
+  city: string;
+  state: string;
+};
+
 export default function Membership() {
   const { isAuthenticated } = useAuth();
   const searchString = useSearch();
@@ -34,6 +42,78 @@ export default function Membership() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [agreedToPremiumTerms, setAgreedToPremiumTerms] = useState(false);
+
+  // ---- Listing picker ----
+  // Premium is sold per listing, so the buyer must pick the school or
+  // college being upgraded (the server rejects a checkout with no listing
+  // id). Profile pages deep-link here with ?school=<slug> / ?college=<slug>
+  // to pre-select the listing.
+  const [selected, setSelected] = useState<SelectedListing | null>(null);
+  const [pickerQuery, setPickerQuery] = useState("");
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const schoolSlugParam = params.get("school");
+  const collegeSlugParam = params.get("college");
+  const preselectDone = useRef(false);
+
+  const preselectSchool = trpc.schools.getBySlug.useQuery(
+    { slug: schoolSlugParam ?? "" },
+    { enabled: !!schoolSlugParam }
+  );
+  const preselectCollege = trpc.colleges.getBySlug.useQuery(
+    { slug: collegeSlugParam ?? "" },
+    { enabled: !!collegeSlugParam }
+  );
+
+  useEffect(() => {
+    if (preselectDone.current) return;
+    const s: any = preselectSchool.data;
+    if (s) {
+      preselectDone.current = true;
+      setSelected({ kind: "school", id: s.id, name: s.name, city: s.city, state: s.state });
+      return;
+    }
+    const c: any = preselectCollege.data;
+    if (c) {
+      preselectDone.current = true;
+      setSelected({ kind: "college", id: c.id, name: c.name, city: c.city, state: c.state });
+    }
+  }, [preselectSchool.data, preselectCollege.data]);
+
+  const pickerEnabled = pickerQuery.trim().length >= 2;
+  const schoolResults = trpc.schools.search.useQuery(
+    { query: pickerQuery.trim(), limit: 6 },
+    { enabled: pickerEnabled }
+  );
+  const collegeResults = trpc.colleges.search.useQuery(
+    { query: pickerQuery.trim(), limit: 4 },
+    { enabled: pickerEnabled }
+  );
+  const pickerResults: SelectedListing[] = [
+    ...((schoolResults.data?.schools ?? []) as any[]).map((s) => ({
+      kind: "school" as const,
+      id: s.id,
+      name: s.name,
+      city: s.city,
+      state: s.state,
+    })),
+    ...((collegeResults.data ?? []) as any[]).map((c) => ({
+      kind: "college" as const,
+      id: c.id,
+      name: c.name,
+      city: c.city,
+      state: c.state,
+    })),
+  ];
+
+  const pickListing = (listing: SelectedListing) => {
+    preselectDone.current = true;
+    setSelected(listing);
+    setPickerOpen(false);
+    setPickerQuery("");
+  };
+
+  // Colleges are priced at the college tier ($500/yr), schools at $99/yr.
+  const price = selected?.kind === "college" ? 500 : 99;
 
   const checkoutMutation = trpc.stripe.createCheckout.useMutation({
     onSuccess: (data) => {
@@ -54,12 +134,23 @@ export default function Membership() {
       window.location.href = '/signup';
       return;
     }
+    if (!selected) {
+      toast.error("Select the school or college you want to upgrade first");
+      return;
+    }
     if (!agreedToPremiumTerms) {
       toast.error("You must agree to the Terms of Service and understand the manual renewal policy");
       return;
     }
+    if (selected.kind === "college" && promoCode) {
+      toast.info("Promo codes apply to school listings only — continuing without the code.");
+    }
     setCheckoutLoading(true);
-    checkoutMutation.mutate({ schoolId: 0, schoolName: "Premium Membership", promoCode: promoCode || undefined });
+    checkoutMutation.mutate(
+      selected.kind === "college"
+        ? { collegeId: selected.id, schoolName: selected.name }
+        : { schoolId: selected.id, schoolName: selected.name, promoCode: promoCode || undefined }
+    );
   };
 
   const handlePromoCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,9 +235,12 @@ export default function Membership() {
               <div className="text-center mb-6">
                 <h3 className="text-lg font-semibold text-[#002855] mb-2">Premium Membership</h3>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-bold text-[#6EBE44]">$99</span>
+                  <span className="text-4xl font-bold text-[#6EBE44]">${price}</span>
                   <span className="text-gray-500 text-sm">/year</span>
                 </div>
+                {selected?.kind === "college" && (
+                  <p className="text-xs text-gray-500 mt-1">College premium pricing</p>
+                )}
                 <p className="text-xs text-gray-500 mt-2">One-time annual fee &middot; Cancel anytime</p>
               </div>
               <ul className="space-y-3 mb-8">
@@ -157,6 +251,77 @@ export default function Membership() {
                   </li>
                 ))}
               </ul>
+              <div className="mb-6 p-4 bg-[#002855]/5 rounded-lg border border-[#002855]/15">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Which listing are you upgrading?</label>
+                {selected ? (
+                  <div className="flex items-center justify-between gap-3 bg-white border border-[#6EBE44] rounded-lg px-3 py-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-[#002855] truncate">{selected.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {selected.city}, {selected.state} · {selected.kind === "college" ? "College" : "School"}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSelected(null)}
+                      className="text-xs font-medium text-[#0055A4] hover:underline shrink-0"
+                    >
+                      Change
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-[#6EBE44]">
+                      <Search className="w-4 h-4 text-gray-400 shrink-0" />
+                      <input
+                        type="text"
+                        value={pickerQuery}
+                        onChange={(e) => {
+                          setPickerQuery(e.target.value);
+                          setPickerOpen(true);
+                        }}
+                        onFocus={() => setPickerOpen(true)}
+                        placeholder="Search for your school or college..."
+                        className="w-full text-sm focus:outline-none"
+                      />
+                    </div>
+                    {pickerOpen && pickerEnabled && (
+                      <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-auto">
+                        {pickerResults.length === 0 ? (
+                          <p className="px-3 py-2 text-sm text-gray-500">
+                            {schoolResults.isLoading || collegeResults.isLoading
+                              ? "Searching..."
+                              : "No matches — try the full name."}
+                          </p>
+                        ) : (
+                          pickerResults.map((r) => (
+                            <button
+                              key={`${r.kind}-${r.id}`}
+                              type="button"
+                              onClick={() => pickListing(r)}
+                              className="w-full text-left px-3 py-2 hover:bg-[#6EBE44]/10 border-b border-gray-100 last:border-0"
+                            >
+                              <span className="block text-sm font-medium text-[#002855]">{r.name}</span>
+                              <span className="block text-xs text-gray-500">
+                                {r.city}, {r.state} · {r.kind === "college" ? "College" : "School"}
+                              </span>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {!selected && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    Not listed yet?{" "}
+                    <Link href="/submit-school" className="text-[#0055A4] hover:underline font-medium">
+                      Add your school free first
+                    </Link>
+                    , then come back to upgrade.
+                  </p>
+                )}
+              </div>
               <div className="mb-6 p-4 bg-[#6EBE44]/5 rounded-lg border border-[#6EBE44]/20">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Have a promo code?</label>
                 <input
@@ -183,12 +348,12 @@ export default function Membership() {
               <Button
                 className="w-full bg-[#6EBE44] hover:bg-[#5aa838] text-white border-0 font-semibold"
                 onClick={handleUpgrade}
-                disabled={checkoutLoading}
+                disabled={checkoutLoading || !selected}
               >
                 {checkoutLoading ? (
                   <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Processing...</>
                 ) : (
-                  "Upgrade to Premium — $99/year"
+                  `Upgrade to Premium — $${price}/year`
                 )}
               </Button>
               <p className="text-center text-xs text-gray-500 mt-3 flex items-center justify-center gap-1">
@@ -196,6 +361,9 @@ export default function Membership() {
               </p>
               {!isAuthenticated && (
                 <p className="text-center text-xs text-gray-400 mt-2">Sign in required to purchase</p>
+              )}
+              {isAuthenticated && !selected && (
+                <p className="text-center text-xs text-gray-400 mt-2">Select your school or college above to enable checkout</p>
               )}
             </div>
           </div>

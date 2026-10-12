@@ -185,7 +185,7 @@ export default function CollegeProfile() {
                   <h2 className="text-2xl font-bold mb-2">Is This Your College?</h2>
                   <p className="text-blue-100 mb-6 leading-relaxed">Claim your free listing and upgrade to Premium to showcase your campus, highlight programs, and reach thousands of Christian families searching for the right college.</p>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/membership">
+                    <Link href={`/membership?college=${college.slug}`}>
                       <Button className="bg-[#FFC72C] hover:bg-[#e6b228] text-[#002855] font-bold px-6 py-3 text-base border-0">
                         View Premium Options
                       </Button>

@@ -193,6 +193,9 @@ export const events = mysqlTable("events", {
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description"),
   category: mysqlEnum("category", ["open_house", "conference", "fundraiser", "workshop", "missions", "other"]).default("other").notNull(),
+  // Audience taxonomy (Teacher Toolkit): who the event is for. Teacher
+  // events (PD, conferences, training) surface on /teacher-toolkit.
+  audience: mysqlEnum("audience", ["families", "teachers", "students", "pastors", "all"]).default("all").notNull(),
   location: varchar("location", { length: 255 }),
   state: varchar("state", { length: 64 }),
   stateCode: varchar("stateCode", { length: 2 }),
@@ -831,3 +834,25 @@ export const enrichmentReports = mysqlTable("enrichment_reports", {
 
 export type EnrichmentReport = typeof enrichmentReports.$inferSelect;
 export type InsertEnrichmentReport = typeof enrichmentReports.$inferInsert;
+
+// Teacher Forum — Founding Teachers waitlist (phase 1 of the teacher forum).
+// Teachers register interest on /teacher-toolkit and attest that they teach
+// at a Christian school. Forum access opens only after an admin validates
+// the entry (status: pending -> validated / rejected). No forum software yet.
+export const teacherForumWaitlist = mysqlTable("teacher_forum_waitlist", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  schoolName: varchar("schoolName", { length: 255 }).notNull(),
+  schoolCity: varchar("schoolCity", { length: 128 }),
+  schoolState: varchar("schoolState", { length: 64 }),
+  role: mysqlEnum("role", ["teacher", "admin", "homeschool"]).default("teacher").notNull(),
+  teachesAtChristianSchool: boolean("teachesAtChristianSchool").default(false).notNull(),
+  status: mysqlEnum("status", ["pending", "validated", "rejected"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TeacherForumWaitlistEntry = typeof teacherForumWaitlist.$inferSelect;
+export type InsertTeacherForumWaitlistEntry = typeof teacherForumWaitlist.$inferInsert;

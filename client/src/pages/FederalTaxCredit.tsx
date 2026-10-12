@@ -283,7 +283,7 @@ export default function FederalTaxCredit() {
         <section className="mb-10">
           <h2 className="text-2xl font-bold text-[#002855] mb-2">Is Your State Participating?</h2>
           <p className="text-gray-600 mb-6">
-            Thirty states have officially opted in as of September 2026. Each participating state will publish its certified SGO registry — click your state to go directly to its Department of Education where the list will appear. States must submit SGO lists by <strong>February 15, 2027</strong>.
+            Thirty states have officially opted in as of October 2026. Each participating state will publish its certified SGO registry — click your state to go directly to its Department of Education where the list will appear. States must submit SGO lists by <strong>February 15, 2027</strong>.
           </p>
 
           <h3 className="text-lg font-bold text-[#6EBE44] mb-3 flex items-center gap-2">
@@ -295,7 +295,6 @@ export default function FederalTaxCredit() {
               { name: "Alabama", url: "https://www.alabamaachieves.org" },
               { name: "Alaska", url: "https://education.alaska.gov" },
               { name: "Arkansas", url: "https://dese.ade.arkansas.gov" },
-              { name: "Arizona", url: "https://www.azed.gov" },
               { name: "Colorado", url: "https://www.cde.state.co.us" },
               { name: "Florida", url: "https://www.fldoe.org" },
               { name: "Georgia", url: "https://www.gadoe.org" },
@@ -339,13 +338,13 @@ export default function FederalTaxCredit() {
 
           <h3 className="text-lg font-bold text-amber-600 mb-3 flex items-center gap-2">
             <span className="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
-            Not Participating (5)
+            Not Participating (6)
           </h3>
           <p className="text-gray-600 text-sm mb-3">
             These states have said they will not participate. Donors in these states can still claim the credit by donating to SGOs in participating states — but students here cannot receive scholarships.
           </p>
           <div className="flex flex-wrap gap-2 mb-8">
-            {["Hawaii", "Minnesota", "New Mexico", "Oregon", "Wisconsin"].map((s) => (
+            {["Arizona", "Hawaii", "Minnesota", "New Mexico", "Oregon", "Wisconsin"].map((s) => (
               <span key={s} className="bg-gray-100 text-gray-600 rounded-full px-4 py-2 text-sm font-medium">{s}</span>
             ))}
           </div>
@@ -362,7 +361,7 @@ export default function FederalTaxCredit() {
               <span key={s} className="bg-gray-50 border border-gray-200 text-gray-500 rounded-full px-4 py-2 text-sm">{s}</span>
             ))}
           </div>
-          <p className="text-gray-400 text-xs mt-6 italic">State participation data as of September 2026, sourced from Ballotpedia. We'll update this directory as SGO registries are published.</p>
+          <p className="text-gray-400 text-xs mt-6 italic">State participation data as of October 2026, per IRS announcements (IR-2026-76 and the Oct 2026 Treasury update). We'll update this directory as SGO registries are published.</p>
         </section>
 
         {/* Share */}

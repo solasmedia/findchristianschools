@@ -26,6 +26,15 @@ import {
 
 // Zip code radius search - school zip coordinates + runtime geocoding
 import { schoolZips } from "./data/schoolzips";
+import { zipCoords } from "./data/zipcoords";
+
+// Complete local US ZIP -> [lat, lon] lookup. Used as the primary geocoding
+// source so radius search never depends on a live third-party API call.
+const zipCoordMap = new Map<string, [number, number]>(
+  zipCoords.map(([z, lat, lon]) => [z, [lat, lon] as [number, number]]),
+);
+// Cache for the (rare) zippopotam fallback lookups.
+const geocodeCache = new Map<string, [number, number] | null>();
 
 function haversineMiles(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 3959;
@@ -38,19 +47,26 @@ function haversineMiles(lat1: number, lon1: number, lat2: number, lon2: number):
 }
 
 async function geocodeZip(zip: string): Promise<[number, number] | null> {
-  // Check school zips first
+  // 1. School zips first (fast path — zips that already have schools)
   const found = schoolZips.find((z) => z[0] === zip);
   if (found) return [found[1], found[2]];
-  // Fallback to zippopotam API
+  // 2. Complete local ZIP coordinate dataset (covers every US ZIP,
+  //    including zips with no school — no network dependency)
+  const local = zipCoordMap.get(zip);
+  if (local) return local;
+  // 3. Last-resort fallback: zippopotam API (result cached per ZIP)
+  if (geocodeCache.has(zip)) return geocodeCache.get(zip) ?? null;
+  let result: [number, number] | null = null;
   try {
     const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
     if (res.ok) {
       const data = await res.json();
       const p = data.places?.[0];
-      if (p) return [parseFloat(p.latitude), parseFloat(p.longitude)];
+      if (p) result = [parseFloat(p.latitude), parseFloat(p.longitude)];
     }
   } catch { /* ignore */ }
-  return null;
+  geocodeCache.set(zip, result);
+  return result;
 }
 
 export async function getZipsWithinRadius(zip: string, miles: number = 25): Promise<string[]> {
@@ -271,6 +287,14 @@ export interface SearchSchoolsParams {
 
 export async function searchSchools(params: SearchSchoolsParams) {
   const db = await conn();
+  // A bare 5-digit ZIP typed into the free-text search box must behave
+  // exactly like a ZIP search (with the 25-mile radius fallback), not an
+  // exact LIKE match against name/city/state/zip — no school's stored ZIP
+  // is guaranteed to equal the searched ZIP, so the LIKE path returns 0.
+  const queryTrimmed = params.query?.trim();
+  if (!params.zip && queryTrimmed && /^\d{5}$/.test(queryTrimmed)) {
+    params = { ...params, zip: queryTrimmed, query: undefined };
+  }
   const conditions = [...publicSchoolConditions()];
 
   if (params.query) {

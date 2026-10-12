@@ -58,7 +58,10 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  // index: false — "/" must fall through to the SEO injection handler below
+  // (express.static would otherwise serve the raw index.html for "/",
+  // bypassing JSON-LD + server-rendered content injection on the homepage).
+  app.use(express.static(distPath, { index: false }));
 
   // SEO: serve index.html with per-route head injection.
   // Unknown routes return 404; detail pages get unique titles/meta via DB lookup.

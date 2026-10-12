@@ -36,6 +36,14 @@ export async function createPremiumCheckout(params: {
     metadata: {
       school_id: listingId.toString(),
       listing_type: listingType,
+      // The webhook's premium-activation branch keys off listingType /
+      // schoolName — the contract set by the submit-school form path
+      // (server/_core/stripe-checkout.ts). This function only ever sells
+      // premium listings, so state that explicitly. Without these keys the
+      // webhook stamped paid Membership/profile-path listings as "free"
+      // and never activated premium.
+      listingType: "premium",
+      schoolName: params.schoolName,
       user_id: params.userId.toString(),
       customer_email: params.userEmail,
     },
@@ -53,8 +61,69 @@ export async function createPremiumCheckout(params: {
         quantity: 1,
       },
     ],
-    success_url: `${params.origin}/membership/success?school_id=${listingId}&type=${listingType}`,
+    success_url: `${params.origin}/membership?status=success&school_id=${listingId}&type=${listingType}`,
     cancel_url: `${params.origin}/membership`,
+  });
+
+  return { url: session.url };
+}
+
+/**
+ * Premium checkout for Enrichment & Activities listings.
+ *
+ * The webhook's enrichment branch keys off metadata.listing_type ===
+ * "enrichment" + metadata.enrichment_id + metadata.listingType ===
+ * "premium". Keep those keys in sync with server/stripe/webhook.ts.
+ * App-level promo discounts are applied by adjusting the price_data
+ * amount (app promo codes are NOT Stripe coupons), same as schools.
+ */
+export async function createEnrichmentCheckout(params: {
+  enrichmentId: number;
+  listingName: string;
+  listerType: "individual" | "business" | "organization";
+  userEmail: string;
+  userId?: number;
+  origin: string;
+  discountPercent?: number;
+}) {
+  const product =
+    params.listerType === "individual"
+      ? PRODUCTS.premiumTutorListing
+      : params.listerType === "organization"
+        ? PRODUCTS.premiumOrganizationListing
+        : PRODUCTS.premiumEnrichmentProvider;
+  const discountPercent = Math.min(100, Math.max(0, params.discountPercent ?? 0));
+  const unitAmount = Math.round(product.priceAmount * (100 - discountPercent) / 100);
+  const session = await getStripe().checkout.sessions.create({
+    mode: "subscription",
+    customer_email: params.userEmail || undefined,
+    client_reference_id: params.userId?.toString(),
+    allow_promotion_codes: true,
+    metadata: {
+      listing_type: "enrichment",
+      enrichment_id: params.enrichmentId.toString(),
+      listingType: "premium",
+      listingName: params.listingName,
+      lister_type: params.listerType,
+      user_id: params.userId?.toString() || "anonymous",
+      customer_email: params.userEmail,
+    },
+    line_items: [
+      {
+        price_data: {
+          currency: product.currency,
+          product_data: {
+            name: product.name,
+            description: `Premium Enrichment & Activities listing for ${params.listingName}`,
+          },
+          unit_amount: unitAmount,
+          recurring: { interval: product.interval },
+        },
+        quantity: 1,
+      },
+    ],
+    success_url: `${params.origin}/enrichment?status=success&listing_id=${params.enrichmentId}`,
+    cancel_url: `${params.origin}/enrichment/submit`,
   });
 
   return { url: session.url };

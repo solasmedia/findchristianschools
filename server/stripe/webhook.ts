@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import type { Request, Response } from "express";
 import { getDb } from "../db";
-import { schools, colleges, resourcePurchases } from "../../drizzle/schema";
+import { schools, colleges, resourcePurchases, enrichmentListings } from "../../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 import { notifyPremiumPurchase } from "../_core/emailNotifications";
 
@@ -70,6 +70,36 @@ export async function handleStripeWebhook(req: Request, res: Response) {
               });
               console.log(`[Webhook] Resource purchase recorded: post ${postId}, ${email}, $${(amountCents / 100).toFixed(2)}`);
             }
+          }
+        }
+        return res.json({ received: true });
+      }
+
+      // --- Enrichment & Activities premium listing ---
+      // Metadata contract set by createEnrichmentCheckout in
+      // server/stripe/checkout.ts: listing_type=enrichment, enrichment_id,
+      // listingType=premium. Handled before the school branch because these
+      // sessions carry no school_id.
+      if (session.metadata?.listing_type === "enrichment") {
+        const db = await getDb();
+        if (db) {
+          const enrichmentId = parseInt(session.metadata.enrichment_id || "0");
+          if (enrichmentId) {
+            const updateData: any = {
+              stripeCustomerId: session.customer as string,
+              stripePaymentIntentId: session.payment_intent as string,
+            };
+            if (session.metadata.listingType === "premium") {
+              updateData.isPremium = true;
+              updateData.listingType = "premium";
+              updateData.featured = true;
+              const premiumExpiresAt = new Date();
+              premiumExpiresAt.setFullYear(premiumExpiresAt.getFullYear() + 1);
+              updateData.premiumExpiresAt = premiumExpiresAt;
+              updateData.stripeSubscriptionId = session.subscription as string;
+            }
+            await db.update(enrichmentListings).set(updateData).where(eq(enrichmentListings.id, enrichmentId));
+            console.log(`[Webhook] Enrichment listing ${enrichmentId} payment processed (${session.metadata.listingType})`);
           }
         }
         return res.json({ received: true });
@@ -158,6 +188,11 @@ export async function handleStripeWebhook(req: Request, res: Response) {
           isPremium: false,
           premiumExpiresAt: null,
         }).where(eq(colleges.stripeSubscriptionId, subscription.id));
+        await db.update(enrichmentListings).set({
+          isPremium: false,
+          featured: false,
+          premiumExpiresAt: null,
+        }).where(eq(enrichmentListings.stripeSubscriptionId, subscription.id));
         console.log(`[Webhook] Subscription ${subscription.id} cancelled`);
       }
       break;

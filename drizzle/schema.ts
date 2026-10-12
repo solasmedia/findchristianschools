@@ -728,3 +728,106 @@ export const newsFetchLog = mysqlTable("news_fetch_log", {
 
 export type NewsFetchLog = typeof newsFetchLog.$inferSelect;
 export type InsertNewsFetchLog = typeof newsFetchLog.$inferInsert;
+
+// ============ ENRICHMENT & ACTIVITIES ============
+// Tutors, classes, sports, camps, youth groups, music & arts, homeschool
+// co-ops/resources. Mirrors the schools table patterns (slug, premium/Stripe
+// fields, promo columns, listingStatus, SoF attestation) plus a verification
+// workflow: verificationStatus is admin-reviewed only — a listing shows a
+// verification badge ONLY when verificationStatus = "approved".
+// Badge wording lives in shared/enrichment.ts and is liability-critical:
+// "Documents Verified" (business/org) / "ID & Background Check Verified"
+// (individual). Never "trusted" / "safe" / "vetted".
+export const enrichmentListings = mysqlTable("enrichment_listings", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  category: mysqlEnum("category", ["tutor", "classes", "sports", "camps", "youth_groups", "music_arts", "homeschool_coop"]).notNull(),
+  // Free-text subcategory / org type, e.g. "American Heritage Girls Troop",
+  // "Trail Life USA Troop", "Piano lessons", "Soccer league"
+  subcategory: varchar("subcategory", { length: 128 }),
+  listerType: mysqlEnum("listerType", ["individual", "business", "organization"]).default("business").notNull(),
+  description: text("description"),
+  // Location
+  address: varchar("address", { length: 512 }),
+  city: varchar("city", { length: 128 }).notNull(),
+  state: varchar("state", { length: 64 }).notNull(),
+  stateCode: varchar("stateCode", { length: 2 }).notNull(),
+  zip: varchar("zip", { length: 10 }).notNull(),
+  latitude: decimal("latitude", { precision: 10, scale: 7 }),
+  longitude: decimal("longitude", { precision: 10, scale: 7 }),
+  // Contact
+  phone: varchar("phone", { length: 20 }),
+  email: varchar("email", { length: 320 }),
+  website: varchar("website", { length: 512 }),
+  contactName: varchar("contactName", { length: 255 }),
+  contactEmail: varchar("contactEmail", { length: 320 }),
+  contactPhone: varchar("contactPhone", { length: 20 }),
+  // Program details
+  agesOrGrades: varchar("agesOrGrades", { length: 128 }), // e.g. "Ages 8-14", "Grades K-6"
+  denomination: varchar("denomination", { length: 128 }),
+  logoUrl: varchar("logoUrl", { length: 512 }),
+  coverImageUrl: varchar("coverImageUrl", { length: 512 }),
+  // Faith attestation (site standard — required at submission)
+  statementOfFaith: text("statementOfFaith"),
+  sofAttested: boolean("sofAttested").default(false).notNull(),
+  sofAttestedAt: timestamp("sofAttestedAt"),
+  certifiedAccurate: boolean("certifiedAccurate").default(false),
+  // Premium / Stripe (mirrors schools)
+  listingType: mysqlEnum("listingType", ["free", "premium"]).default("free").notNull(),
+  isPremium: boolean("isPremium").default(false).notNull(),
+  premiumExpiresAt: timestamp("premiumExpiresAt"),
+  featured: boolean("featured").default(false).notNull(),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }),
+  stripeSubscriptionId: varchar("stripeSubscriptionId", { length: 255 }),
+  stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
+  promoCode: varchar("promoCode", { length: 50 }),
+  promoDiscountPercent: int("promoDiscountPercent"),
+  ownerId: int("ownerId"),
+  // Verification workflow (admin-reviewed; no external check APIs)
+  verificationStatus: mysqlEnum("verificationStatus", ["none", "pending", "approved", "rejected"]).default("none").notNull(),
+  verificationType: mysqlEnum("verificationType", ["none", "documents", "id_background"]).default("none").notNull(),
+  // Businesses/orgs: EIN + legal name must match
+  ein: varchar("ein", { length: 32 }),
+  legalName: varchar("legalName", { length: 255 }),
+  // Individuals: attestations captured at submission (admin reviews)
+  idAttested: boolean("idAttested").default(false),
+  backgroundCheckAttested: boolean("backgroundCheckAttested").default(false),
+  backgroundCheckDate: date("backgroundCheckDate"), // date of the individual's most recent background check
+  reference1Name: varchar("reference1Name", { length: 255 }),
+  reference1Contact: varchar("reference1Contact", { length: 255 }), // church/school name + contact
+  reference2Name: varchar("reference2Name", { length: 255 }),
+  reference2Contact: varchar("reference2Contact", { length: 255 }),
+  verifiedAt: timestamp("verifiedAt"),
+  verifiedBy: varchar("verifiedBy", { length: 255 }),
+  verificationNotes: text("verificationNotes"),
+  // Publication workflow — public search shows only isApproved listings that
+  // are not removed/suspended (same pattern as colleges/races sitemap filter)
+  listingStatus: mysqlEnum("listingStatus", ["pending", "active", "removed", "suspended", "community_submitted"]).default("community_submitted").notNull(),
+  isApproved: boolean("isApproved").default(false).notNull(),
+  internalNotes: text("internalNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EnrichmentListing = typeof enrichmentListings.$inferSelect;
+export type InsertEnrichmentListing = typeof enrichmentListings.$inferInsert;
+
+// Reports against enrichment listings — removal-first policy: a credible
+// report suspends the listing pending admin review (noted in the admin view).
+export const enrichmentReports = mysqlTable("enrichment_reports", {
+  id: int("id").autoincrement().primaryKey(),
+  listingId: int("listingId").notNull(),
+  listingName: varchar("listingName", { length: 255 }),
+  reason: mysqlEnum("reason", ["fraudulent", "incorrect_info", "inappropriate", "closed", "safety_concern", "other"]).notNull(),
+  details: text("details"),
+  reporterName: varchar("reporterName", { length: 255 }),
+  reporterEmail: varchar("reporterEmail", { length: 320 }),
+  status: mysqlEnum("status", ["pending", "reviewed", "actioned", "dismissed"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EnrichmentReport = typeof enrichmentReports.$inferSelect;
+export type InsertEnrichmentReport = typeof enrichmentReports.$inferInsert;

@@ -75,6 +75,7 @@ import Enrichment from "./pages/Enrichment";
 import EnrichmentProfile from "./pages/EnrichmentProfile";
 import SubmitEnrichment from "./pages/SubmitEnrichment";
 import ListerTerms from "./pages/ListerTerms";
+import TeacherToolkit from "./pages/TeacherToolkit";
 
 const EnrichmentHome = () => <Enrichment />;
 const EnrichmentTutors = () => <Enrichment presetCategory="tutors" />;
@@ -175,6 +176,7 @@ function Router() {
       <Route path="/enrichment/music-arts" component={EnrichmentMusicArts} />
       <Route path="/enrichment/homeschool" component={EnrichmentHomeschool} />
       <Route path="/lister-terms" component={ListerTerms} />
+      <Route path="/teacher-toolkit" component={TeacherToolkit} />
       {/* Redirect routes for common URL variations */}
       <Route path="/donate" component={Mission} />
       <Route path="/compare-schools" component={Compare} />

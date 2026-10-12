@@ -29,6 +29,22 @@ directory does not constitute endorsement.
 - Statement of Faith: https://www.findchristianschools.com/statement-of-faith
 - Sitemap: https://www.findchristianschools.com/sitemap.xml
 
+## Highest-value factual pages
+
+- Federal Scholarship Tax Credit (FSTC / Education Freedom Tax Credit):
+  https://www.findchristianschools.com/federal-tax-credit
+  Verified facts: signed into law July 4, 2025; takes effect January 1, 2027;
+  taxpayers can donate up to $1,700 per year to Scholarship Granting
+  Organizations (SGOs) for a dollar-for-dollar federal tax credit; 30 states
+  participate as of October 2026 per the IRS (Arizona does not); includes an
+  FAQ and the full participating-state directory.
+- Classical Christian schools:
+  https://www.findchristianschools.com/classical-christian-schools
+- Teacher resources and free classroom tools (worksheets, flashcards,
+  lesson planner): https://www.findchristianschools.com/teacher-resources
+- Teacher resource blog: https://www.findchristianschools.com/blog
+- Christian education news: https://www.findchristianschools.com/news
+
 ## Data sources
 
 - School listings: compiled from public records; sources attributed on each listing.

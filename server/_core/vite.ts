@@ -74,7 +74,7 @@ export function serveStatic(app: Express) {
   // inside the handler (Express 4 mount behavior), which broke route matching.
   app.use(async (req, res) => {
     // Lazy import to avoid circular deps at module load
-    const { matchRoute, resolveMeta, injectHead } = await import("./seoHead");
+    const { matchRoute, resolveMeta, injectHead, resolveSeoContent } = await import("./seoHead");
 
     // Normalize path (strip trailing slash for canonical)
     let reqPath = req.path;
@@ -109,6 +109,16 @@ export function serveStatic(app: Express) {
         });
         res.status(404).set({ "Content-Type": "text/html" }).end(html);
         return;
+      }
+      // AI-search visibility: JSON-LD + server-rendered content blocks for
+      // non-JS crawlers (GPTBot, ClaudeBot, PerplexityBot). Best-effort —
+      // failures here must never break page serving.
+      try {
+        const extras = await resolveSeoContent(match);
+        if (extras.jsonLd?.length) meta.jsonLd = extras.jsonLd;
+        if (extras.bodyHtml) meta.bodyHtml = extras.bodyHtml;
+      } catch (e) {
+        console.error("[serveStatic] seo content injection failed:", e);
       }
       const html = injectHead(getTemplate(), meta);
       res.status(200).set({ "Content-Type": "text/html" }).end(html);

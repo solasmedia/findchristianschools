@@ -14,6 +14,7 @@ import {
   desc,
   eq,
   gte,
+  inArray,
   isNull,
   like,
   lte,
@@ -124,6 +125,7 @@ import {
   races,
   enrichmentListings,
   enrichmentReports,
+  teacherForumWaitlist,
   blogPosts,
   resourceDownloads,
   resourcePurchases,
@@ -2404,3 +2406,139 @@ export async function updateEnrichmentReport(id: number, data: Record<string, un
 
 // Re-exported literal types for router validation convenience
 export type { EnrichmentCategory, EnrichmentListerType, EnrichmentListingStatus, EnrichmentVerificationStatus };
+
+// ---------------------------------------------------------------------------
+// Teacher Toolkit (/teacher-toolkit)
+// ---------------------------------------------------------------------------
+
+/** Upcoming public events tagged for the teacher audience. */
+export async function getTeacherEvents(limit = 6) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(events)
+    .where(and(...publicEventConditions(), eq(events.audience, "teachers")))
+    .orderBy(asc(events.startDate))
+    .limit(limit);
+  return rows;
+}
+
+/** Teacher-audience workshops & conferences = professional development. */
+export async function getProfessionalDevelopmentEvents(limit = 6) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(events)
+    .where(
+      and(
+        ...publicEventConditions(),
+        eq(events.audience, "teachers"),
+        inArray(events.category, ["workshop", "conference"])
+      )
+    )
+    .orderBy(asc(events.startDate))
+    .limit(limit);
+  return rows;
+}
+
+/** Live counts for the Toolkit hero — every number comes from a real query. */
+export async function getTeacherToolkitCounts() {
+  const db = await conn();
+  const [blogCountRows, jobCountRows] = await Promise.all([
+    db
+      .select({ value: count() })
+      .from(blogPosts)
+      .where(eq(blogPosts.status, "published")),
+    db
+      .select({ value: count() })
+      .from(jobs)
+      .where(and(...publicJobConditions(), eq(jobs.isActive, true))),
+  ]);
+  return {
+    blogPostCount: Number(blogCountRows[0]?.value ?? 0),
+    openJobCount: Number(jobCountRows[0]?.value ?? 0),
+  };
+}
+
+const blogSummarySelect = {
+  id: blogPosts.id,
+  title: blogPosts.title,
+  slug: blogPosts.slug,
+  excerpt: blogPosts.excerpt,
+  category: blogPosts.category,
+  ageGroup: blogPosts.ageGroup,
+  readingTimeMinutes: blogPosts.readingTimeMinutes,
+  publishedAt: blogPosts.publishedAt,
+  heroImageUrl: blogPosts.heroImageUrl,
+};
+
+/**
+ * Latest published blog posts for the Toolkit: teacher-facing categories
+ * first (all of them, newest first), then filled with any remaining
+ * published posts so the section never shows fewer than exist.
+ */
+export async function getLatestTeacherBlogPosts(limit = 4) {
+  const db = await conn();
+  const { TEACHER_BLOG_CATEGORIES } = await import("../shared/teacherToolkit");
+  const teacherPosts = await db
+    .select(blogSummarySelect)
+    .from(blogPosts)
+    .where(
+      and(
+        eq(blogPosts.status, "published"),
+        inArray(blogPosts.category, [...TEACHER_BLOG_CATEGORIES] as (typeof blogPosts.category.enumValues)[number][])
+      )
+    )
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(limit);
+  if (teacherPosts.length >= limit) return teacherPosts;
+  const seen = new Set(teacherPosts.map((p) => p.id));
+  const rest = await db
+    .select(blogSummarySelect)
+    .from(blogPosts)
+    .where(eq(blogPosts.status, "published"))
+    .orderBy(desc(blogPosts.publishedAt))
+    .limit(limit * 3);
+  return [...teacherPosts, ...rest.filter((p) => !seen.has(p.id))].slice(0, limit);
+}
+
+// --- Teacher Forum waitlist (phase 1) ---
+
+export async function createTeacherForumWaitlistEntry(data: {
+  name: string;
+  email: string;
+  schoolName: string;
+  schoolCity?: string;
+  schoolState?: string;
+  role: "teacher" | "admin" | "homeschool";
+  teachesAtChristianSchool: boolean;
+}) {
+  const db = await conn();
+  const result = await db.insert(teacherForumWaitlist).values(data);
+  return { id: Number((result as any)[0]?.insertId ?? 0), success: true };
+}
+
+export async function getTeacherForumWaitlist(status?: "pending" | "validated" | "rejected") {
+  const db = await conn();
+  const query = db.select().from(teacherForumWaitlist);
+  const rows = await (status
+    ? query.where(eq(teacherForumWaitlist.status, status))
+    : query
+  )
+    .orderBy(desc(teacherForumWaitlist.createdAt))
+    .limit(500);
+  return rows;
+}
+
+export async function updateTeacherForumWaitlistStatus(
+  id: number,
+  status: "pending" | "validated" | "rejected",
+  adminNotes?: string
+) {
+  const db = await conn();
+  await db
+    .update(teacherForumWaitlist)
+    .set({ status, ...(adminNotes !== undefined ? { adminNotes } : {}) })
+    .where(eq(teacherForumWaitlist.id, id));
+  return { success: true };
+}

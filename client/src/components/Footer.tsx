@@ -50,6 +50,8 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><Link href="/resources" className="text-sm text-blue-200 hover:text-white transition-colors">Homeschool Resources</Link></li>
               <li><Link href="/colleges" className="text-sm text-blue-200 hover:text-white transition-colors">Christian Colleges</Link></li>
+              <li><Link href="/enrichment" className="text-sm text-blue-200 hover:text-white transition-colors">Enrichment & Activities</Link></li>
+              <li><Link href="/enrichment/submit" className="text-sm text-blue-200 hover:text-white transition-colors">List Your Program</Link></li>
               <li><Link href="/races" className="text-sm text-blue-200 hover:text-white transition-colors">Christian Races</Link></li>
               <li><Link href="/jobs" className="text-sm text-blue-200 hover:text-white transition-colors">Job Board</Link></li>
               <li><Link href="/events" className="text-sm text-blue-200 hover:text-white transition-colors">Events</Link></li>
@@ -67,6 +69,7 @@ export default function Footer() {
               <li><Link href="/admin-login" className="text-sm text-blue-200 hover:text-white transition-colors">Admin Login</Link></li>
               <li><Link href="/contact" className="text-sm text-blue-200 hover:text-white transition-colors">Contact Us</Link></li>
               <li><Link href="/terms-of-service" className="text-sm text-blue-200 hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link href="/lister-terms" className="text-sm text-blue-200 hover:text-white transition-colors">Lister Terms</Link></li>
               <li><Link href="/privacy" className="text-sm text-blue-200 hover:text-white transition-colors">Privacy Policy</Link></li>
               <li><Link href="/legal-contact" className="text-sm text-blue-200 hover:text-white transition-colors">Legal Contact</Link></li>
               <li><Link href="/statement-of-faith" className="text-sm text-blue-200 hover:text-white transition-colors">Statement of Faith</Link></li>

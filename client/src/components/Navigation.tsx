@@ -27,6 +27,21 @@ const navItems: NavItem[] = [
     ],
   },
   { href: "/colleges", label: "Colleges" },
+  {
+    href: "/enrichment",
+    label: "Enrichment",
+    children: [
+      { href: "/enrichment", label: "All Enrichment & Activities" },
+      { href: "/enrichment/tutors", label: "Tutors" },
+      { href: "/enrichment/classes", label: "Classes & Tutoring Centers" },
+      { href: "/enrichment/sports", label: "Sports & Leagues" },
+      { href: "/enrichment/camps", label: "Camps" },
+      { href: "/enrichment/youth-groups", label: "Youth Groups" },
+      { href: "/enrichment/music-arts", label: "Music & Arts" },
+      { href: "/enrichment/homeschool", label: "Homeschool Co-ops & Resources" },
+      { href: "/enrichment/submit", label: "List Your Program" },
+    ],
+  },
   { href: "/states", label: "States" },
   { href: "/jobs", label: "Jobs" },
   {

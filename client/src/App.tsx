@@ -71,6 +71,19 @@ const ReadingWorksheets = () => <WorksheetGenerator presetSubject="reading" />;
 const VocabularyWorksheets = () => <WorksheetGenerator presetSubject="vocabulary" />;
 import Submit from "./pages/Submit";
 import Feedback from "./pages/Feedback";
+import Enrichment from "./pages/Enrichment";
+import EnrichmentProfile from "./pages/EnrichmentProfile";
+import SubmitEnrichment from "./pages/SubmitEnrichment";
+import ListerTerms from "./pages/ListerTerms";
+
+const EnrichmentHome = () => <Enrichment />;
+const EnrichmentTutors = () => <Enrichment presetCategory="tutors" />;
+const EnrichmentClasses = () => <Enrichment presetCategory="classes" />;
+const EnrichmentSports = () => <Enrichment presetCategory="sports" />;
+const EnrichmentCamps = () => <Enrichment presetCategory="camps" />;
+const EnrichmentYouthGroups = () => <Enrichment presetCategory="youth-groups" />;
+const EnrichmentMusicArts = () => <Enrichment presetCategory="music-arts" />;
+const EnrichmentHomeschool = () => <Enrichment presetCategory="homeschool" />;
 import { FloatingDonateButton } from "./components/FloatingDonateButton";
 import { SeoHead } from "./components/SeoHead";
 import { usePageTracking } from "./hooks/useAnalytics";
@@ -151,6 +164,17 @@ function Router() {
       <Route path="/tools/flashcards" component={Flashcards} />
       <Route path="/submit" component={Submit} />
       <Route path="/feedback" component={Feedback} />
+      <Route path="/enrichment" component={EnrichmentHome} />
+      <Route path="/enrichment/submit" component={SubmitEnrichment} />
+      <Route path="/enrichment/listing/:slug" component={EnrichmentProfile} />
+      <Route path="/enrichment/tutors" component={EnrichmentTutors} />
+      <Route path="/enrichment/classes" component={EnrichmentClasses} />
+      <Route path="/enrichment/sports" component={EnrichmentSports} />
+      <Route path="/enrichment/camps" component={EnrichmentCamps} />
+      <Route path="/enrichment/youth-groups" component={EnrichmentYouthGroups} />
+      <Route path="/enrichment/music-arts" component={EnrichmentMusicArts} />
+      <Route path="/enrichment/homeschool" component={EnrichmentHomeschool} />
+      <Route path="/lister-terms" component={ListerTerms} />
       {/* Redirect routes for common URL variations */}
       <Route path="/donate" component={Mission} />
       <Route path="/compare-schools" component={Compare} />

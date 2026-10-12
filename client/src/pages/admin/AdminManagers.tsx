@@ -393,6 +393,10 @@ export function EventsManager() {
     onSuccess: () => { toast.success("Event deleted."); refetchPending(); refetchAll(); },
     onError: (err) => toast.error(err.message),
   });
+  const setAudience = trpc.events.update.useMutation({
+    onSuccess: () => { toast.success("Event audience updated."); refetchPending(); refetchAll(); },
+    onError: (err) => toast.error(err.message),
+  });
 
   const formatDate = (d: any) => d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
 
@@ -418,6 +422,24 @@ export function EventsManager() {
           {event.submitterName && <span>By: {event.submitterName}</span>}
           {event.contactEmail && <span>{event.contactEmail}</span>}
           {event.website && <a href={event.website} target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">{event.website}</a>}
+        </div>
+        <div className="flex items-center gap-2 mt-2.5">
+          <label className="text-[11px] font-medium text-gray-500">Audience:</label>
+          <select
+            className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-[#0055A4]"
+            value={event.audience ?? "all"}
+            onChange={(e) => setAudience.mutate({ id: event.id, data: { audience: e.target.value as any } })}
+            disabled={setAudience.isPending}
+          >
+            <option value="all">All</option>
+            <option value="families">Families</option>
+            <option value="teachers">Teachers</option>
+            <option value="students">Students</option>
+            <option value="pastors">Pastors</option>
+          </select>
+          {event.audience === "teachers" && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Shows in Teacher Toolkit</span>
+          )}
         </div>
       </div>
       <div className="flex gap-2 shrink-0">
@@ -1475,6 +1497,98 @@ export function BlogManager() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+
+export function ForumWaitlistManager() {
+  const [statusFilter, setStatusFilter] = useState<"pending" | "validated" | "rejected" | "all">("pending");
+  const { data: entries, isLoading, refetch } = trpc.toolkitAdmin.forumWaitlist.useQuery(
+    statusFilter === "all" ? {} : { status: statusFilter }
+  );
+  const setStatus = trpc.toolkitAdmin.setForumWaitlistStatus.useMutation({
+    onSuccess: () => { toast.success("Waitlist entry updated."); refetch(); },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const statusBadge = (s: string) =>
+    s === "validated" ? "bg-green-100 text-green-700" : s === "rejected" ? "bg-red-100 text-red-600" : "bg-amber-100 text-amber-700";
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-xl font-bold text-[#002855]">Teacher Forum — Founding Waitlist</h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            Teachers who signed up on /teacher-toolkit. Validate the school before forum access opens — no one gets in unvalidated.
+          </p>
+        </div>
+        <div className="flex gap-2">
+          {(["pending", "validated", "rejected", "all"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              className={`text-sm px-4 py-2 rounded-full border font-medium capitalize transition-colors ${statusFilter === s ? "bg-[#0055A4] text-white border-[#0055A4]" : "bg-white text-gray-600 border-gray-200 hover:border-[#0055A4]"}`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {isLoading ? (
+        <LoadingSkeleton />
+      ) : !entries || entries.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
+          <Users className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-600 font-medium">No {statusFilter === "all" ? "" : statusFilter} signups</p>
+          <p className="text-sm text-gray-400">Founding-teacher signups from the Teacher Toolkit will appear here.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {entries.map((entry: any) => (
+            <div key={entry.id} className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col sm:flex-row sm:items-start gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="font-semibold text-[#002855] text-sm">{entry.name}</h3>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${statusBadge(entry.status)}`}>{entry.status}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#0055A4]/10 text-[#0055A4] capitalize">{entry.role}</span>
+                  {entry.teachesAtChristianSchool ? (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-600">Attests Christian school</span>
+                  ) : null}
+                </div>
+                <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+                  <span>{entry.email}</span>
+                  <span>{entry.schoolName}{entry.schoolCity ? ` — ${entry.schoolCity}` : ""}{entry.schoolState ? `, ${entry.schoolState}` : ""}</span>
+                  <span>{entry.createdAt ? new Date(entry.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : ""}</span>
+                </div>
+                {entry.adminNotes && <p className="text-xs text-gray-400 mt-1.5 italic">{entry.adminNotes}</p>}
+              </div>
+              <div className="flex gap-2 shrink-0">
+                {entry.status !== "validated" && (
+                  <Button size="sm" className="bg-[#6EBE44] hover:bg-[#5aa836] text-white"
+                    onClick={() => setStatus.mutate({ id: entry.id, status: "validated" })} disabled={setStatus.isPending}>
+                    <CheckCircle className="w-3.5 h-3.5 mr-1" /> Validate
+                  </Button>
+                )}
+                {entry.status !== "rejected" && (
+                  <Button size="sm" variant="outline" className="text-red-500 border-red-200 hover:bg-red-50"
+                    onClick={() => setStatus.mutate({ id: entry.id, status: "rejected" })} disabled={setStatus.isPending}>
+                    <XCircle className="w-3.5 h-3.5 mr-1" /> Reject
+                  </Button>
+                )}
+                {entry.status !== "pending" && (
+                  <Button size="sm" variant="outline"
+                    onClick={() => setStatus.mutate({ id: entry.id, status: "pending" })} disabled={setStatus.isPending}>
+                    Reset
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

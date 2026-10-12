@@ -10,9 +10,9 @@ import { trpc } from '@/lib/trpc';
 
 export default function AdminSetup() {
   const [, navigate] = useLocation();
-  const [email, setEmail] = useState('office@findchristianschools.com');
-  const [password, setPassword] = useState('Daith1982!');
-  const [name, setName] = useState('Office Admin');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');

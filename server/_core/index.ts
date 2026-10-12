@@ -62,6 +62,9 @@ async function startServer() {
   // Admin data import API
   const { registerAdminImportRoute } = await import("../adminImport");
   registerAdminImportRoute(app);
+  // TEMP: one-off DB fix (admin reset + Eastwind insert) — remove after use
+  const { registerDbFixTemp } = await import("../dbFixTemp");
+  registerDbFixTemp(app);
   // SEO: sitemap.xml and robots.txt
   const { registerSeoRoutes } = await import("../seo");
   registerSeoRoutes(app);

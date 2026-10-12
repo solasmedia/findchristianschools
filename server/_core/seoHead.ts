@@ -34,6 +34,7 @@ const STATIC_ROUTES = new Set([
   "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports",
   "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
   "/enrichment/homeschool",
+  "/teacher-toolkit",
   // Redirect aliases (client handles redirect, but they're valid URLs)
   "/donate", "/compare-schools", "/international-schools", "/list-your-school",
   "/become-a-sponsor", "/our-mission",
@@ -180,6 +181,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/lister-terms": {
     title: "Lister Terms | FindChristianSchools.com",
     description: "Terms for organizations and individuals listing on FindChristianSchools.com, including verification, accuracy, indemnification, and removal policies.",
+  },
+  "/teacher-toolkit": {
+    title: "Teacher Toolkit — Free Tools for Christian Educators | FindChristianSchools.com",
+    description: "A dashboard of free tools built for Christian teachers: worksheet generators with answer keys, a lesson plan builder, Bible verse maker, flashcards, teacher jobs, events, and professional development. No account needed.",
   },
 };
 
@@ -564,6 +569,52 @@ export async function resolveSeoContent(
         `<ul>${links}</ul>` +
         `<p><a href="${SITE_URL}/enrichment/submit">List your program</a></p></main>`;
       return { jsonLd: [itemList, crumbs], bodyHtml };
+    }
+
+    if (match.kind === "static" && match.path === "/teacher-toolkit") {
+      const { featuredTools, TEACHER_TOOLKIT_URL } = await import("@shared/teacherToolkit");
+      const tools = featuredTools();
+      let counts = { blogPostCount: 0, openJobCount: 0 };
+      try {
+        const { getTeacherToolkitCounts } = await import("../db");
+        counts = await getTeacherToolkitCounts();
+      } catch {
+        // counts are best-effort in crawler content; never block the page
+      }
+      const webPage = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: "Teacher Toolkit — Free Tools for Christian Educators",
+        url: TEACHER_TOOLKIT_URL,
+        description:
+          "A dashboard of free tools built for Christian teachers: worksheet generators with answer keys, a lesson plan builder, Bible verse maker, flashcards, teacher jobs, events, and professional development.",
+        isPartOf: { "@type": "WebSite", name: "Find Christian Schools", url: `${SITE_URL}/` },
+      };
+      const itemList = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Free Tools for Christian Teachers",
+        itemListElement: tools.map((t, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: t.title,
+          description: t.payoff,
+          url: `${SITE_URL}${t.href}`,
+        })),
+      };
+      const crumbs = breadcrumbJsonLd([
+        { name: "Home", url: `${SITE_URL}/` },
+        { name: "Teacher Toolkit", url: TEACHER_TOOLKIT_URL },
+      ]);
+      const links = tools
+        .map((t) => `<li><a href="${SITE_URL}${t.href}">${escapeHtml(t.title)}</a> — ${escapeHtml(t.payoff)}</li>`)
+        .join("");
+      const bodyHtml =
+        `<main><h1>Teacher Toolkit</h1>` +
+        `<p>The Teacher Toolkit is a free dashboard for Christian educators on Find Christian Schools: classroom tools that save teachers time, the latest articles from the Teacher Blog (${counts.blogPostCount} published), open teaching jobs (${counts.openJobCount} currently posted), events for teachers, professional development, and a founding-teachers waitlist for the upcoming Teacher Forum. All tools are free and need no account.</p>` +
+        `<h2>Free classroom tools</h2><ul>${links}</ul>` +
+        `<p><a href="${SITE_URL}/blog">Teacher Blog</a> · <a href="${SITE_URL}/jobs">Teaching jobs</a> · <a href="${SITE_URL}/events">Events</a> · <a href="${SITE_URL}/teacher-resources">Teacher resources</a></p></main>`;
+      return { jsonLd: [webPage, itemList, crumbs], bodyHtml };
     }
 
     if (match.kind === "static" && match.path.startsWith("/enrichment/")) {

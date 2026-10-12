@@ -824,7 +824,7 @@ export const appRouter = router({
             listingType: 'premium',
             premiumExpiresAt,
           }).where(eq(schools.id, input.schoolId));
-          return { url: `${origin}/membership/success?school_id=${input.schoolId}&type=school&promo=${encodeURIComponent(input.promoCode.toUpperCase())}` };
+          return { url: `${origin}/membership?status=success&school_id=${input.schoolId}&type=school&promo=${encodeURIComponent(input.promoCode.toUpperCase())}` };
         }
       }
       return createPremiumCheckout({ schoolId: input.schoolId, collegeId: input.collegeId, schoolName: input.schoolName, userEmail: ctx.user.email || '', userId: ctx.user.id, origin, discountPercent });

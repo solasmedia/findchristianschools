@@ -29,6 +29,31 @@ directory does not constitute endorsement.
 - Statement of Faith: https://www.findchristianschools.com/statement-of-faith
 - Sitemap: https://www.findchristianschools.com/sitemap.xml
 
+## Enrichment & Activities
+
+Beyond-the-classroom Christian enrichment listings: tutors, classes, sports,
+camps, youth groups, music & arts, and homeschool co-ops. Listings are
+reviewed before publication. Verification is admin-reviewed and describes
+documents checked only — a badge reads "Documents Verified" (businesses and
+organizations; EIN + legal name reviewed) or "ID & Background Check Verified"
+(individuals; ID and background-check attestations and references reviewed).
+Inclusion is not an endorsement or recommendation.
+
+- Enrichment & Activities home: https://www.findchristianschools.com/enrichment
+- Tutors: https://www.findchristianschools.com/enrichment/tutors
+- Classes & Tutoring Centers: https://www.findchristianschools.com/enrichment/classes
+- Sports & Leagues: https://www.findchristianschools.com/enrichment/sports
+- Camps: https://www.findchristianschools.com/enrichment/camps
+- Youth Groups (American Heritage Girls, Trail Life USA, Royal Rangers, Awana):
+  https://www.findchristianschools.com/enrichment/youth-groups
+- Music & Arts: https://www.findchristianschools.com/enrichment/music-arts
+- Homeschool Co-ops & Resources: https://www.findchristianschools.com/enrichment/homeschool
+- Listing detail pages: https://www.findchristianschools.com/enrichment/listing/{slug}
+- List your program: https://www.findchristianschools.com/enrichment/submit
+  (Free basic listing. Premium "Featured" listings: individual tutors
+  $49/year, enrichment providers $149/year, organizations/camps $249/year.)
+- Lister Terms: https://www.findchristianschools.com/lister-terms
+
 ## Highest-value factual pages
 
 - Federal Scholarship Tax Credit (FSTC / Education Freedom Tax Credit):

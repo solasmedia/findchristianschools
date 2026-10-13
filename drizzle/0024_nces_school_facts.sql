@@ -4,7 +4,7 @@
 -- the runner-up, and no competing claim on the same PSS record). Facts live
 -- in this side table — never in `schools` — so federal survey data stays
 -- separate from school-claimed data and the whole import can be rolled back
--- by dropping the table. Schools without a row simply show no facts panel;
+-- by dropping the table. Schools without a row simply show no facts panel,
 -- nothing is estimated or interpolated.
 -- Source: U.S. Dept. of Education, NCES PSS 2023-24 public-use file
 -- (nces.ed.gov/surveys/pss/zip/pss2324_pu_csv.zip), public-use data.

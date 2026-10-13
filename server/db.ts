@@ -307,6 +307,16 @@ export interface SearchSchoolsParams {
   offset?: number;
 }
 
+/**
+ * Escape LIKE wildcards in user-supplied search text so % and _ match
+ * literally instead of acting as pattern operators (audit S-1: bound
+ * parameters already prevent SQL injection; this is result correctness).
+ * MySQL's default LIKE escape character is the backslash.
+ */
+export function escapeLike(value: string): string {
+  return value.replace(/[\%_]/g, (c) => `\\${c}`);
+}
+
 export async function searchSchools(params: SearchSchoolsParams) {
   const db = await conn();
   // A bare 5-digit ZIP typed into the free-text search box must behave
@@ -320,11 +330,11 @@ export async function searchSchools(params: SearchSchoolsParams) {
   const conditions = [...publicSchoolConditions()];
 
   if (params.query) {
-    const q = `%${params.query}%`;
+    const q = `%${escapeLike(params.query)}%`;
     // Split into words for more forgiving matching (handles partial typos)
     const words = params.query.trim().split(/\s+/).filter(w => w.length > 2);
     const wordClauses = words.map(w => {
-      const wq = `%${w}%`;
+      const wq = `%${escapeLike(w)}%`;
       return or(
         like(schools.name, wq),
         like(schools.city, wq),
@@ -346,7 +356,7 @@ export async function searchSchools(params: SearchSchoolsParams) {
     const clause = or(eq(schools.state, params.state), eq(schools.stateCode, code));
     if (clause) conditions.push(clause);
   }
-  if (params.city) conditions.push(like(schools.city, `%${params.city}%`));
+  if (params.city) conditions.push(like(schools.city, `%${escapeLike(params.city)}%`));
   if (params.zip) {
     const zip5 = params.zip.slice(0, 5);
     const radiusMiles = (params as any).radius ?? 25;
@@ -361,10 +371,10 @@ export async function searchSchools(params: SearchSchoolsParams) {
         (params as any)._searchZip = zip5;
         (params as any)._radiusMiles = radiusMiles;
       } else {
-        conditions.push(like(schools.zip, `${zip5}%`));
+        conditions.push(like(schools.zip, `${escapeLike(zip5)}%`));
       }
     } else {
-      conditions.push(like(schools.zip, `${zip5}%`));
+      conditions.push(like(schools.zip, `${escapeLike(zip5)}%`));
     }
   }
   if (params.programType) conditions.push(eq(schools.programType, params.programType as "traditional" | "online" | "hybrid" | "homeschool_coop" | "boarding"));
@@ -373,7 +383,7 @@ export async function searchSchools(params: SearchSchoolsParams) {
   if (params.schoolType) conditions.push(eq(schools.schoolType, params.schoolType));
   if (params.enrollmentTier) conditions.push(eq(schools.enrollmentTier, params.enrollmentTier));
   if (params.gradeLevel) {
-    const g = `%${params.gradeLevel}%`;
+    const g = `%${escapeLike(params.gradeLevel)}%`;
     const clause = or(like(schools.gradeStart, g), like(schools.gradeEnd, g));
     if (clause) conditions.push(clause);
   }
@@ -523,7 +533,7 @@ export async function searchColleges(params: {
   const conditions = [...publicCollegeConditions()];
 
   if (params.query) {
-    const q = `%${params.query}%`;
+    const q = `%${escapeLike(params.query)}%`;
     conditions.push(
       or(
         like(colleges.name, q),
@@ -537,9 +547,9 @@ export async function searchColleges(params: {
     const code = stateToCode(params.state);
     conditions.push(or(eq(colleges.state, params.state), eq(colleges.stateCode, code))!);
   }
-  if (params.city) conditions.push(like(colleges.city, `%${params.city}%`));
+  if (params.city) conditions.push(like(colleges.city, `%${escapeLike(params.city)}%`));
   if (params.zip) conditions.push(eq(colleges.zip, params.zip.slice(0, 5)));
-  if (params.denomination) conditions.push(like(colleges.denomination, `%${params.denomination}%`));
+  if (params.denomination) conditions.push(like(colleges.denomination, `%${escapeLike(params.denomination)}%`));
 
   const limit = Math.min(params.limit ?? 50, 200);
   const offset = params.offset ?? 0;
@@ -607,7 +617,7 @@ export async function searchRaces(params: {
   const conditions = [...publicRaceConditions()];
 
   if (params.query) {
-    const q = `%${params.query}%`;
+    const q = `%${escapeLike(params.query)}%`;
     conditions.push(
       or(
         like(races.name, q),
@@ -620,7 +630,7 @@ export async function searchRaces(params: {
     const code = stateToCode(params.state);
     conditions.push(or(eq(races.state, params.state), eq(races.stateCode, code))!);
   }
-  if (params.city) conditions.push(like(races.city, `%${params.city}%`));
+  if (params.city) conditions.push(like(races.city, `%${escapeLike(params.city)}%`));
   if (params.zip) conditions.push(eq(races.zip, params.zip.slice(0, 5)));
 
   const limit = Math.min(params.limit ?? 50, 200);
@@ -798,12 +808,12 @@ export async function searchJobs(params: {
   const db = await conn();
   const conditions = [...publicJobConditions(), eq(jobs.isActive, true)];
   if (params.query) {
-    const q = `%${params.query}%`;
+    const q = `%${escapeLike(params.query)}%`;
     const clause = or(like(jobs.title, q), like(jobs.description, q), like(jobs.schoolName, q), like(jobs.location, q));
     if (clause) conditions.push(clause);
   }
   if (params.state) conditions.push(eq(jobs.state, stateToCode(params.state)));
-  if (params.zip) conditions.push(like(jobs.zip, `${params.zip}%`));
+  if (params.zip) conditions.push(like(jobs.zip, `${escapeLike(params.zip)}%`));
   if (params.positionType) conditions.push(eq(jobs.positionType, params.positionType as JobPositionType));
   if (params.employmentType) conditions.push(eq(jobs.employmentType, params.employmentType as JobEmploymentType));
   const rows = await db
@@ -1086,7 +1096,7 @@ export async function searchInternationalSchools(params: {
   const db = await conn();
   const conditions = [eq(internationalSchools.isApproved, true)];
   if (params.query) {
-    const q = `%${params.query}%`;
+    const q = `%${escapeLike(params.query)}%`;
     const clause = or(
       like(internationalSchools.name, q),
       like(internationalSchools.city, q),
@@ -1096,7 +1106,7 @@ export async function searchInternationalSchools(params: {
   }
   if (params.country) conditions.push(eq(internationalSchools.countryCode, params.country));
   if (params.language) {
-    const lang = `%${params.language}%`;
+    const lang = `%${escapeLike(params.language)}%`;
     const clause = or(
       like(internationalSchools.primaryLanguage, lang),
       like(internationalSchools.secondaryLanguage, lang),
@@ -1105,7 +1115,7 @@ export async function searchInternationalSchools(params: {
   }
   if (params.curriculumType) conditions.push(eq(internationalSchools.curriculumType, params.curriculumType as typeof internationalSchools.$inferSelect.curriculumType));
   if (params.gradeLevel) {
-    const g = `%${params.gradeLevel}%`;
+    const g = `%${escapeLike(params.gradeLevel)}%`;
     const clause = or(like(internationalSchools.gradeStart, g), like(internationalSchools.gradeEnd, g));
     if (clause) conditions.push(clause);
   }
@@ -2237,7 +2247,7 @@ export async function searchEnrichmentListings(params: SearchEnrichmentParams) {
   const conditions: any[] = [...publicEnrichmentConditions()];
 
   if (params.query) {
-    const q = `%${params.query}%`;
+    const q = `%${escapeLike(params.query)}%`;
     const clause = or(
       like(enrichmentListings.name, q),
       like(enrichmentListings.city, q),

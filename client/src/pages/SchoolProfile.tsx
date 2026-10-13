@@ -28,6 +28,18 @@ export default function SchoolProfile() {
     { schoolId: school?.id || 0 },
     { enabled: !!school?.id }
   );
+  // NCES PSS facts — null unless this school matched a federal survey record
+  // at high confidence. No row = no panel (never an estimate).
+  const { data: ncesFacts } = trpc.schools.getNcesFacts.useQuery(
+    { schoolId: school?.id || 0 },
+    { enabled: !!school?.id }
+  );
+  const ncesAssociations: string[] = (() => {
+    try { return ncesFacts?.associations ? JSON.parse(ncesFacts.associations) : []; } catch { return []; }
+  })();
+  const ncesGrades: Record<string, number> = (() => {
+    try { return ncesFacts?.gradeEnrollment ? JSON.parse(ncesFacts.gradeEnrollment) : {}; } catch { return {}; }
+  })();
 
   // Dynamic SEO meta tags
   useEffect(() => {
@@ -226,6 +238,65 @@ export default function SchoolProfile() {
                   )}
                 </dl>
               </div>
+
+              {/* School Facts (NCES PSS) — rendered only for high-confidence matches */}
+              {ncesFacts && (
+                <div className="bg-white rounded-xl border border-gray-100 p-6">
+                  <h2 className="text-lg font-semibold text-[#002855] mb-4">School Facts</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                    {ncesFacts.totalEnrollment != null && (
+                      <div className="text-center p-3 rounded-lg bg-gray-50">
+                        <Users className="w-5 h-5 text-[#0055A4] mx-auto mb-1" />
+                        <p className="text-xs text-gray-500">Total Enrollment</p>
+                        <p className="text-sm font-semibold text-[#002855]">{ncesFacts.totalEnrollment.toLocaleString()}</p>
+                      </div>
+                    )}
+                    {ncesFacts.fteTeachers != null && (
+                      <div className="text-center p-3 rounded-lg bg-gray-50">
+                        <BookOpen className="w-5 h-5 text-[#0055A4] mx-auto mb-1" />
+                        <p className="text-xs text-gray-500">Teachers (FTE)</p>
+                        <p className="text-sm font-semibold text-[#002855]">{Number(ncesFacts.fteTeachers)}</p>
+                      </div>
+                    )}
+                    {ncesFacts.studentTeacherRatio != null && (
+                      <div className="text-center p-3 rounded-lg bg-gray-50">
+                        <GraduationCap className="w-5 h-5 text-[#0055A4] mx-auto mb-1" />
+                        <p className="text-xs text-gray-500">Student–Teacher Ratio</p>
+                        <p className="text-sm font-semibold text-[#002855]">{Number(ncesFacts.studentTeacherRatio).toFixed(1)} : 1</p>
+                      </div>
+                    )}
+                  </div>
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                    {ncesFacts.religiousOrientation && (
+                      <div><dt className="text-gray-500 text-xs">Religious Orientation</dt><dd className="text-[#002855] font-medium">{ncesFacts.religiousOrientation}</dd></div>
+                    )}
+                    {ncesFacts.schoolTypology && (
+                      <div><dt className="text-gray-500 text-xs">School Type</dt><dd className="text-[#002855] font-medium">{ncesFacts.schoolTypology}</dd></div>
+                    )}
+                  </dl>
+                  {ncesAssociations.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-gray-500 text-xs mb-2">Association Memberships</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {ncesAssociations.map((a) => (
+                          <span key={a} className="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-[#0055A4]">{a}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {Object.keys(ncesGrades).length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-gray-500 text-xs mb-1">Enrollment by Grade</p>
+                      <p className="text-sm text-[#002855]">
+                        {Object.entries(ncesGrades).map(([g, n]) => `${g}: ${n}`).join(" · ")}
+                      </p>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-400 mt-4">
+                    Source: NCES Private School Universe Survey, 2023–24 (latest available). Figures as reported by the school to the U.S. Department of Education.
+                  </p>
+                </div>
+              )}
 
               {/* Pending Verification Notice */}
               {listingStatus === 'pending' && (

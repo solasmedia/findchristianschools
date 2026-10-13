@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { notifyOwner } from "./notification";
-import { notifyContactForm } from "./emailNotifications";
+import { notifyAdminOfSubmission } from "./emailNotifications";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 import { createContactMessage, getContactMessages, updateContactMessage, deleteContactMessage } from "../db";
 
@@ -54,18 +54,15 @@ export const systemRouter = router({
           category: input.category || "general",
           status: "new",
         });
-        // Notify admin of new contact message
-        await notifyOwner({
-          title: `New Contact: ${input.reason} from ${input.senderName}`,
-          content: `From: ${input.senderName} (${input.senderEmail})\nCategory: ${input.category || 'general'}\nSchool: ${input.schoolName || 'N/A'}\n\nMessage: ${input.message.substring(0, 500)}`,
+        // Email the admin exactly once per contact submission
+        await notifyAdminOfSubmission(`New Contact: ${input.reason} from ${input.senderName}`, {
+          From: input.senderName,
+          Email: input.senderEmail,
+          Phone: input.senderPhone,
+          Category: input.category || "general",
+          School: input.schoolName,
+          Message: input.message.substring(0, 500),
         }).catch(() => {}); // Don't fail if notification fails
-        // Send email notification
-        await notifyContactForm({
-          name: input.senderName,
-          email: input.senderEmail,
-          phone: input.senderPhone,
-          message: input.message,
-        }).catch(() => {}); // Don't fail if email fails
         return { success: true };
       } catch (error) {
         console.error('[Contact] Failed to submit message:', error);

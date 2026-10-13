@@ -257,7 +257,7 @@ export default function StateHub() {
             <span className="text-2xl">✅</span>
             <div>
               <p className="font-bold text-blue-900 text-sm">{stateName} participates in the Federal Scholarship Tax Credit</p>
-              <p className="text-blue-700 text-xs">Starting January 1, 2027, donors can claim up to $1,700 ($3,400 for married couples) for donations to scholarship organizations serving {stateName} families. <Link href="/federal-tax-credit" className="underline font-semibold">Learn more</Link></p>
+              <p className="text-blue-700 text-xs">Starting January 1, 2027, donors can claim up to $1,700 for donations to scholarship organizations serving {stateName} families — up to $3,400 for married couples filing jointly under the U.S. Treasury's October 2026 proposed regulations (not yet final). <Link href="/federal-tax-credit" className="underline font-semibold">Learn more</Link></p>
             </div>
           </div>
         </div>

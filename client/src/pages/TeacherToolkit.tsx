@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
@@ -270,7 +271,7 @@ export default function TeacherToolkit() {
             {more.map((t) => {
               const Icon = ICONS[t.icon] ?? Sparkles;
               return (
-                <Link key={t.slug} href={t.href}>
+                <Link key={t.slug} href={t.href} onClick={() => trackEvent("toolkit_tool_open", { tool_name: t.slug })}>
                   <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-[#6EBE44] hover:shadow-lg transition cursor-pointer h-full flex gap-4 group">
                     <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${t.color} flex items-center justify-center shrink-0`}>
                       <Icon className="w-5 h-5 text-white" />

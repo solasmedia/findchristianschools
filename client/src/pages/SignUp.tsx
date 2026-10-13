@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 import { CheckCircle, Star, Heart } from "lucide-react";
 
@@ -18,6 +19,7 @@ export default function SignUp() {
 
   const subscribe = trpc.newsletter.subscribe.useMutation({
     onSuccess: () => {
+      trackEvent("user_signup", { user_type: userType, tier });
       setSubmitted(true);
       toast.success("Welcome to the mission!");
     },

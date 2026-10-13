@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -134,6 +135,11 @@ export default function SubmitEnrichment() {
         reference2Contact: isIndividual ? form.reference2Contact || undefined : undefined,
         listingType,
         promoCode: listingType === "premium" && promoCode ? promoCode : undefined,
+      });
+
+      trackEvent("enrichment_submit", {
+        category: form.category,
+        listing_type: listingType,
       });
 
       if (result.checkoutUrl) {

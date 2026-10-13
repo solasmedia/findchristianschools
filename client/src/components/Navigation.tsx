@@ -64,6 +64,7 @@ const navItems: NavItem[] = [
       { href: "/book-club", label: "Book Club" },
       { href: "/traveled", label: "TravelED" },
       { href: "/federal-tax-credit", label: "Scholarship Tax Credit" },
+      { href: "/accreditation-readiness", label: "Accreditation Readiness" },
       { href: "/curriculum-comparison", label: "Curriculum Comparison" },
       { href: "/lesson-planning", label: "Lesson Planning" },
       // { href: "/learning-resources", label: "Learning Resources" }, // Hidden for now

@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useLocation, useSearch, Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import { useAuth } from "@/_core/hooks/useAuth";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -263,6 +264,26 @@ export default function SearchResults() {
     offset,
   };
   const { data, isLoading } = trpc.schools.search.useQuery(searchInput);
+
+  // GA4: record each distinct executed search once its results arrive.
+  // Deduped on the full query string; pagination (offset > 0) doesn't refire.
+  const lastTrackedSearch = useRef("");
+  useEffect(() => {
+    if (!data || offset !== 0 || !searchKey) return;
+    if (searchString === lastTrackedSearch.current) return;
+    lastTrackedSearch.current = searchString;
+    const queryType = params.get("zip")
+      ? "zip"
+      : params.get("city")
+        ? "city"
+        : params.get("state")
+          ? "state"
+          : "text";
+    trackEvent("school_search", {
+      query_type: queryType,
+      results_count: data.total ?? data.schools?.length ?? 0,
+    });
+  }, [data, offset, searchKey, searchString]);
   const { data: courseCategories } = trpc.courses.getCategories.useQuery();
 
   // Accumulate pages as user loads more

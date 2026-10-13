@@ -61,7 +61,22 @@ export function serveStatic(app: Express) {
   // index: false — "/" must fall through to the SEO injection handler below
   // (express.static would otherwise serve the raw index.html for "/",
   // bypassing JSON-LD + server-rendered content injection on the homepage).
-  app.use(express.static(distPath, { index: false }));
+  // Cache policy (site audit B-6): Vite emits content-hashed filenames under
+  // /assets/, so those are immutable for a year. Everything else static
+  // (favicon, logo, llms.txt) revalidates daily; HTML is never served from
+  // here and the SEO handler below marks it no-cache.
+  app.use(
+    express.static(distPath, {
+      index: false,
+      setHeaders: (res, filePath) => {
+        if (filePath.includes(`${path.sep}assets${path.sep}`)) {
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        } else {
+          res.setHeader("Cache-Control", "public, max-age=86400");
+        }
+      },
+    })
+  );
 
   // SEO: serve index.html with per-route head injection.
   // Unknown routes return 404; detail pages get unique titles/meta via DB lookup.
@@ -93,7 +108,7 @@ export function serveStatic(app: Express) {
           description: "The page you are looking for doesn't exist.",
           canonical: `${process.env.SITE_URL || "https://www.findchristianschools.com"}/404`,
         });
-        res.status(404).set({ "Content-Type": "text/html" }).end(html);
+        res.status(404).set({ "Content-Type": "text/html", "Cache-Control": "no-cache" }).end(html);
       } catch {
         res.status(404).sendFile(path.resolve(distPath, "index.html"));
       }
@@ -110,7 +125,7 @@ export function serveStatic(app: Express) {
           description: "The page you are looking for doesn't exist.",
           canonical: `${process.env.SITE_URL || "https://www.findchristianschools.com"}/404`,
         });
-        res.status(404).set({ "Content-Type": "text/html" }).end(html);
+        res.status(404).set({ "Content-Type": "text/html", "Cache-Control": "no-cache" }).end(html);
         return;
       }
       // AI-search visibility: JSON-LD + server-rendered content blocks for
@@ -124,7 +139,7 @@ export function serveStatic(app: Express) {
         console.error("[serveStatic] seo content injection failed:", e);
       }
       const html = injectHead(getTemplate(), meta);
-      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      res.status(200).set({ "Content-Type": "text/html", "Cache-Control": "no-cache" }).end(html);
     } catch (e) {
       console.error("[serveStatic] head injection failed:", e);
       res.sendFile(path.resolve(distPath, "index.html"));

@@ -7,6 +7,7 @@ vi.mock('./_core/notification', () => ({
 
 // Mock the emailNotifications module
 vi.mock('./_core/emailNotifications', () => ({
+  notifyAdminOfSubmission: vi.fn().mockResolvedValue(true),
   notifySchoolListing: vi.fn().mockResolvedValue(true),
   notifyClaimRequest: vi.fn().mockResolvedValue(true),
   notifyRemovalRequest: vi.fn().mockResolvedValue(true),
@@ -24,7 +25,8 @@ import * as path from 'path';
 
 describe('Form Submission Notifications', () => {
   const routersContent = fs.readFileSync(path.join(__dirname, 'routers.ts'), 'utf-8');
-  const dbContent = fs.readFileSync(path.join(__dirname, 'db.ts'), 'utf-8');
+  const enrichmentContent = fs.readFileSync(path.join(__dirname, 'routers-enrichment.ts'), 'utf-8');
+  const toolkitContent = fs.readFileSync(path.join(__dirname, 'routers-toolkit.ts'), 'utf-8');
   const systemRouterContent = fs.readFileSync(path.join(__dirname, '_core/systemRouter.ts'), 'utf-8');
 
   it('should have notifyOwner import in routers.ts', () => {
@@ -39,12 +41,12 @@ describe('Form Submission Notifications', () => {
     expect(routersContent).toContain('School Claimed:');
   });
 
-  it('should notify on job submission (submitJob in db.ts)', () => {
-    expect(dbContent).toContain('New Job Submission');
+  it('should notify on job submission (jobs.submit in routers.ts)', () => {
+    expect(routersContent).toContain('New Job Posting:');
   });
 
-  it('should notify on event submission (submitEvent in db.ts)', () => {
-    expect(dbContent).toContain('New Event Submission');
+  it('should notify on event submission (events.submit in routers.ts)', () => {
+    expect(routersContent).toContain('New Event:');
   });
 
   it('should notify on report listing', () => {
@@ -79,17 +81,17 @@ describe('Form Submission Notifications', () => {
     expect(routersContent).toContain('New Newsletter Subscriber:');
   });
 
-  it('should notify on course submission (db.ts)', () => {
-    expect(dbContent).toContain('New Course Submission');
+  it('should notify on enrichment listing submission (routers-enrichment.ts)', () => {
+    expect(enrichmentContent).toContain('New Enrichment Listing Submitted:');
   });
 
-  it('should notify on class submission (db.ts)', () => {
-    expect(dbContent).toContain('New Class Submission');
+  it('should notify on teacher forum waitlist signup (routers-toolkit.ts)', () => {
+    expect(toolkitContent).toContain('New Teacher Forum founding-teacher signup');
   });
 
   it('should use .catch(() => {}) pattern to prevent notification failures from breaking form submissions', () => {
-    // Count occurrences of notifyOwner with .catch pattern in routers.ts
-    const catchPatterns = routersContent.match(/notifyOwner\([^)]+\)[\s\S]*?\.catch\(\(\) => \{\}\)/g);
+    // Count occurrences of notifyAdminOfSubmission with .catch pattern in routers.ts
+    const catchPatterns = routersContent.match(/notifyAdminOfSubmission\([^)]+\)[\s\S]*?\.catch\(\(\) => \{\}\)/g);
     // Should have at least 6 catch patterns (school submit, school claim, report, claim request, removal request, sponsor, international, course listing, newsletter)
     expect(catchPatterns).not.toBeNull();
     expect(catchPatterns!.length).toBeGreaterThanOrEqual(6);
@@ -114,17 +116,13 @@ describe('Form Submission Notifications', () => {
       expect(routersContent).toContain(notification);
     }
 
-    // db.ts notifications
-    const dbNotifications = [
-      'New Job Submission',
-      'New Event Submission',
-      'New Course Submission',
-      'New Class Submission',
-    ];
+    // job + event notifications live in routers.ts
+    expect(routersContent).toContain('New Job Posting:');
+    expect(routersContent).toContain('New Event:');
 
-    for (const notification of dbNotifications) {
-      expect(dbContent).toContain(notification);
-    }
+    // enrichment + toolkit notifications
+    expect(enrichmentContent).toContain('New Enrichment Listing Submitted:');
+    expect(toolkitContent).toContain('New Teacher Forum founding-teacher signup');
 
     // systemRouter notifications
     expect(systemRouterContent).toContain('New Contact:');

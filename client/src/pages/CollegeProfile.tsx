@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ListingDisclaimer, SourceAttribution, ListingActions } from "@/components/ListingDisclaimer";
 import { JsonLd, collegeJsonLd } from "@/components/SeoJsonLd";
-import { GraduationCap, MapPin, Phone, Globe, Users, Church, Star, ExternalLink, AlertTriangle, ChevronLeft } from "lucide-react";
+import { GraduationCap, MapPin, Phone, Globe, Users, Church, Star, ExternalLink, AlertTriangle, ChevronLeft, DollarSign, Percent, Award } from "lucide-react";
 
 export default function CollegeProfile() {
   const params = useParams();
@@ -163,6 +163,39 @@ export default function CollegeProfile() {
                   <SourceAttribution source={college.source} sourceUrl={college.sourceUrl} />
                 </div>
               </div>
+
+              {/* College Facts (IPEDS) — rendered only when federal data was matched */}
+              {(college.tuition != null || college.graduationRate != null || college.highestDegreeOffered) && (
+                <div className="bg-white rounded-xl border border-gray-100 p-6">
+                  <h2 className="text-lg font-semibold text-[#002855] mb-4">College Facts</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {college.tuition != null && (
+                      <div className="p-3 rounded-lg bg-gray-50">
+                        <DollarSign className="w-5 h-5 text-[#0055A4] mb-1" />
+                        <p className="text-xs text-gray-500">Published Tuition &amp; Fees</p>
+                        <p className="text-sm font-semibold text-[#002855]">${Number(college.tuition).toLocaleString()} <span className="font-normal text-gray-500">/ year</span></p>
+                      </div>
+                    )}
+                    {college.graduationRate != null && (
+                      <div className="p-3 rounded-lg bg-gray-50">
+                        <Percent className="w-5 h-5 text-[#0055A4] mb-1" />
+                        <p className="text-xs text-gray-500">Graduation Rate</p>
+                        <p className="text-sm font-semibold text-[#002855]">{Math.round(Number(college.graduationRate))}% <span className="font-normal text-gray-500">within 6 years</span></p>
+                      </div>
+                    )}
+                    {college.highestDegreeOffered && (
+                      <div className="p-3 rounded-lg bg-gray-50">
+                        <Award className="w-5 h-5 text-[#0055A4] mb-1" />
+                        <p className="text-xs text-gray-500">Highest Degree Offered</p>
+                        <p className="text-sm font-semibold text-[#002855]">{college.highestDegreeOffered}</p>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400 mt-4">
+                    Source: IPEDS {college.ipedsDataYear || "2023-24"} via NCES (U.S. Department of Education). Tuition is the published undergraduate tuition and fees for the year; graduation rate is the share of the entering cohort completing within 150% of normal time.
+                  </p>
+                </div>
+              )}
 
               {/* Pending Verification Notice */}
               {listingStatus === 'pending' && (

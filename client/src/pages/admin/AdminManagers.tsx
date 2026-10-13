@@ -861,6 +861,75 @@ export function SubmissionsQueue() {
 
 
 // Contact Messages Manager
+export function SchoolInquiries() {
+  const { data: inquiries, isLoading } = trpc.schools.getInquiries.useQuery({});
+  const utils = trpc.useUtils();
+
+  const updateInquiry = trpc.schools.updateInquiry.useMutation({
+    onSuccess: () => {
+      toast.success("Inquiry updated!");
+      utils.schools.getInquiries.invalidate();
+    },
+  });
+
+  const deleteInquiry = trpc.schools.deleteInquiry.useMutation({
+    onSuccess: () => {
+      toast.success("Inquiry deleted!");
+      utils.schools.getInquiries.invalidate();
+    },
+  });
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <h3 className="text-lg font-bold text-[#002855]">School Inquiries</h3>
+        <p className="text-sm text-gray-600 mt-0.5">Parent questions submitted from school profile pages. “Not delivered” means the school has not claimed its listing — a claim outreach lead.</p>
+      </div>
+      {isLoading ? (
+        <p className="text-sm text-gray-500 text-center py-6">Loading inquiries...</p>
+      ) : !inquiries || inquiries.length === 0 ? (
+        <div className="text-center py-8 bg-white rounded-xl border border-gray-100">
+          <Mail className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+          <p className="text-gray-600 font-medium">No school inquiries yet</p>
+          <p className="text-sm text-gray-500">Questions parents ask from school profiles will appear here.</p>
+        </div>
+      ) : (
+        inquiries.map((inq: any) => (
+          <div key={inq.id} className={`bg-white rounded-xl border p-5 ${inq.status === 'new' ? 'border-blue-200 bg-blue-50' : 'border-gray-100'}`}>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-[#002855] text-sm">{inq.schoolName || `School #${inq.schoolId}`}</span>
+                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${inq.deliveredToSchool ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {inq.deliveredToSchool ? 'Delivered to school' : 'Not delivered — unclaimed'}
+                  </span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 capitalize">{inq.status}</span>
+                </div>
+                <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">{inq.message}</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  {inq.parentName} · {inq.parentEmail}
+                  {inq.parentPhone ? ` · ${inq.parentPhone}` : ''}
+                  {inq.childGrade ? ` · Grade: ${inq.childGrade}` : ''}
+                  {' · '}{new Date(inq.createdAt).toLocaleString()}
+                </p>
+              </div>
+              <div className="flex flex-col gap-1.5 shrink-0">
+                {inq.status === 'new' && (
+                  <Button size="sm" variant="outline" className="text-xs" onClick={() => updateInquiry.mutate({ id: inq.id, status: 'read' })}>Mark Read</Button>
+                )}
+                {inq.status !== 'responded' && (
+                  <Button size="sm" variant="outline" className="text-xs" onClick={() => updateInquiry.mutate({ id: inq.id, status: 'responded' })}>Mark Responded</Button>
+                )}
+                <Button size="sm" variant="outline" className="text-xs text-red-600 border-red-200 hover:bg-red-50" onClick={() => deleteInquiry.mutate({ id: inq.id })}>Delete</Button>
+              </div>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
 export function ContactMessages() {
   const [filter, setFilter] = useState<'all' | 'new' | 'read' | 'responded'>('new');
   const { data: messages, isLoading } = trpc.system.getContactMessages.useQuery({ status: filter === 'all' ? undefined : filter });
@@ -943,6 +1012,8 @@ export function ContactMessages() {
           <p className="text-sm text-gray-600 mt-1">All contact form submissions</p>
         </div>
       </div>
+
+      <SchoolInquiries />
 
       <div className="flex gap-2 items-center flex-wrap">
         {['all', 'new', 'read', 'responded'].map((status) => (

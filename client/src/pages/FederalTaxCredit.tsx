@@ -77,7 +77,7 @@ export default function FederalTaxCredit() {
         {
           "@type": "Question",
           "name": "What is the Federal Scholarship Tax Credit?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The Education Freedom Tax Credit (also called the Federal Scholarship Tax Credit) is a federal program signed into law July 4, 2025, that lets taxpayers donate up to $1,700 per year ($3,400 for married couples) to Scholarship Granting Organizations and receive a dollar-for-dollar federal tax credit. The program takes effect January 1, 2027." }
+          "acceptedAnswer": { "@type": "Answer", "text": "The Education Freedom Tax Credit (also called the Federal Scholarship Tax Credit) is a federal program signed into law July 4, 2025, that lets taxpayers donate up to $1,700 per year to Scholarship Granting Organizations and receive a dollar-for-dollar federal tax credit. Under the U.S. Treasury's October 2026 proposed regulations (not yet final), married couples filing jointly can donate up to $3,400. The program takes effect January 1, 2027." }
         },
         {
           "@type": "Question",

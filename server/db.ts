@@ -120,6 +120,7 @@ import {
   claimRequests,
   removalRequests,
   contactMessages,
+  schoolInquiries,
   pageViews,
   funnelEvents,
   colleges,
@@ -439,6 +440,12 @@ export async function searchSchools(params: SearchSchoolsParams) {
 export async function getSchoolBySlug(slug: string) {
   const db = await conn();
   const rows = await db.select().from(schools).where(eq(schools.slug, slug)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function getSchoolById(id: number) {
+  const db = await conn();
+  const rows = await db.select().from(schools).where(eq(schools.id, id)).limit(1);
   return rows[0] ?? null;
 }
 
@@ -1785,6 +1792,79 @@ export async function updateContactMessage(
 export async function deleteContactMessage(id: number) {
   const db = await conn();
   await db.delete(contactMessages).where(eq(contactMessages.id, id));
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// School inquiries (parent questions submitted from school profiles)
+// ---------------------------------------------------------------------------
+
+type SchoolInquiryStatus = typeof schoolInquiries.$inferSelect.status;
+
+export async function createSchoolInquiry(data: {
+  schoolId: number;
+  parentName: string;
+  parentEmail: string;
+  parentPhone?: string;
+  childGrade?: string;
+  message: string;
+  deliveredToSchool?: boolean;
+}) {
+  const db = await conn();
+  const result = await db.insert(schoolInquiries).values({
+    schoolId: data.schoolId,
+    parentName: data.parentName,
+    parentEmail: data.parentEmail,
+    parentPhone: data.parentPhone,
+    childGrade: data.childGrade,
+    message: data.message,
+    status: "new",
+    deliveredToSchool: data.deliveredToSchool ?? false,
+  });
+  return { success: true, id: Number(result[0].insertId) };
+}
+
+export async function getSchoolInquiries(status?: string) {
+  const db = await conn();
+  return db
+    .select({
+      id: schoolInquiries.id,
+      schoolId: schoolInquiries.schoolId,
+      parentName: schoolInquiries.parentName,
+      parentEmail: schoolInquiries.parentEmail,
+      parentPhone: schoolInquiries.parentPhone,
+      childGrade: schoolInquiries.childGrade,
+      message: schoolInquiries.message,
+      status: schoolInquiries.status,
+      deliveredToSchool: schoolInquiries.deliveredToSchool,
+      createdAt: schoolInquiries.createdAt,
+      updatedAt: schoolInquiries.updatedAt,
+      schoolName: schools.name,
+      schoolSlug: schools.slug,
+    })
+    .from(schoolInquiries)
+    .leftJoin(schools, eq(schoolInquiries.schoolId, schools.id))
+    .where(status ? eq(schoolInquiries.status, status as SchoolInquiryStatus) : undefined)
+    .orderBy(desc(schoolInquiries.createdAt));
+}
+
+export async function updateSchoolInquiry(
+  id: number,
+  data: { status?: string; deliveredToSchool?: boolean },
+) {
+  const db = await conn();
+  const patch: Partial<typeof schoolInquiries.$inferInsert> = {};
+  if (data.status !== undefined) patch.status = data.status as SchoolInquiryStatus;
+  if (data.deliveredToSchool !== undefined) patch.deliveredToSchool = data.deliveredToSchool;
+  if (Object.keys(patch).length > 0) {
+    await db.update(schoolInquiries).set(patch).where(eq(schoolInquiries.id, id));
+  }
+  return { success: true };
+}
+
+export async function deleteSchoolInquiry(id: number) {
+  const db = await conn();
+  await db.delete(schoolInquiries).where(eq(schoolInquiries.id, id));
   return { success: true };
 }
 

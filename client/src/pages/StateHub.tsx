@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { GraduationCap, MapPin, BookOpen, Scale, Award, ChevronRight, ExternalLink, TrendingUp, Users, Map, Search, AlertCircle, Building2, Bird, CalendarCheck } from "lucide-react";
 import { Link } from "wouter";
 import InviteSchoolCard from "@/components/InviteSchoolCard";
+import SchoolChoiceBlock from "@/components/SchoolChoiceBlock";
 import { getProgramsByState } from "@shared/schoolChoicePrograms";
 
 // Federal Scholarship Tax Credit participating states.
@@ -549,6 +550,9 @@ export default function StateHub() {
               </p>
             </div>
           )}
+
+          {/* School Choice Programs (verified data: shared/schoolChoice.ts) */}
+          <SchoolChoiceBlock stateName={stateName} />
 
           {/* Resources for this state */}
           {resourceData?.resources && resourceData.resources.length > 0 && (

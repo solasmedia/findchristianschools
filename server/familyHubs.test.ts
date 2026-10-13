@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   HOMESCHOOL_TOOL_PICKS,
   homeschoolTools,
+  PARENT_TOOL_PICKS,
+  parentTools,
   HOMESCHOOL_BLOG_CATEGORIES,
   PARENT_BLOG_CATEGORIES,
   HOMESCHOOL_ACTIVITY_PICKS,
@@ -46,6 +48,33 @@ describe("Homeschool tool picks (registry reuse)", () => {
     const tools = homeschoolTools();
     expect(tools[0].slug).toBe("worksheet-generator");
     expect(tools[1].slug).toBe("lesson-planner");
+  });
+});
+
+describe("Parent tool picks (Family Toolbox)", () => {
+  it("every pick references a real tool in the Teacher Toolkit registry", () => {
+    const registrySlugs = new Set(TEACHER_TOOLS.map((t) => t.slug));
+    for (const pick of PARENT_TOOL_PICKS) {
+      expect(registrySlugs.has(pick.slug), pick.slug).toBe(true);
+    }
+  });
+
+  it("resolves every pick with a parent-voice payoff and a real route", () => {
+    const tools = parentTools();
+    expect(tools).toHaveLength(PARENT_TOOL_PICKS.length);
+    for (const [i, tool] of tools.entries()) {
+      expect(tool.payoff).toBe(PARENT_TOOL_PICKS[i].payoff);
+      expect(tool.payoff.length, tool.slug).toBeGreaterThan(40);
+      expect(matchRoute(tool.href).kind, `${tool.slug} -> ${tool.href}`).toBe("static");
+    }
+  });
+
+  it("leads with the worksheet generator and includes the lesson planner", () => {
+    const tools = parentTools();
+    expect(tools[0].slug).toBe("worksheet-generator");
+    expect(tools.some((t) => t.slug === "lesson-planner")).toBe(true);
+    expect(tools.some((t) => t.slug === "bible-verse-maker")).toBe(true);
+    expect(tools.some((t) => t.slug === "flashcards")).toBe(true);
   });
 });
 

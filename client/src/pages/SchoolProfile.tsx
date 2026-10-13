@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -253,7 +254,7 @@ export default function SchoolProfile() {
                         View Premium Options
                       </Button>
                     </Link>
-                    <Link href={`/submit?claim=${school.slug}`}>
+                    <Link href={`/submit?claim=${school.slug}`} onClick={() => trackEvent("claim_listing_click", { listing_type: "school" })}>
                       <Button variant="outline" className="border-white text-white hover:bg-white/10 px-6 py-3 text-base">
                         Claim This School
                       </Button>

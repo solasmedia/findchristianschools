@@ -250,7 +250,7 @@ export default function TeacherToolkit() {
         tagline="Every free classroom tool on the site — in one place, made to give you back your evenings."
         chips={[
           `${tools.length} free classroom tools`,
-          ...(data ? [`${data.blogPostCount} teacher articles`, `${data.openJobCount} open teaching jobs`] : []),
+          ...(data ? [`${data.blogPostCount} teacher articles`, data.openJobCount > 0 ? `${data.openJobCount} open teaching jobs` : "Job board: post a teaching job"] : []),
         ]}
       />
 

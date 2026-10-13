@@ -118,6 +118,37 @@ export const schools = mysqlTable("schools", {
 export type School = typeof schools.$inferSelect;
 export type InsertSchool = typeof schools.$inferInsert;
 
+// NCES Private School Universe Survey (PSS) facts, matched to a directory
+// school by server/scripts/importNcesPss.ts. Kept in a side table (never
+// written into `schools`) so imported federal data stays separate from
+// school-claimed data, is fully reversible, and every row carries its match
+// score/method for audit. A row exists ONLY for a high-confidence match;
+// review-band and unmatched schools have no row and show no panel.
+export const schoolNcesFacts = mysqlTable("school_nces_facts", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolId: int("schoolId").notNull().unique(), // schools.id
+  ncesSchoolId: varchar("ncesSchoolId", { length: 16 }).notNull(), // PSS PPIN
+  surveyYear: varchar("surveyYear", { length: 16 }).notNull().default("2023-24"),
+  ncesSchoolName: varchar("ncesSchoolName", { length: 255 }), // PINST as reported to NCES
+  totalEnrollment: int("totalEnrollment"), // NUMSTUDS (K-12 + ungraded)
+  fteTeachers: decimal("fteTeachers", { precision: 8, scale: 2 }), // NUMTEACH
+  studentTeacherRatio: decimal("studentTeacherRatio", { precision: 6, scale: 2 }), // STTCH_RT
+  religiousOrientation: varchar("religiousOrientation", { length: 128 }), // ORIENT label
+  schoolTypology: varchar("schoolTypology", { length: 128 }), // TYPOLOGY label
+  associations: text("associations"), // JSON array of association names (PSS Q15, flag = 1)
+  gradeEnrollment: text("gradeEnrollment"), // JSON object {gradeLabel: count}, reported grades only
+  matchScore: decimal("matchScore", { precision: 4, scale: 3 }),
+  matchMethod: varchar("matchMethod", { length: 16 }), // 'zip' | 'city'
+  sourceName: varchar("sourceName", { length: 255 })
+    .notNull()
+    .default("NCES Private School Universe Survey (PSS) 2023-24"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SchoolNcesFact = typeof schoolNcesFacts.$inferSelect;
+export type InsertSchoolNcesFact = typeof schoolNcesFacts.$inferInsert;
+
 export const resources = mysqlTable("resources", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),

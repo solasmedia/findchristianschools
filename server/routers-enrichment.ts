@@ -19,7 +19,7 @@ import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "./rateLimit";
-import { notifyOwner } from "./_core/notification";
+import { notifyAdminOfSubmission } from "./_core/emailNotifications";
 import { createEnrichmentCheckout } from "./stripe/checkout";
 import {
   searchEnrichmentListings,
@@ -251,9 +251,16 @@ export const enrichmentRouter = router({
 
       const listingId = created.id;
 
-      await notifyOwner({
-        title: `New Enrichment Listing Submitted: ${input.name}`,
-        content: `A new Enrichment & Activities listing has been submitted and is pending review.\n\nListing: ${input.name}\nCategory: ${input.category}\nLister type: ${input.listerType}\nCity: ${input.city}, ${input.state}\nTier: ${input.listingType || "free"}\nVerification: ${isIndividual ? "ID & background check (individual)" : "Documents — EIN + legal name (business/org)"}\n\nPlease review in the Admin Dashboard (Enrichment tab).`,
+      await notifyAdminOfSubmission(`New Enrichment Listing Submitted: ${input.name}`, {
+        Listing: input.name,
+        Category: input.category,
+        "Lister type": input.listerType,
+        City: input.city,
+        State: input.state,
+        Tier: input.listingType || "free",
+        Verification: isIndividual ? "ID & background check (individual)" : "Documents — EIN + legal name (business/org)",
+        Contact: input.contactName,
+        Email: input.contactEmail || input.email,
       }).catch(() => {});
 
       // ---- Premium tier: 100% promo activates free; otherwise Stripe ----
@@ -374,9 +381,13 @@ export const enrichmentRouter = router({
         reporterName: input.reporterName,
         reporterEmail: input.reporterEmail || undefined,
       });
-      await notifyOwner({
-        title: `Enrichment Listing Report: ${input.listingName || `Listing #${input.listingId}`}`,
-        content: `An Enrichment & Activities listing has been reported.\n\nListing: ${input.listingName || `ID ${input.listingId}`}\nReason: ${input.reason}\nDetails: ${input.details || "None provided"}\nReporter: ${input.reporterName || "Anonymous"} (${input.reporterEmail || "no email"})\n\nREMOVAL-FIRST POLICY: if this report is credible, suspend the listing first and review after. Please review in the Admin Dashboard (Enrichment tab).`,
+      await notifyAdminOfSubmission(`Enrichment Listing Report: ${input.listingName || `Listing #${input.listingId}`}`, {
+        Listing: input.listingName || `ID ${input.listingId}`,
+        Reason: input.reason,
+        Details: input.details || "None provided",
+        Reporter: input.reporterName || "Anonymous",
+        Email: input.reporterEmail || "no email",
+        Note: "REMOVAL-FIRST POLICY: if this report is credible, suspend the listing first and review after.",
       }).catch(() => {});
       return { success: true };
     }),

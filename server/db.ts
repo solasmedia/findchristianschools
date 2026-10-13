@@ -103,6 +103,7 @@ import * as schema from "../drizzle/schema";
 import {
   users,
   schools,
+  schoolNcesFacts,
   resources,
   jobs,
   events,
@@ -428,6 +429,19 @@ export async function searchSchools(params: SearchSchoolsParams) {
 export async function getSchoolBySlug(slug: string) {
   const db = await conn();
   const rows = await db.select().from(schools).where(eq(schools.slug, slug)).limit(1);
+  return rows[0] ?? null;
+}
+
+// NCES PSS facts for a school, or null when no high-confidence match exists.
+// The profile page renders its "School Facts" panel only when this returns a
+// row — unmatched schools show nothing rather than an estimate.
+export async function getSchoolNcesFacts(schoolId: number) {
+  const db = await conn();
+  const rows = await db
+    .select()
+    .from(schoolNcesFacts)
+    .where(eq(schoolNcesFacts.schoolId, schoolId))
+    .limit(1);
   return rows[0] ?? null;
 }
 

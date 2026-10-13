@@ -11,8 +11,8 @@
  *
  * TOOLS: both hubs reuse the Teacher Toolkit registry
  * (shared/teacherToolkit.ts) as the single source of truth for what the
- * tools ARE. This file only chooses the homeschool-relevant subset and
- * re-voices each payoff for a parent teaching at the kitchen table.
+ * tools ARE. This file only chooses each hub's subset (homeschool and
+ * parent picks) and re-voices each payoff for the parent reading it.
  */
 
 import { TEACHER_TOOLS, type TeacherTool } from "./teacherToolkit";
@@ -97,6 +97,60 @@ export function homeschoolTools(): TeacherTool[] {
   const bySlug = new Map(TEACHER_TOOLS.map((t) => [t.slug, t]));
   const out: TeacherTool[] = [];
   for (const pick of HOMESCHOOL_TOOL_PICKS) {
+    const tool = bySlug.get(pick.slug);
+    if (tool) out.push({ ...tool, payoff: pick.payoff });
+  }
+  return out;
+}
+
+/* ------------------------------------------------------------------ */
+/* Parent tools — registry subset for the Playbook's Family Toolbox    */
+/*                                                                     */
+/* The Parent Playbook is a toolbox too, not just electives: these     */
+/* are the registry tools a parent actually reaches for — homework     */
+/* practice, memory verses, study decks — with payoffs voiced for a    */
+/* parent helping at home, not teaching a classroom.                  */
+/* ------------------------------------------------------------------ */
+
+/** Display order = usefulness to a parent, not alphabetical. */
+export const PARENT_TOOL_PICKS: HubToolPick[] = [
+  {
+    slug: "worksheet-generator",
+    payoff:
+      "Turn tonight's word list into a printable word search, scramble, or worksheet — with answer key — in under a minute.",
+  },
+  {
+    slug: "flashcards",
+    payoff:
+      "Build a study deck once — your kids review it on screen, then print the same deck for the car or the kitchen table.",
+  },
+  {
+    slug: "bible-verse-maker",
+    payoff:
+      "This week's memory verse becomes copywork, trace sheets, and a word search in one click — family devotions, done for you.",
+  },
+  {
+    slug: "spelling-worksheets",
+    payoff:
+      "Paste the spelling list from school and print the practice — spelling handled for the whole week in seconds.",
+  },
+  {
+    slug: "math-worksheets",
+    payoff:
+      "Fresh math practice at exactly your child's level — no workbook gaps, and the answer key does the checking.",
+  },
+  {
+    slug: "lesson-planner",
+    payoff:
+      "Plan a week of summer learning or after-school practice — subjects, goals, and Scripture in one simple grid.",
+  },
+];
+
+/** Registry entries for the parent picks, with parent-voice payoffs. */
+export function parentTools(): TeacherTool[] {
+  const bySlug = new Map(TEACHER_TOOLS.map((t) => [t.slug, t]));
+  const out: TeacherTool[] = [];
+  for (const pick of PARENT_TOOL_PICKS) {
     const tool = bySlug.get(pick.slug);
     if (tool) out.push({ ...tool, payoff: pick.payoff });
   }

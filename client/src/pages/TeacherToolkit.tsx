@@ -8,13 +8,17 @@ import {
   featuredTools,
   moreTools,
   TEACHER_TOOLKIT_URL,
-  type TeacherTool,
 } from "@shared/teacherToolkit";
+import {
+  HubHeaderBand,
+  HubToolboxHeader,
+  HubToolLauncherCard,
+} from "@/components/HubCards";
 import {
   Printer, CalendarRange, ScrollText, Calculator, SpellCheck, PenLine,
   BookOpen, BookMarked, Layers, GraduationCap, Map, DollarSign,
-  ArrowRight, Heart, Briefcase, CalendarDays, Newspaper, Users,
-  School, Share2, Check, Sparkles, Clock, MapPin, Award,
+  ArrowRight, Briefcase, CalendarDays, Newspaper, Users,
+  School, Share2, Check, Sparkles, Clock, MapPin, Award, Wrench,
 } from "lucide-react";
 
 const ICONS: Record<string, typeof Printer> = {
@@ -47,31 +51,6 @@ const EVENT_CATEGORY_LABELS: Record<string, string> = {
 function formatDate(d: any) {
   if (!d) return "";
   return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-}
-
-function ToolCard({ tool }: { tool: TeacherTool }) {
-  const Icon = ICONS[tool.icon] ?? Sparkles;
-  return (
-    <Link href={tool.href}>
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-[#6EBE44] hover:shadow-xl transition-all cursor-pointer h-full group flex flex-col">
-        <div className="flex items-start justify-between mb-4">
-          <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center shadow-sm`}>
-            <Icon className="w-6 h-6 text-white" />
-          </div>
-          {tool.tag && (
-            <span className="text-xs font-semibold bg-[#6EBE44]/10 text-[#2d6a1e] px-2.5 py-1 rounded-full">{tool.tag}</span>
-          )}
-        </div>
-        <h3 className="font-bold text-[#002855] mb-1.5 flex items-center gap-1.5">
-          {tool.title}
-          <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
-        </h3>
-        <p className="text-sm font-medium text-gray-800 leading-relaxed mb-1.5">{tool.payoff}</p>
-        <p className="text-sm text-gray-500 leading-relaxed">{tool.blurb}</p>
-        <span className="mt-auto pt-4 text-sm font-semibold text-[#0055A4] group-hover:text-[#6EBE44] transition">Launch tool →</span>
-      </div>
-    </Link>
-  );
 }
 
 function EventCard({ event }: { event: any }) {
@@ -257,55 +236,32 @@ export default function TeacherToolkit() {
     }
   };
 
-  const jumpChips = [
-    { href: "#tools", label: "Tools" },
-    { href: "#blog", label: "Teacher Blog" },
-    { href: "#jobs", label: "Jobs" },
-    { href: "#events", label: "Events for Teachers" },
-    { href: "#pd", label: "Professional Development" },
-    { href: "#forum", label: "Teacher Forum" },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-[#fafbfc]">
       <Navigation />
 
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#00509e] py-12 sm:py-16">
-        <div className="container max-w-6xl px-4 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-blue-100 text-xs font-semibold px-4 py-2 rounded-full mb-5">
-            <Heart className="w-3.5 h-3.5 text-[#6EBE44]" /> A dashboard built for Christian educators
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-4">Teacher Toolkit</h1>
-          <p className="text-blue-100/90 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Every free tool on FindChristianSchools.com, in one place — made to give you back
-            your evenings. No account. No catch. Just tools that earn their keep.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 mt-7">
-            <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">{tools.length} free classroom tools</span>
-            {data && <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">{data.blogPostCount} teacher articles</span>}
-            {data && <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">{data.openJobCount} open teaching jobs</span>}
-          </div>
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {jumpChips.map((c) => (
-              <a key={c.href} href={c.href} className="text-xs font-semibold text-blue-100 border border-white/25 hover:bg-white/10 px-3.5 py-1.5 rounded-full transition">
-                {c.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* App-style header band — compact, so the toolbox starts on the first screen */}
+      <HubHeaderBand
+        gradient="from-[#002855] via-[#003d7a] to-[#00509e]"
+        icon={Wrench}
+        eyebrow="FindChristianSchools.com"
+        name="Teacher Toolkit"
+        tagline="Every free classroom tool on the site — in one place, made to give you back your evenings."
+        chips={[
+          `${tools.length} free classroom tools`,
+          ...(data ? [`${data.blogPostCount} teacher articles`, `${data.openJobCount} open teaching jobs`] : []),
+        ]}
+      />
 
-      <div className="container max-w-6xl px-4 py-12 flex-1 w-full mx-auto">
-        {/* Tools grid */}
+      <div className="container max-w-6xl px-4 pt-7 sm:pt-9 pb-12 flex-1 w-full mx-auto">
+        {/* THE TOOLBOX — first and dominant: big app-launcher tiles */}
         <section id="tools" className="mb-14 scroll-mt-24">
-          <SectionHeader
-            icon={Sparkles} iconBg="bg-[#6EBE44]/10 text-[#2d6a1e]"
-            title="Classroom Tools"
-            sub="Ranked by the time they give back — every one free, no account needed"
+          <HubToolboxHeader
+            title="Your Toolbox"
+            sub="Tap a tool and go — ranked by the time they give back. Every one free, no account needed."
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tools.map((t) => <ToolCard key={t.slug} tool={t} />)}
+            {tools.map((t) => <HubToolLauncherCard key={t.slug} tool={t} />)}
           </div>
 
           {/* More resources */}

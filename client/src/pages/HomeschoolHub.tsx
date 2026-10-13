@@ -9,14 +9,15 @@ import {
 } from "@shared/familyHubs";
 import {
   HubSectionHeader,
-  HubEmptyState,
-  HubToolCard,
+  HubHeaderBand,
+  HubToolboxHeader,
+  HubToolLauncherCard,
   HubBlogCard,
   HubEnrichmentCard,
   HubFamilyStrip,
 } from "@/components/HubCards";
 import {
-  Coffee, Sparkles, BookOpen, Compass, Scale, Map, Heart,
+  Coffee, BookOpen, Compass, Scale, Map, Heart,
   ArrowRight, Library, Sunrise,
 } from "lucide-react";
 
@@ -41,53 +42,30 @@ export default function HomeschoolHub() {
     window.scrollTo(0, 0);
   }, []);
 
-  const jumpChips = [
-    { href: "#tools", label: "Tools" },
-    { href: "#morning-basket", label: "The Morning Basket" },
-    { href: "#curriculum", label: "Curriculum" },
-    { href: "#activities", label: "Family Activities" },
-    { href: "#getting-started", label: "Getting Started" },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-[#fffaf2]">
       <Navigation />
 
-      {/* Hero — warm kitchen-table tones, same dashboard shape as the Toolkit */}
-      <section className="bg-gradient-to-br from-[#7c3f06] via-[#b45309] to-[#d97706] py-12 sm:py-16">
-        <div className="container max-w-6xl px-4 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-amber-50 text-xs font-semibold px-4 py-2 rounded-full mb-5">
-            <Coffee className="w-3.5 h-3.5 text-amber-200" /> A homeschool hub by FindChristianSchools.com
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-4">The Kitchen Table</h1>
-          <p className="text-amber-50/90 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Where homeschool days begin. The tools, ideas, and local community for Christian
-            families teaching at home — in one place, free, in language that sounds like your life.
-          </p>
-          <div className="flex flex-wrap justify-center gap-3 mt-7">
-            <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">{tools.length} free tools for your table</span>
-            <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">No account needed</span>
-          </div>
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {jumpChips.map((c) => (
-              <a key={c.href} href={c.href} className="text-xs font-semibold text-amber-50 border border-white/25 hover:bg-white/10 px-3.5 py-1.5 rounded-full transition">
-                {c.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* App-style header band — warm kitchen-table tones, compact like the Toolkit's */}
+      <HubHeaderBand
+        gradient="from-[#7c3f06] via-[#b45309] to-[#d97706]"
+        icon={Coffee}
+        eyebrow="FindChristianSchools.com · Homeschool Hub"
+        name="The Kitchen Table"
+        tagline="Where homeschool days begin — free tools, ideas, and local community for Christian families teaching at home."
+        chips={[`${tools.length} free tools for your table`, "No account needed"]}
+      />
 
-      <div className="container max-w-6xl px-4 py-12 flex-1 w-full mx-auto">
-        {/* Tools */}
+      <div className="container max-w-6xl px-4 pt-7 sm:pt-9 pb-12 flex-1 w-full mx-auto">
+        {/* THE TOOLBOX — first and dominant: big app-launcher tiles */}
         <section id="tools" className="mb-14 scroll-mt-24">
-          <HubSectionHeader
-            icon={Sparkles} iconBg="bg-amber-500/10 text-amber-600"
-            title="Tools for Your Table"
-            sub="The same free generators teachers love — picked and worded for homeschool days"
+          <HubToolboxHeader
+            title="Your Toolbox"
+            sub="Tap a tool and go — the same free generators teachers love, picked and worded for homeschool days."
+            iconBg="bg-[#b45309]"
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {tools.map((t) => <HubToolCard key={t.slug} tool={t} ctaLabel="Open tool" />)}
+            {tools.map((t) => <HubToolLauncherCard key={t.slug} tool={t} />)}
           </div>
         </section>
 

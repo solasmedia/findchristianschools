@@ -6,13 +6,14 @@
  * padding. If you restyle one dashboard, restyle them all — the three
  * pages are one family.
  */
+import type { ReactNode } from "react";
 import { Link } from "wouter";
 import type { TeacherTool } from "@shared/teacherToolkit";
 import type { HubEnrichmentCard } from "@shared/familyHubs";
 import {
   Printer, CalendarRange, ScrollText, Calculator, SpellCheck, PenLine,
   BookOpen, BookMarked, Layers, GraduationCap, Map, DollarSign,
-  ArrowRight, Sparkles, CalendarDays, Clock, MapPin,
+  ArrowRight, Sparkles, CalendarDays, Clock, MapPin, Wrench,
   Presentation, Trophy, Tent, Sun, Users, Music, Library,
 } from "lucide-react";
 
@@ -57,6 +58,99 @@ export const EVENT_CATEGORY_LABELS: Record<string, string> = {
 export function formatHubDate(d: any) {
   if (!d) return "";
   return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+/**
+ * App-style header band for the hub pages. This replaces the old tall
+ * marketing hero: a compact title bar (hub icon + hub name, like an app
+ * title bar) + ONE line of framing + live stat chips, so the toolbox
+ * below it starts inside the first phone screen and a visitor instantly
+ * knows they're inside a toolkit, not on a landing page.
+ */
+export function HubHeaderBand({ gradient, icon: Icon, eyebrow, name, tagline, chips, children }: {
+  gradient: string;
+  icon: any;
+  eyebrow: string;
+  name: string;
+  tagline: string;
+  chips?: string[];
+  children?: ReactNode;
+}) {
+  return (
+    <section className={`bg-gradient-to-br ${gradient}`}>
+      <div className="container max-w-6xl px-4 py-4 sm:py-6">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/15 border border-white/25 flex items-center justify-center shrink-0">
+            <Icon className="w-6 h-6 text-white" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-white/70 leading-none">{eyebrow}</p>
+            <h1 className="text-[26px] sm:text-3xl font-bold text-white leading-tight">{name}</h1>
+          </div>
+        </div>
+        <p className="text-white/85 text-sm sm:text-base mt-2 max-w-2xl leading-snug">{tagline}</p>
+        {children}
+        {chips && chips.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3">
+            {chips.map((chip) => (
+              <span key={chip} className="bg-white/10 text-white text-xs font-semibold px-3 py-1.5 rounded-full">{chip}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/** Bold heading for the toolbox — the first, dominant section on every hub. */
+export function HubToolboxHeader({ title, sub, iconBg = "bg-[#002855]" }: {
+  title: string;
+  sub: string;
+  iconBg?: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 mb-5">
+      <div className={`w-11 h-11 rounded-xl ${iconBg} flex items-center justify-center shrink-0 shadow-sm`}>
+        <Wrench className="w-5 h-5 text-white" />
+      </div>
+      <div>
+        <h2 className="text-[26px] sm:text-3xl font-extrabold text-[#002855] leading-none">{title}</h2>
+        <p className="text-sm text-gray-500 mt-1.5">{sub}</p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * App-launcher tool tile: oversized icon, tool name, payoff, and a solid
+ * colored "Open tool" bar across the bottom — built to be impossible to
+ * mistake for an article or marketing card on a phone screen.
+ */
+export function HubToolLauncherCard({ tool }: { tool: TeacherTool }) {
+  const Icon = ICONS[tool.icon] ?? Sparkles;
+  return (
+    <Link href={tool.href}>
+      <div className="bg-white rounded-2xl border-2 border-gray-200 hover:border-[#6EBE44] hover:shadow-xl active:scale-[0.99] transition-all cursor-pointer h-full group flex flex-col overflow-hidden">
+        <div className="p-5 pb-4 flex flex-col flex-1">
+          <div className="flex items-start justify-between mb-3.5">
+            <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center shadow-md`}>
+              <Icon className="w-9 h-9 text-white" />
+            </div>
+            {tool.tag && (
+              <span className="text-xs font-semibold bg-[#6EBE44]/10 text-[#2d6a1e] px-2.5 py-1 rounded-full">{tool.tag}</span>
+            )}
+          </div>
+          <h3 className="text-lg font-bold text-[#002855] mb-1 leading-snug">{tool.title}</h3>
+          <p className="text-sm font-medium text-gray-800 leading-relaxed">{tool.payoff}</p>
+          <p className="text-sm text-gray-500 leading-relaxed mt-1">{tool.blurb}</p>
+        </div>
+        <div className={`bg-gradient-to-r ${tool.color} text-white font-bold text-[15px] px-5 py-3 mt-auto flex items-center justify-between group-hover:brightness-110 transition`}>
+          <span>Open tool</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 export function HubSectionHeader({ icon: Icon, iconBg, title, sub, href, hrefLabel }: {

@@ -3,9 +3,12 @@ import { Link, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { parentEnrichmentCards } from "@shared/familyHubs";
+import { parentEnrichmentCards, parentTools } from "@shared/familyHubs";
 import {
   HubSectionHeader,
+  HubHeaderBand,
+  HubToolboxHeader,
+  HubToolLauncherCard,
   HubEmptyState,
   HubBlogCard,
   HubEventCard,
@@ -20,10 +23,12 @@ import {
 /**
  * The Parent Playbook — /parents.
  * A dashboard for parents choosing (and living with) a Christian school,
- * sister to the Teacher Toolkit. Not in the main nav. The hero is the
- * school search; the heart of the page is the electives showcase —
- * Enrichment & Activities, including the real Vacation Bible School
- * category at /enrichment/vbs. All counts, posts, and events are live.
+ * sister to the Teacher Toolkit. Not in the main nav. The header band
+ * carries the school search; the first section is the Family Toolbox
+ * (registry tools with parent-voice payoffs), and the electives
+ * showcase — Enrichment & Activities, including the real Vacation Bible
+ * School category at /enrichment/vbs — follows it. All counts, posts,
+ * and events are live.
  */
 export default function ParentsPlaybook() {
   const [, navigate] = useLocation();
@@ -31,6 +36,7 @@ export default function ParentsPlaybook() {
   const { data } = trpc.hubs.parentsOverview.useQuery();
   const { data: categoryCounts } = trpc.enrichment.countsByCategory.useQuery();
   const electives = parentEnrichmentCards();
+  const tools = parentTools();
   const posts = data?.latestPosts ?? [];
   const familyEvents = data?.familyEvents ?? [];
 
@@ -52,68 +58,54 @@ export default function ParentsPlaybook() {
     navigate(`/search?${params.toString()}`);
   };
 
-  const jumpChips = [
-    { href: "#tax-credit", label: "The 2027 Tax Credit" },
-    { href: "#electives", label: "Electives & Activities" },
-    { href: "#events", label: "Family Events" },
-    { href: "#reading", label: "Parent Reading" },
-    { href: "#guides", label: "Guides & Colleges" },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-[#fafbfc]">
       <Navigation />
 
-      {/* Hero — built around finding the right school */}
-      <section className="bg-gradient-to-br from-[#002855] via-[#003d7a] to-[#00509e] py-12 sm:py-16">
-        <div className="container max-w-6xl px-4 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 text-blue-100 text-xs font-semibold px-4 py-2 rounded-full mb-5">
-            <Heart className="w-3.5 h-3.5 text-[#6EBE44]" /> A dashboard for Christian parents
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-4">The Parent Playbook</h1>
-          <p className="text-blue-100/90 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Everything after “we should look at Christian schools” — the search, the money,
-            and the classes, teams, and camps that fill the week — in one place.
-          </p>
-
-          <form onSubmit={handleSearch} className="bg-white rounded-xl shadow-2xl p-3 mt-8 max-w-2xl mx-auto">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="relative flex-1">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="City, State, or ZIP code…"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[#0055A4] focus:ring-2 focus:ring-[#0055A4]/20 outline-none text-sm"
-                />
-              </div>
-              <button type="submit" className="bg-[#6EBE44] hover:bg-[#5aa838] text-white font-semibold px-6 py-3 rounded-lg text-sm inline-flex items-center justify-center gap-2 transition">
-                <Search className="w-4 h-4" /> Find schools
-              </button>
+      {/* App-style header band — compact, with the school search right inside it */}
+      <HubHeaderBand
+        gradient="from-[#002855] via-[#003d7a] to-[#00509e]"
+        icon={Heart}
+        eyebrow="FindChristianSchools.com"
+        name="The Parent Playbook"
+        tagline="Everything after “we should look at Christian schools” — the search, the money, and the week around school."
+        chips={[
+          ...(data && data.schoolCount > 0 ? [`${data.schoolCount.toLocaleString()} Christian schools listed`] : []),
+          ...(data && data.collegeCount > 0 ? [`${data.collegeCount.toLocaleString()} Christian colleges`] : []),
+          "Free for families, always",
+        ]}
+      >
+        <form onSubmit={handleSearch} className="bg-white rounded-xl shadow-2xl p-2.5 mt-4 max-w-2xl">
+          <div className="flex flex-col sm:flex-row gap-2.5">
+            <div className="relative flex-1">
+              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="City, State, or ZIP code…"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 focus:border-[#0055A4] focus:ring-2 focus:ring-[#0055A4]/20 outline-none text-sm"
+              />
             </div>
-          </form>
-
-          <div className="flex flex-wrap justify-center gap-3 mt-7">
-            {data && data.schoolCount > 0 && (
-              <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">{data.schoolCount.toLocaleString()} Christian schools listed</span>
-            )}
-            {data && data.collegeCount > 0 && (
-              <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">{data.collegeCount.toLocaleString()} Christian colleges</span>
-            )}
-            <span className="bg-white/10 text-white text-sm font-semibold px-4 py-2 rounded-full">Free for families, always</span>
+            <button type="submit" className="bg-[#6EBE44] hover:bg-[#5aa838] text-white font-semibold px-6 py-3 rounded-lg text-sm inline-flex items-center justify-center gap-2 transition">
+              <Search className="w-4 h-4" /> Find schools
+            </button>
           </div>
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            {jumpChips.map((c) => (
-              <a key={c.href} href={c.href} className="text-xs font-semibold text-blue-100 border border-white/25 hover:bg-white/10 px-3.5 py-1.5 rounded-full transition">
-                {c.label}
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+        </form>
+      </HubHeaderBand>
 
-      <div className="container max-w-6xl px-4 py-12 flex-1 w-full mx-auto">
+      <div className="container max-w-6xl px-4 pt-7 sm:pt-9 pb-12 flex-1 w-full mx-auto">
+        {/* THE FAMILY TOOLBOX — first and dominant: big app-launcher tiles */}
+        <section id="toolbox" className="mb-14 scroll-mt-24">
+          <HubToolboxHeader
+            title="Family Toolbox"
+            sub="Tap a tool and go — free help for homework, memory verses, and practice at home."
+          />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tools.map((t) => <HubToolLauncherCard key={t.slug} tool={t} />)}
+          </div>
+        </section>
+
         {/* The 2027 tax credit */}
         <section id="tax-credit" className="mb-14 scroll-mt-24">
           <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 items-start">

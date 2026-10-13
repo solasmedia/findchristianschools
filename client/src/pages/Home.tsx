@@ -548,7 +548,7 @@ export default function Home() {
                   defaultValue=""
                   className="w-full pl-12 pr-10 py-4 rounded-xl border-2 border-gray-200 focus:border-[#0055A4] outline-none text-base font-medium text-gray-700 bg-white appearance-none cursor-pointer shadow-sm hover:border-[#0055A4]/50 transition-colors"
                 >
-                  <option value="" disabled>All 50 states...</option>
+                  <option value="" disabled>All 50 states + DC...</option>
                   {[
                     {v:"AL",l:"Alabama"},{v:"AK",l:"Alaska"},{v:"AZ",l:"Arizona"},{v:"AR",l:"Arkansas"},{v:"CA",l:"California"},
                     {v:"CO",l:"Colorado"},{v:"CT",l:"Connecticut"},{v:"DE",l:"Delaware"},{v:"FL",l:"Florida"},{v:"GA",l:"Georgia"},

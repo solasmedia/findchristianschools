@@ -22,7 +22,7 @@ import {
   updateTeacherForumWaitlistStatus,
 } from "./db";
 import { getJobs } from "./db";
-import { notifyOwner } from "./_core/notification";
+import { notifyAdminOfSubmission } from "./_core/emailNotifications";
 
 export const toolkitRouter = router({
   overview: publicProcedure.query(async () => {
@@ -71,9 +71,14 @@ export const toolkitRouter = router({
         });
       }
       const result = await createTeacherForumWaitlistEntry(input);
-      await notifyOwner({
-        title: "New Teacher Forum founding-teacher signup",
-        content: `${input.name} (${input.email}) — ${input.schoolName}${input.schoolCity ? `, ${input.schoolCity}` : ""}${input.schoolState ? `, ${input.schoolState}` : ""} — role: ${input.role}. Status: pending validation.`,
+      await notifyAdminOfSubmission("New Teacher Forum founding-teacher signup", {
+        Name: input.name,
+        Email: input.email,
+        School: input.schoolName,
+        City: input.schoolCity,
+        State: input.schoolState,
+        Role: input.role,
+        Status: "Pending validation",
       }).catch(() => {});
       return result;
     }),

@@ -15,7 +15,7 @@ const STATIC_ROUTES = new Set([
   "/", "/search", "/map", "/resources", "/jobs", "/events", "/mission",
   "/membership", "/states", "/international", "/submit-school",
   "/submit-international", "/admin", "/sponsor", "/profile", "/compare",
-  "/save-to-home-screen", "/welcome", "/learning-resources", "/admin-login",
+  "/save-to-home-screen", "/learning-resources", "/admin-login",
   "/admin-setup", "/privacy", "/privacy-policy", "/terms-of-service", "/terms",
   "/legal-contact", "/disclaimer", "/dmca", "/statement-of-faith",
   "/colleges", "/races", "/signup", "/contact", "/list-course",
@@ -29,7 +29,7 @@ const STATIC_ROUTES = new Set([
   "/tools/reading-worksheet-generator", "/tools/bible-verse-maker",
   "/tools/vocabulary-worksheet-generator", "/tools/flashcards",
   "/teacher-resources", "/federal-tax-credit",
-  "/classical-christian-schools", "/book-club", "/videos", "/newsletter",
+  "/classical-christian-schools", "/book-club", "/newsletter",
   "/enrichment", "/enrichment/submit", "/lister-terms",
   "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports",
   "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
@@ -115,9 +115,13 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "Free Flashcard Maker for Teachers | FindChristianSchools.com",
     description: "Create printable flashcards and study in interactive mode. Perfect for vocabulary, Bible verses, math facts, and any subject. Free, no account needed.",
   },
-  "/videos": {
-    title: "Videos for Christian Educators | FindChristianSchools.com",
-    description: "Free educational videos for Christian teachers and families — Bible book overviews, education news, and teaching tips.",
+  "/membership": {
+    title: "Membership & Premium Listings | FindChristianSchools.com",
+    description: "Claim your school's free listing or upgrade to Premium: showcase your campus, highlight programs, and reach Christian families searching for the right school or college.",
+  },
+  "/statement-of-faith": {
+    title: "Statement of Faith | FindChristianSchools.com",
+    description: "The statement of faith behind Find Christian Schools: what we believe, and the standard every listing, resource, and partner on the site is held to.",
   },
   "/newsletter": {
     title: "The Christian Ed Weekly — Newsletter | FindChristianSchools.com",
@@ -357,9 +361,10 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
       };
     }
     if (match.kind === "state") {
+      const stateName = US_STATE_NAMES[match.code] || match.code;
       return {
-        title: `Christian Schools in ${match.code} | FindChristianSchools.com`,
-        description: `Browse Christian schools in ${match.code}. Search by city, denomination, and program type.`,
+        title: `Christian Schools in ${stateName} | FindChristianSchools.com`,
+        description: `Browse Christian schools in ${stateName}. Search by city, denomination, and program type.`,
         canonical,
       };
     }
@@ -512,6 +517,124 @@ export async function resolveSeoContent(
   match: RouteMatch
 ): Promise<{ jsonLd?: unknown[]; bodyHtml?: string }> {
   try {
+    const isoDate = (d: unknown): string | undefined => {
+      if (!d) return undefined;
+      const t = d instanceof Date ? d : new Date(d as any);
+      return isNaN(t.getTime()) ? undefined : t.toISOString();
+    };
+    const orgRef = {
+      "@type": "Organization",
+      name: "Find Christian Schools",
+      url: `${SITE_URL}/`,
+      logo: `${SITE_URL}/logo-new.jpg`,
+    };
+
+    if (match.kind === "blog") {
+      const { getBlogPostBySlug } = await import("../db");
+      const post: any = await getBlogPostBySlug(match.slug);
+      if (post) {
+        const url = `${SITE_URL}/blog/${post.slug}`;
+        const article: Record<string, unknown> = {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: post.title,
+          url,
+          mainEntityOfPage: url,
+          author: orgRef,
+          publisher: orgRef,
+        };
+        const desc = post.excerpt ? stripText(String(post.excerpt)) : "";
+        if (desc) article.description = desc;
+        if (post.heroImageUrl) article.image = [String(post.heroImageUrl)];
+        const published = isoDate(post.publishedAt) || isoDate(post.createdAt);
+        if (published) article.datePublished = published;
+        const modified = isoDate(post.updatedAt) || published;
+        if (modified) article.dateModified = modified;
+        const crumbs = breadcrumbJsonLd([
+          { name: "Home", url: `${SITE_URL}/` },
+          { name: "Teacher Resources Blog", url: `${SITE_URL}/blog` },
+          { name: post.title, url },
+        ]);
+        return { jsonLd: [article, crumbs] };
+      }
+    }
+
+    if (match.kind === "news") {
+      const { getNewsItemBySlug } = await import("../db");
+      const item: any = await getNewsItemBySlug(match.slug);
+      if (item) {
+        const url = `${SITE_URL}/news/${item.slug}`;
+        const article: Record<string, unknown> = {
+          "@context": "https://schema.org",
+          "@type": "NewsArticle",
+          headline: item.title,
+          url,
+          mainEntityOfPage: url,
+          author: item.sourceName
+            ? { "@type": "Organization", name: String(item.sourceName) }
+            : orgRef,
+          publisher: orgRef,
+        };
+        const desc = item.summary ? stripText(String(item.summary)) : "";
+        if (desc) article.description = desc;
+        if (item.imageUrl) article.image = [String(item.imageUrl)];
+        const published = isoDate(item.publishedAt) || isoDate(item.fetchedAt);
+        if (published) article.datePublished = published;
+        const crumbs = breadcrumbJsonLd([
+          { name: "Home", url: `${SITE_URL}/` },
+          { name: "Education News", url: `${SITE_URL}/news` },
+          { name: item.title, url },
+        ]);
+        return { jsonLd: [article, crumbs] };
+      }
+    }
+
+    if (match.kind === "race") {
+      const { getRaceBySlug } = await import("../db");
+      const race: any = await getRaceBySlug(match.slug);
+      if (race) {
+        const url = `${SITE_URL}/race/${race.slug}`;
+        const event: Record<string, unknown> = {
+          "@context": "https://schema.org",
+          "@type": "Event",
+          name: race.name,
+          url,
+          eventStatus: "https://schema.org/EventScheduled",
+          location: {
+            "@type": "Place",
+            name: [race.city, race.state].filter(Boolean).join(", ") || race.name,
+            address: {
+              "@type": "PostalAddress",
+              ...(race.city ? { addressLocality: race.city } : {}),
+              ...(race.stateCode ? { addressRegion: race.stateCode } : {}),
+              ...(race.zip ? { postalCode: race.zip } : {}),
+              addressCountry: "US",
+            },
+          },
+          organizer: orgRef,
+        };
+        const start = isoDate(race.raceDate);
+        if (start) event.startDate = start.slice(0, 10);
+        const desc = race.summary
+          ? stripText(String(race.summary))
+          : `${race.name} is a Christian running event${race.city ? ` in ${race.city}, ${race.state || ""}` : ""}${race.distances ? ` — distances: ${race.distances}` : ""}.`;
+        event.description = desc;
+        if (race.signupUrl) {
+          event.offers = {
+            "@type": "Offer",
+            url: String(race.signupUrl),
+            availability: "https://schema.org/InStock",
+          };
+        }
+        const crumbs = breadcrumbJsonLd([
+          { name: "Home", url: `${SITE_URL}/` },
+          { name: "Christian Races", url: `${SITE_URL}/races` },
+          { name: race.name, url },
+        ]);
+        return { jsonLd: [event, crumbs] };
+      }
+    }
+
     if (match.kind === "static" && match.path === "/") {
       const org = {
         "@type": "Organization",
@@ -624,7 +747,7 @@ export async function resolveSeoContent(
         .join("");
       const bodyHtml =
         `<main><h1>Teacher Toolkit</h1>` +
-        `<p>The Teacher Toolkit is a free dashboard for Christian educators on Find Christian Schools: classroom tools that save teachers time, the latest articles from the Teacher Blog (${counts.blogPostCount} published), open teaching jobs (${counts.openJobCount} currently posted), events for teachers, professional development, and a founding-teachers waitlist for the upcoming Teacher Forum. All tools are free and need no account.</p>` +
+        `<p>The Teacher Toolkit is a free dashboard for Christian educators on Find Christian Schools: classroom tools that save teachers time, the latest articles from the Teacher Blog (${counts.blogPostCount} published), ${counts.openJobCount > 0 ? `open teaching jobs (${counts.openJobCount} currently posted)` : "a job board where schools post open teaching jobs"}, events for teachers, professional development, and a founding-teachers waitlist for the upcoming Teacher Forum. All tools are free and need no account.</p>` +
         `<h2>Free classroom tools</h2><ul>${links}</ul>` +
         `<p><a href="${SITE_URL}/blog">Teacher Blog</a> · <a href="${SITE_URL}/jobs">Teaching jobs</a> · <a href="${SITE_URL}/events">Events</a> · <a href="${SITE_URL}/teacher-resources">Teacher resources</a></p></main>`;
       return { jsonLd: [webPage, itemList, crumbs], bodyHtml };

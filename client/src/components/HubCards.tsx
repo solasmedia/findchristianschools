@@ -8,6 +8,7 @@
  */
 import type { ReactNode } from "react";
 import { Link } from "wouter";
+import { trackEvent } from "@/lib/analytics";
 import type { TeacherTool } from "@shared/teacherToolkit";
 import type { HubEnrichmentCard } from "@shared/familyHubs";
 import {
@@ -129,7 +130,7 @@ export function HubToolboxHeader({ title, sub, iconBg = "bg-[#002855]" }: {
 export function HubToolLauncherCard({ tool }: { tool: TeacherTool }) {
   const Icon = ICONS[tool.icon] ?? Sparkles;
   return (
-    <Link href={tool.href}>
+    <Link href={tool.href} onClick={() => trackEvent("toolkit_tool_open", { tool_name: tool.slug })}>
       <div className="bg-white rounded-2xl border-2 border-gray-200 hover:border-[#6EBE44] hover:shadow-xl active:scale-[0.99] transition-all cursor-pointer h-full group flex flex-col overflow-hidden">
         <div className="p-5 pb-4 flex flex-col flex-1">
           <div className="flex items-start justify-between mb-3.5">

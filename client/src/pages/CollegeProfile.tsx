@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useParams } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -190,7 +191,7 @@ export default function CollegeProfile() {
                         View Premium Options
                       </Button>
                     </Link>
-                    <Link href={`/submit?claim=${college.slug}&type=college`}>
+                    <Link href={`/submit?claim=${college.slug}&type=college`} onClick={() => trackEvent("claim_listing_click", { listing_type: "college" })}>
                       <Button variant="outline" className="border-white text-white hover:bg-white/10 px-6 py-3 text-base">
                         Claim This College
                       </Button>

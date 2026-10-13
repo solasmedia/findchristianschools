@@ -7,6 +7,7 @@ import { Link, useSearch } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
+import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";
 
 const features = [
@@ -118,6 +119,10 @@ export default function Membership() {
   const checkoutMutation = trpc.stripe.createCheckout.useMutation({
     onSuccess: (data) => {
       if (data.url) {
+        trackEvent("premium_checkout_start", {
+          listing_type: selected?.kind ?? "school",
+          price,
+        });
         toast.info("Redirecting to checkout...");
         window.open(data.url, '_blank');
       }
@@ -145,6 +150,7 @@ export default function Membership() {
     if (selected.kind === "college" && promoCode) {
       toast.info("Promo codes apply to school listings only — continuing without the code.");
     }
+    trackEvent("membership_upgrade_click", { listing_type: selected.kind });
     setCheckoutLoading(true);
     checkoutMutation.mutate(
       selected.kind === "college"

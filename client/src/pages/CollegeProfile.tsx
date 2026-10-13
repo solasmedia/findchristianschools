@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ListingDisclaimer, SourceAttribution, ListingActions } from "@/components/ListingDisclaimer";
+import { ShareButton } from "@/components/ShareButton";
 import { JsonLd, collegeJsonLd } from "@/components/SeoJsonLd";
 import { GraduationCap, MapPin, Phone, Globe, Users, Church, Star, ExternalLink, AlertTriangle, ChevronLeft, DollarSign, Percent, Award } from "lucide-react";
 
@@ -105,6 +106,9 @@ export default function CollegeProfile() {
                   />
                 )}
               </p>
+              <div className="mt-3">
+                <ShareButton title={college.name} url={`/college/${college.slug}`} className="text-blue-200 hover:text-white" />
+              </div>
             </div>
           </div>
         </div>

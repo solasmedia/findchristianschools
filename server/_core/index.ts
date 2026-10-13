@@ -82,6 +82,38 @@ async function startServer() {
     })
   );
   // development mode uses Vite, production mode uses static files
+  // Canonical URL hygiene (site audit B-3/B-4): one canonical URL per page.
+  // True duplicate twins (same page, two paths) 301 to the path the site's
+  // own internal links use. /submit vs /submit-school and /lesson-planning
+  // vs /lesson-planner are NOT twins (distinct flows/content) and stay live.
+  // State/city hub codes canonicalize to uppercase, matching every internal
+  // link, breadcrumb, and sitemap entry.
+  const CANONICAL_REDIRECTS: Record<string, string> = {
+    "/our-mission": "/mission",
+    "/privacy-policy": "/privacy",
+    "/terms": "/terms-of-service",
+    "/compare-schools": "/compare",
+    "/international-schools": "/international",
+  };
+  app.use((req, res, next) => {
+    if (req.method !== "GET" && req.method !== "HEAD") return next();
+    const p = req.path;
+    const qs = req.originalUrl.includes("?")
+      ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
+      : "";
+    const twin = CANONICAL_REDIRECTS[p];
+    if (twin) {
+      res.redirect(301, twin + qs);
+      return;
+    }
+    const hub = p.match(/^\/(state|city)\/([a-zA-Z]{2})(\/.*)?$/);
+    if (hub && hub[2] !== hub[2].toUpperCase()) {
+      res.redirect(301, `/${hub[1]}/${hub[2].toUpperCase()}${hub[3] || ""}${qs}`);
+      return;
+    }
+    next();
+  });
+
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);
   } else {

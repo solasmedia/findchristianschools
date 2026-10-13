@@ -1,40 +1,124 @@
 import { invokeLLM } from "./llm";
 
-const ADMIN_EMAIL = "dworiordan@gmail.com";
-const NOTIFICATION_API = process.env.BUILT_IN_FORGE_API_URL;
-const API_KEY = process.env.BUILT_IN_FORGE_API_KEY;
+/**
+ * Where every form-submission notification goes. Configurable via the
+ * NOTIFICATION_EMAIL env var; defaults to the site's only real mailbox.
+ */
+export const NOTIFICATION_EMAIL =
+  process.env.NOTIFICATION_EMAIL ?? "findchristianschools@gmail.com";
+
+const NOTIFICATION_FROM =
+  process.env.NOTIFICATION_FROM ??
+  "FindChristianSchools <notifications@findchristianschools.com>";
+
+// Email transports, in priority order. The codebase historically sent mail
+// through the Manus Forge API (BUILT_IN_FORGE_API_URL / BUILT_IN_FORGE_API_KEY);
+// those credentials are Manus-era and are not present in the current Railway
+// deployment, so no mail actually flows until the owner configures a provider.
+// Preferred: a Resend API key (RESEND_API_KEY) — one env var, sent over HTTPS.
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const FORGE_API_URL = process.env.BUILT_IN_FORGE_API_URL;
+const FORGE_API_KEY = process.env.BUILT_IN_FORGE_API_KEY;
 
 export async function sendEmail(to: string | string[], subject: string, htmlBody: string) {
   if (!to || !subject || !htmlBody) return false;
-  
+
   const recipients = Array.isArray(to) ? to : [to];
   const validRecipients = recipients.filter(r => r && r.includes("@"));
-  
+
   if (validRecipients.length === 0) return false;
 
   try {
-    const response = await fetch(`${NOTIFICATION_API}/email/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify({
-        to: validRecipients,
-        subject,
-        html: htmlBody,
-      }),
-    });
+    if (RESEND_API_KEY) {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: NOTIFICATION_FROM,
+          to: validRecipients,
+          subject,
+          html: htmlBody,
+        }),
+      });
+      if (!response.ok) {
+        console.error("[Email] Resend send failed:", response.status, await response.text().catch(() => ""));
+      }
+      return response.ok;
+    }
 
-    return response.ok;
+    if (FORGE_API_URL && FORGE_API_KEY) {
+      const response = await fetch(`${FORGE_API_URL}/email/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${FORGE_API_KEY}`,
+        },
+        body: JSON.stringify({
+          to: validRecipients,
+          subject,
+          html: htmlBody,
+        }),
+      });
+      return response.ok;
+    }
+
+    console.error(
+      "[Email] No email provider configured (set RESEND_API_KEY in the server environment). " +
+      `Notification not sent: "${subject}" to ${validRecipients.join(", ")}`
+    );
+    return false;
   } catch (error) {
     console.error("[Email] Failed to send:", error);
     return false;
   }
 }
 
+export type SubmissionFields = Record<string, string | number | boolean | null | undefined>;
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+/**
+ * The one notification path for form submissions: emails the site admin
+ * (NOTIFICATION_EMAIL, default findchristianschools@gmail.com) with the form
+ * type, the key submitted fields, and a link to the relevant admin view.
+ * Never throws — a mail failure must not fail the visitor's submission.
+ */
+export async function notifyAdminOfSubmission(
+  type: string,
+  fields: SubmissionFields,
+  adminPath = "/admin"
+): Promise<boolean> {
+  try {
+    const rows = Object.entries(fields)
+      .filter(([, v]) => v !== undefined && v !== null && v !== "")
+      .map(
+        ([k, v]) =>
+          `<tr><td style="padding:4px 12px 4px 0;vertical-align:top;"><strong>${escapeHtml(k)}</strong></td><td>${escapeHtml(String(v)).replace(/\n/g, "<br>")}</td></tr>`
+      )
+      .join("");
+    const html = `
+      <h2>New Form Submission</h2>
+      <p><strong>${escapeHtml(type)}</strong></p>
+      <table>${rows}</table>
+      <p><a href="https://www.findchristianschools.com${adminPath}">Review in Admin Panel</a></p>
+    `;
+    return await sendEmail(NOTIFICATION_EMAIL, `[FCS Form] ${type}`, html);
+  } catch (error) {
+    console.error("[Email] notifyAdminOfSubmission failed:", error);
+    return false;
+  }
+}
+
 export async function notifySchoolListing(school: any) {
-  const recipients = [ADMIN_EMAIL];
+  const recipients = [NOTIFICATION_EMAIL];
   if (school.contactEmail) recipients.push(school.contactEmail);
 
   const html = `
@@ -49,7 +133,7 @@ export async function notifySchoolListing(school: any) {
 }
 
 export async function notifyClaimRequest(school: any, claimData: any) {
-  const recipients = [ADMIN_EMAIL];
+  const recipients = [NOTIFICATION_EMAIL];
   if (school.contactEmail) recipients.push(school.contactEmail);
 
   const html = `
@@ -64,7 +148,7 @@ export async function notifyClaimRequest(school: any, claimData: any) {
 }
 
 export async function notifyRemovalRequest(school: any, removalData: any) {
-  const recipients = [ADMIN_EMAIL];
+  const recipients = [NOTIFICATION_EMAIL];
   if (school.contactEmail) recipients.push(school.contactEmail);
 
   const html = `
@@ -89,11 +173,11 @@ export async function notifyContactForm(contactData: any) {
     <p><a href="https://findchristianschools.com/admin">View in Admin Panel</a></p>
   `;
 
-  return sendEmail(ADMIN_EMAIL, "Contact Form: " + contactData.name, html);
+  return sendEmail(NOTIFICATION_EMAIL, "Contact Form: " + contactData.name, html);
 }
 
 export async function notifyPremiumPurchase(school: any, amount: number) {
-  const recipients = [ADMIN_EMAIL];
+  const recipients = [NOTIFICATION_EMAIL];
   if (school.contactEmail) recipients.push(school.contactEmail);
 
   const html = `
@@ -117,7 +201,7 @@ export async function notifyDonation(donationData: any, amount: number) {
     <p><a href="https://findchristianschools.com/admin">View in Admin Panel</a></p>
   `;
 
-  return sendEmail(ADMIN_EMAIL, "New Donation: $" + amount, html);
+  return sendEmail(NOTIFICATION_EMAIL, "New Donation: $" + amount, html);
 }
 
 export async function notifyJobPosted(job: any) {
@@ -129,7 +213,7 @@ export async function notifyJobPosted(job: any) {
     <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
-  return sendEmail(ADMIN_EMAIL, "New Job Posting: " + job.title, html);
+  return sendEmail(NOTIFICATION_EMAIL, "New Job Posting: " + job.title, html);
 }
 
 export async function notifyEventPosted(event: any) {
@@ -141,7 +225,7 @@ export async function notifyEventPosted(event: any) {
     <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
-  return sendEmail(ADMIN_EMAIL, "New Event: " + event.title, html);
+  return sendEmail(NOTIFICATION_EMAIL, "New Event: " + event.title, html);
 }
 
 export async function notifyCoursePosted(course: any) {
@@ -153,5 +237,5 @@ export async function notifyCoursePosted(course: any) {
     <p><a href="https://findchristianschools.com/admin">Review in Admin Panel</a></p>
   `;
 
-  return sendEmail(ADMIN_EMAIL, "New Course: " + course.title, html);
+  return sendEmail(NOTIFICATION_EMAIL, "New Course: " + course.title, html);
 }

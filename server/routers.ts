@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createPremiumCheckout } from "./stripe/checkout";
 import { notifyOwner } from "./_core/notification";
-import { notifySchoolListing, notifyClaimRequest, notifyRemovalRequest, notifyContactForm, notifyPremiumPurchase, notifyDonation, notifyJobPosted, notifyEventPosted, notifyCoursePosted } from "./_core/emailNotifications";
+import { notifyAdminOfSubmission, notifyCoursePosted, notifyEventPosted } from "./_core/emailNotifications";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "./rateLimit";
 import {
   searchSchools, getSchoolBySlug, getSchoolsByState, getFeaturedSchools, getNewestSchools,
@@ -224,9 +224,13 @@ const courseRouter = router({
         maxStudents: input.maxStudents,
         isActive: false,
       } as any);
-      await notifyOwner({
-        title: `New Course/Class Listing: ${input.name}`,
-        content: `A new ${input.type} listing has been submitted.\n\nName: ${input.name}\nType: ${input.type}\nDelivery: ${input.deliveryType}\nContact: ${input.contactName} (${input.contactEmail})\nGrade Level: ${input.gradeLevel || 'Not specified'}\n\nPlease review in the Admin Dashboard.`,
+      await notifyAdminOfSubmission(`New Course/Class Listing: ${input.name}`, {
+        Name: input.name,
+        Type: input.type,
+        Delivery: input.deliveryType,
+        Contact: input.contactName,
+        Email: input.contactEmail,
+        "Grade Level": input.gradeLevel || "Not specified",
       }).catch(() => {});
       return { success: true };
     }),
@@ -331,9 +335,11 @@ export const appRouter = router({
         throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many subscribe attempts. Please try again later.' });
       }
       const result = await subscribeNewsletter({ ...input, source: 'welcome' });
-      await notifyOwner({
-        title: `New Newsletter Subscriber: ${input.email}`,
-        content: `A new user subscribed to the newsletter.\n\nEmail: ${input.email}\nName: ${input.firstName || ''} ${input.lastName || ''}\nState: ${input.state || 'Not specified'}\nType: ${input.userType || 'Not specified'}`,
+      await notifyAdminOfSubmission(`New Newsletter Subscriber: ${input.email}`, {
+        Email: input.email,
+        Name: `${input.firstName || ''} ${input.lastName || ''}`.trim(),
+        State: input.state || "Not specified",
+        Type: input.userType || "Not specified",
       }).catch(() => {});
       return result;
     }),
@@ -356,9 +362,14 @@ export const appRouter = router({
         throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many submissions. Please try again later.' });
       }
       const result = await createSponsor(input);
-      await notifyOwner({
-        title: `New Sponsor Inquiry: ${input.companyName}`,
-        content: `A new sponsor inquiry has been submitted.\n\nCompany: ${input.companyName}\nContact: ${input.contactName} (${input.contactEmail})\nType: ${input.sponsorType || 'General'}\nBudget: ${input.budget || 'Not specified'}\nMessage: ${input.message || 'None'}\n\nPlease review in the Admin Dashboard.`,
+      await notifyAdminOfSubmission(`New Sponsor Inquiry: ${input.companyName}`, {
+        Company: input.companyName,
+        Contact: input.contactName,
+        Email: input.contactEmail,
+        Phone: input.contactPhone,
+        Type: input.sponsorType || "General",
+        Budget: input.budget || "Not specified",
+        Message: input.message || "None",
       }).catch(() => {});
       return result;
     }),
@@ -511,10 +522,12 @@ export const appRouter = router({
         sofAttested: true,
         sofAttestedAt: new Date(),
       });
-      await notifyJobPosted({
-        title: input.title,
-        schoolName: input.schoolName,
-        contactEmail: input.submitterEmail,
+      await notifyAdminOfSubmission(`New Job Posting: ${input.title}`, {
+        Title: input.title,
+        School: input.schoolName,
+        Location: input.location,
+        "Submitted by": input.submitterName,
+        Email: input.submitterEmail,
       }).catch(() => {});
       return result;
     }),
@@ -588,10 +601,12 @@ export const appRouter = router({
         sofAttested: true,
         sofAttestedAt: new Date(),
       });
-      await notifyEventPosted({
-        title: input.title,
-        date: input.startDate?.toLocaleDateString(),
-        contactEmail: input.contactEmail,
+      await notifyAdminOfSubmission(`New Event: ${input.title}`, {
+        Title: input.title,
+        Date: input.startDate?.toLocaleDateString(),
+        Location: input.location,
+        "Submitted by": input.submitterName,
+        Email: input.contactEmail,
       }).catch(() => {});
       return result;
     }),
@@ -650,7 +665,14 @@ export const appRouter = router({
       if (!checkRateLimit(key, { maxRequests: 10, windowMs: 60 * 60 * 1000 })) {
         throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many download attempts. Please try again later.' });
       }
-      return logResourceDownload(input);
+      const result = await logResourceDownload(input);
+      await notifyAdminOfSubmission(`New Resource Download (post #${input.postId})`, {
+        "Post ID": input.postId,
+        Email: input.email,
+        Name: input.firstName,
+        Type: input.userType,
+      }).catch(() => {});
+      return result;
     }),
     // Premium purchase: create Stripe checkout for a resource packet
     purchaseResource: publicProcedure.input(z.object({
@@ -951,10 +973,15 @@ export const appRouter = router({
 
         await dbConn.update(schoolsTable).set(updateFields).where(eq(schoolsTable.id, existingSchool.id));
 
-        // Notify owner
-        await notifyOwner({
-          title: `School Claimed: ${existingSchool.name}`,
-          content: `An existing school has been claimed and updated.\n\nSchool: ${existingSchool.name}\nCity: ${existingSchool.city}, ${existingSchool.state}\nClaimed by: ${ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || 'Unknown'}\nStatus changed to: Pending\n\nPlease review and approve in the Admin Dashboard.`,
+        // Notify admin by email
+        await notifyAdminOfSubmission(`School Claimed: ${existingSchool.name}`, {
+          School: existingSchool.name,
+          City: existingSchool.city,
+          State: existingSchool.state,
+          "Claimed by": ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || "Unknown",
+          Contact: input.contactName,
+          Email: input.contactEmail,
+          Status: "Pending",
         }).catch(() => {});
 
         return { success: true, slug: existingSchool.slug, matched: true };
@@ -973,10 +1000,15 @@ export const appRouter = router({
           listingType: listingType || 'free',
           donationAmount: donationAmount || undefined,
         } as any);
-        // Notify owner of new school submission
-        await notifyOwner({
-          title: `New School Submitted: ${input.name}`,
-          content: `A new school has been submitted for review.\n\nSchool: ${input.name}\nCity: ${input.city}, ${input.state}\nSubmitted by: ${ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || 'Unknown'}\nStatement of Faith: ${input.statementOfFaith.substring(0, 100)}...\n\nPlease review in the Admin Dashboard.`,
+        // Notify admin of new school submission by email
+        await notifyAdminOfSubmission(`New School Submitted: ${input.name}`, {
+          School: input.name,
+          City: input.city,
+          State: input.state,
+          "Submitted by": ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || "Unknown",
+          Contact: input.contactName,
+          Email: input.contactEmail,
+          "Listing type": listingType || "free",
         }).catch(() => {});
         return { success: true, slug, matched: false };
       }
@@ -1003,9 +1035,12 @@ export const appRouter = router({
       reporterName: input.reporterName,
       reporterEmail: input.reporterEmail || undefined,
     });
-    await notifyOwner({
-      title: `Listing Report: ${input.schoolName || `School #${input.schoolId}`}`,
-      content: `A listing has been reported.\n\nSchool: ${input.schoolName || `ID ${input.schoolId}`}\nReason: ${input.reason}\nDetails: ${input.details || 'None provided'}\nReporter: ${input.reporterName || 'Anonymous'} (${input.reporterEmail || 'no email'})\n\nPlease review in the Admin Dashboard.`,
+    await notifyAdminOfSubmission(`Listing Report: ${input.schoolName || `School #${input.schoolId}`}`, {
+      School: input.schoolName || `ID ${input.schoolId}`,
+      Reason: input.reason,
+      Details: input.details || "None provided",
+      Reporter: input.reporterName || "Anonymous",
+      Email: input.reporterEmail || "no email",
     }).catch(() => {});
     return { success: true };
   }),
@@ -1047,9 +1082,13 @@ export const appRouter = router({
         programType: input.programType || 'day_school', curriculumType: input.curriculumType || 'other',
         sofAttested: true, sofAttestedAt: new Date(),
       });
-      await notifyOwner({
-        title: `New International School Submitted: ${input.name}`,
-        content: `A new international school has been submitted for review.\n\nSchool: ${input.name}\nCountry: ${input.country}\nCity: ${input.city}\nDenomination: ${input.denomination || 'Not specified'}\nSubmitted by: ${ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || 'Unknown'}\n\nPlease review in the Admin Dashboard.`,
+      await notifyAdminOfSubmission(`New International School Submitted: ${input.name}`, {
+        School: input.name,
+        Country: input.country,
+        City: input.city,
+        Denomination: input.denomination || "Not specified",
+        "Submitted by": ctx.user?.name || ctx.user?.email || input.contactName || input.contactEmail || "Unknown",
+        Email: input.contactEmail,
       }).catch(() => {});
       return { success: true, slug };
     }),
@@ -1082,18 +1121,15 @@ export const appRouter = router({
       }
       const result = await createClaimRequest(input);
       const listingLabel = input.collegeId ? `College ID: ${input.collegeId}` : `School ID: ${input.schoolId}`;
-      await notifyOwner({
-        title: `New Claim Request from ${input.claimantName}`,
-        content: `${listingLabel}\nClaimant: ${input.claimantName} (${input.claimantEmail})\nRole: ${input.claimantRole}\n\nPlease review in Admin > Claims.`,
+      await notifyAdminOfSubmission(`New Claim Request from ${input.claimantName}`, {
+        Listing: listingLabel,
+        Claimant: input.claimantName,
+        Email: input.claimantEmail,
+        Phone: input.claimantPhone,
+        Role: input.claimantRole,
+        Relationship: input.relationship,
+        Notes: input.verificationNotes,
       }).catch(() => {});
-      if (input.schoolId) {
-        await notifyClaimRequest({ id: input.schoolId }, {
-          contactName: input.claimantName,
-          contactEmail: input.claimantEmail,
-          contactPhone: input.claimantPhone,
-          claimantRole: input.claimantRole,
-        }).catch(() => {});
-      }
       return result;
     }),
   }),
@@ -1108,15 +1144,13 @@ export const appRouter = router({
       reason: z.string().min(1),
     })).mutation(async ({ input }) => {
       const result = await createRemovalRequest(input);
-      await notifyOwner({
-        title: `New Removal Request from ${input.requesterName}`,
-        content: `School ID: ${input.schoolId}\nRequester: ${input.requesterName} (${input.requesterEmail})\nRole: ${input.requesterRole}\nReason: ${input.reason}\n\nPlease review in Admin > Removals.`,
-      }).catch(() => {});
-      await notifyRemovalRequest({ id: input.schoolId }, {
-        contactName: input.requesterName,
-        contactEmail: input.requesterEmail,
-        contactPhone: input.requesterPhone,
-        reason: input.reason,
+      await notifyAdminOfSubmission(`New Removal Request from ${input.requesterName}`, {
+        "School ID": input.schoolId,
+        Requester: input.requesterName,
+        Email: input.requesterEmail,
+        Phone: input.requesterPhone,
+        Role: input.requesterRole,
+        Reason: input.reason,
       }).catch(() => {});
       return result;
     }),
@@ -1315,15 +1349,13 @@ export const appRouter = router({
         status: 'new',
       });
       
-      // Notify admin of new feedback (non-blocking)
-      try {
-        await notifyOwner({
-          title: 'New Feedback Received',
-          content: `New ${input.feedbackType.replace(/_/g, ' ')}: ${input.message.substring(0, 100)}...${input.name ? ` from ${input.name}` : ''}`,
-        });
-      } catch (e) {
-        console.warn('Feedback notification failed:', e);
-      }
+      // Notify admin of new feedback by email (non-blocking)
+      await notifyAdminOfSubmission('New Feedback Received', {
+        Type: input.feedbackType.replace(/_/g, ' '),
+        From: input.name,
+        Email: input.email,
+        Message: input.message.substring(0, 500),
+      }).catch(() => {});
       
       return { success: true };
     }),

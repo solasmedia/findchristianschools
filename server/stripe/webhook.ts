@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { getDb } from "../db";
 import { schools, colleges, resourcePurchases, enrichmentListings } from "../../drizzle/schema";
 import { eq, and } from "drizzle-orm";
-import { notifyPremiumPurchase } from "../_core/emailNotifications";
+import { notifyPremiumPurchase, notifyAdminOfSubmission } from "../_core/emailNotifications";
 
 let _stripe: Stripe | null = null;
 function getStripe(): Stripe {
@@ -69,6 +69,11 @@ export async function handleStripeWebhook(req: Request, res: Response) {
                 amountCents,
               });
               console.log(`[Webhook] Resource purchase recorded: post ${postId}, ${email}, $${(amountCents / 100).toFixed(2)}`);
+              await notifyAdminOfSubmission(`New Resource Purchase (post #${postId})`, {
+                "Post ID": postId,
+                Email: email,
+                Amount: `$${(amountCents / 100).toFixed(2)}`,
+              }).catch(() => {});
             }
           }
         }

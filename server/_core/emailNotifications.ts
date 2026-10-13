@@ -176,6 +176,44 @@ export async function notifyContactForm(contactData: any) {
   return sendEmail(NOTIFICATION_EMAIL, "Contact Form: " + contactData.name, html);
 }
 
+/**
+ * Delivers a parent's profile-page question ("Ask this school a question")
+ * to a school that has claimed its listing. Only called when the school has
+ * a contact email on file. sendEmail has no reply-to support, so the
+ * parent's email is stated prominently at the top of the body and linked —
+ * the school replies by writing to that address directly.
+ * Returns true only when the mail provider accepted the send.
+ */
+export async function notifySchoolOfInquiry(
+  school: { name: string; contactEmail: string },
+  inquiry: {
+    parentName: string;
+    parentEmail: string;
+    parentPhone?: string;
+    childGrade?: string;
+    message: string;
+  }
+): Promise<boolean> {
+  const html = `
+    <h2>A parent has a question about ${escapeHtml(school.name)}</h2>
+    <p><strong>Reply to the parent directly at: <a href="mailto:${escapeHtml(inquiry.parentEmail)}">${escapeHtml(inquiry.parentEmail)}</a></strong></p>
+    <table>
+      <tr><td style="padding:4px 12px 4px 0;vertical-align:top;"><strong>From</strong></td><td>${escapeHtml(inquiry.parentName)}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;vertical-align:top;"><strong>Email</strong></td><td>${escapeHtml(inquiry.parentEmail)}</td></tr>
+      ${inquiry.parentPhone ? `<tr><td style="padding:4px 12px 4px 0;vertical-align:top;"><strong>Phone</strong></td><td>${escapeHtml(inquiry.parentPhone)}</td></tr>` : ""}
+      ${inquiry.childGrade ? `<tr><td style="padding:4px 12px 4px 0;vertical-align:top;"><strong>Grade exploring</strong></td><td>${escapeHtml(inquiry.childGrade)}</td></tr>` : ""}
+      <tr><td style="padding:4px 12px 4px 0;vertical-align:top;"><strong>Message</strong></td><td>${escapeHtml(inquiry.message).replace(/\n/g, "<br>")}</td></tr>
+    </table>
+    <p style="color:#666;font-size:12px;">This question was submitted on your school's FindChristianSchools.com profile page. Replying to the parent's email address above reaches them directly.</p>
+  `;
+
+  return sendEmail(
+    school.contactEmail,
+    `Parent question about ${school.name} via FindChristianSchools`,
+    html
+  );
+}
+
 export async function notifyPremiumPurchase(school: any, amount: number) {
   const recipients = [NOTIFICATION_EMAIL];
   if (school.contactEmail) recipients.push(school.contactEmail);

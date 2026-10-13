@@ -557,6 +557,27 @@ export const contactMessages = mysqlTable("contact_messages", {
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type InsertContactMessage = typeof contactMessages.$inferInsert;
 
+// School inquiries table - parent questions submitted from school profile
+// pages ("Ask this school a question"). Every inquiry is stored here first;
+// deliveredToSchool records whether it was also emailed to the school,
+// which only happens when the school has claimed its listing and has a
+// contact email on file.
+export const schoolInquiries = mysqlTable("school_inquiries", {
+  id: int("id").autoincrement().primaryKey(),
+  schoolId: int("schoolId").notNull(), // schools.id
+  parentName: varchar("parentName", { length: 255 }).notNull(),
+  parentEmail: varchar("parentEmail", { length: 320 }).notNull(),
+  parentPhone: varchar("parentPhone", { length: 20 }),
+  childGrade: varchar("childGrade", { length: 32 }), // grade the parent is exploring, free text
+  message: text("message").notNull(),
+  status: mysqlEnum("status", ["new", "read", "responded", "archived"]).default("new").notNull(),
+  deliveredToSchool: boolean("deliveredToSchool").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+export type SchoolInquiry = typeof schoolInquiries.$inferSelect;
+export type InsertSchoolInquiry = typeof schoolInquiries.$inferInsert;
+
 // Page views table - for internal analytics tracking
 export const pageViews = mysqlTable("page_views", {
   id: int("id").autoincrement().primaryKey(),

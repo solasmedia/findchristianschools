@@ -29,12 +29,6 @@ const US_STATES = [
   {code:"WI",name:"Wisconsin"},{code:"WY",name:"Wyoming"},{code:"DC",name:"District of Columbia"}
 ];
 
-const filterChips = [
-  { value: "", label: "All" },
-  { value: "free", label: "Free / Tuition-Assisted" },
-  { value: "tuition_based", label: "Tuition-Based" },
-];
-
 const programTypes = [
   { value: "traditional", label: "Traditional" },
   { value: "online", label: "Online Only" },
@@ -55,8 +49,6 @@ const educationalModels = [
 const sortOptions = [
   { value: "featured", label: "Featured First" },
   { value: "name", label: "Name (A-Z)" },
-  { value: "tuition_low", label: "Tuition (Low to High)" },
-  { value: "tuition_high", label: "Tuition (High to Low)" },
 ];
 
 function SaveSearchButton({ query, state, programType }: { query: string; state: string; programType: string }) {
@@ -86,7 +78,6 @@ export default function SearchResults() {
   const [, navigate] = useLocation();
 
   // (searchText state declared below with other search form state)
-  const [tuitionFilter, setTuitionFilter] = useState(params.get("tuitionType") || "");
   const [programFilters, setProgramFilters] = useState<string[]>(params.get("programType") ? [params.get("programType")!] : []);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
@@ -119,7 +110,6 @@ export default function SearchResults() {
     setStateSelect(params.get("state") || "");
     setSelectedState(params.get("state") || null);
     setRadius(params.get("radius") || "");
-    setTuitionFilter(params.get("tuitionType") || "");
     setDenominationTag(params.get("denominationTag") || "");
     setSchoolType(params.get("schoolType") || "");
     setEnrollmentTier(params.get("enrollmentTier") || "");
@@ -224,7 +214,6 @@ export default function SearchResults() {
     if (stateSelect) p.set("state", stateSelect);
     if (zipInput.trim() && !p.get("zip")) p.set("zip", zipInput.trim().slice(0, 5));
     if (radius) p.set("radius", radius);
-    if (tuitionFilter) p.set("tuitionType", tuitionFilter);
     if (denominationTag) p.set("denominationTag", denominationTag);
     if (schoolType) p.set("schoolType", schoolType);
     if (enrollmentTier) p.set("enrollmentTier", enrollmentTier);
@@ -254,7 +243,6 @@ export default function SearchResults() {
     city: params.get("city") || undefined,
     zip: params.get("zip") || undefined,
     programType: programFilters.length > 0 ? programFilters[0] : undefined,
-    tuitionType: tuitionFilter || undefined,
     gradeLevel: params.get("gradeLevel") || undefined,
     denominationTag: denominationTag || undefined,
     schoolType: schoolType || undefined,
@@ -313,8 +301,6 @@ export default function SearchResults() {
   const handleSort = (schools: any[]) => {
     const sorted = [...schools];
     if (sortBy === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortBy === "tuition_low") sorted.sort((a, b) => (a.tuitionMin || 0) - (b.tuitionMin || 0));
-    else if (sortBy === "tuition_high") sorted.sort((a, b) => (b.tuitionMax || 0) - (a.tuitionMax || 0));
     else sorted.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     return sorted;
   };
@@ -457,24 +443,9 @@ export default function SearchResults() {
             </select>
           </div>
 
-          {/* Tuition Filter */}
-          <div className="mb-6">
-            <h3 className="font-semibold text-[#002855] mb-3 text-sm">Tuition Type</h3>
-            <div className="space-y-2">
-              {filterChips.map(chip => (
-                <label key={chip.value} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="tuition"
-                    checked={tuitionFilter === chip.value}
-                    onChange={() => setTuitionFilter(chip.value)}
-                    className="w-4 h-4 text-[#0055A4]"
-                  />
-                  <span className="text-sm text-gray-700">{chip.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          {/* Tuition Type filter removed 2026-10-13: tuitionType/tuition data
+              is populated for ~0% of listings, so the filter silently returned
+              zero results. Re-add when tuition data exists (gap analysis). */}
 
           {/* Program Type Filter */}
           <div className="mb-6">
@@ -670,13 +641,12 @@ export default function SearchResults() {
           </div>
 
           {/* Clear Filters */}
-          {(tuitionFilter || programFilters.length > 0 || deliveryTypeFilter || courseFilter || selectedCategorySlug) && (
+          {(programFilters.length > 0 || deliveryTypeFilter || courseFilter || selectedCategorySlug) && (
             <Button
               variant="outline"
               size="sm"
               className="w-full text-xs"
               onClick={() => {
-                setTuitionFilter("");
                 setProgramFilters([]);
                 setDeliveryTypeFilter("");
                 setCourseFilter("");

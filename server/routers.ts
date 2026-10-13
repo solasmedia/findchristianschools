@@ -9,7 +9,7 @@ import { notifyOwner } from "./_core/notification";
 import { notifyAdminOfSubmission, notifyCoursePosted, notifyEventPosted } from "./_core/emailNotifications";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "./rateLimit";
 import {
-  searchSchools, getSchoolBySlug, getSchoolsByState, getFeaturedSchools, getNewestSchools,
+  searchSchools, getSchoolBySlug, getSchoolNcesFacts, getSchoolsByState, getFeaturedSchools, getNewestSchools,
   getResources, getJobs, getJobsBySchool, searchJobs, submitJob, getPendingJobs, getAllJobsAdmin, getEvents, getImpactMetrics, getDonationStats,
   createSchool, updateSchool, deleteSchool,
   createResource, updateResource, deleteResource,
@@ -394,6 +394,7 @@ export const appRouter = router({
       offset: z.number().optional(),
     })).query(({ input }) => searchSchools(input)),
     getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => getSchoolBySlug(input.slug)),
+    getNcesFacts: publicProcedure.input(z.object({ schoolId: z.number() })).query(({ input }) => getSchoolNcesFacts(input.schoolId)),
     getByState: publicProcedure.input(z.object({ stateCode: z.string() })).query(({ input }) => getSchoolsByState(input.stateCode)),
     featured: publicProcedure.query(() => getFeaturedSchools()),
     newest: publicProcedure.query(() => getNewestSchools(6)),

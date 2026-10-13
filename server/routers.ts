@@ -6,10 +6,11 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createPremiumCheckout } from "./stripe/checkout";
 import { notifyOwner } from "./_core/notification";
-import { notifyAdminOfSubmission, notifyCoursePosted, notifyEventPosted } from "./_core/emailNotifications";
+import { notifyAdminOfSubmission, notifyCoursePosted, notifyEventPosted, notifySchoolOfInquiry } from "./_core/emailNotifications";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "./rateLimit";
 import {
-  searchSchools, getSchoolBySlug, getSchoolNcesFacts, getSchoolsByState, getFeaturedSchools, getNewestSchools,
+  searchSchools, getSchoolBySlug, getSchoolById, getSchoolNcesFacts, getSchoolsByState, getFeaturedSchools, getNewestSchools,
+  createSchoolInquiry, getSchoolInquiries, updateSchoolInquiry, deleteSchoolInquiry,
   getResources, getJobs, getJobsBySchool, searchJobs, submitJob, getPendingJobs, getAllJobsAdmin, getEvents, getImpactMetrics, getDonationStats,
   createSchool, updateSchool, deleteSchool,
   createResource, updateResource, deleteResource,
@@ -395,6 +396,85 @@ export const appRouter = router({
     })).query(({ input }) => searchSchools(input)),
     getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => getSchoolBySlug(input.slug)),
     getNcesFacts: publicProcedure.input(z.object({ schoolId: z.number() })).query(({ input }) => getSchoolNcesFacts(input.schoolId)),
+    // Parent inquiry from a school profile ("Ask this school a question").
+    // Always stored and always notified to the admin. It is additionally
+    // emailed to the school itself only when the school has claimed its
+    // listing and has a contact email on file — the response reports which
+    // case applied so the UI never claims a delivery that did not happen.
+    submitInquiry: publicProcedure.input(z.object({
+      schoolId: z.number(),
+      parentName: z.string().min(1, "name is required").max(255),
+      parentEmail: z.string().email("valid email is required"),
+      parentPhone: z.string().max(20).optional(),
+      childGrade: z.string().max(32).optional(),
+      message: z.string().min(1, "message is required").max(5000),
+    })).mutation(async ({ ctx, input }) => {
+      const key = getRateLimitKey('school-inquiry', undefined, ctx.req.ip);
+      if (!checkRateLimit(key, RATE_LIMITS.contact)) {
+        throw new TRPCError({ code: 'TOO_MANY_REQUESTS', message: 'Too many inquiries. Please try again in an hour.' });
+      }
+      const school = await getSchoolById(input.schoolId);
+      if (!school) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'School not found' });
+      }
+
+      const isClaimed = school.schoolClaimed || school.listingStatus === 'claimed';
+      const schoolContactEmail = isClaimed ? school.contactEmail : null;
+
+      const created = await createSchoolInquiry({
+        schoolId: input.schoolId,
+        parentName: input.parentName,
+        parentEmail: input.parentEmail,
+        parentPhone: input.parentPhone,
+        childGrade: input.childGrade,
+        message: input.message,
+      });
+
+      let deliveredToSchool = false;
+      if (schoolContactEmail) {
+        deliveredToSchool = await notifySchoolOfInquiry(
+          { name: school.name, contactEmail: schoolContactEmail },
+          {
+            parentName: input.parentName,
+            parentEmail: input.parentEmail,
+            parentPhone: input.parentPhone,
+            childGrade: input.childGrade,
+            message: input.message,
+          }
+        ).catch(() => false);
+        if (deliveredToSchool) {
+          await updateSchoolInquiry(created.id, { deliveredToSchool: true }).catch(() => {});
+        }
+      }
+
+      // Email the admin exactly once per inquiry; runs after the school
+      // delivery attempt so the notice can state the true delivery outcome.
+      await notifyAdminOfSubmission(`School Inquiry: ${school.name}`, {
+        School: school.name,
+        From: input.parentName,
+        Email: input.parentEmail,
+        Phone: input.parentPhone,
+        "Grade Exploring": input.childGrade,
+        Message: input.message.substring(0, 500),
+        "Delivered to School": deliveredToSchool ? "Yes" : "No — school has not claimed its listing or has no contact email on file",
+      }).catch(() => {}); // Don't fail if notification fails
+
+      return { success: true, deliveredToSchool } as const;
+    }),
+    getInquiries: adminProcedure.input(z.object({
+      status: z.string().optional(),
+    })).query(({ input }) => getSchoolInquiries(input.status)),
+    updateInquiry: adminProcedure.input(z.object({
+      id: z.number(),
+      status: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      await updateSchoolInquiry(input.id, { status: input.status });
+      return { success: true };
+    }),
+    deleteInquiry: adminProcedure.input(z.object({ id: z.number() })).mutation(async ({ input }) => {
+      await deleteSchoolInquiry(input.id);
+      return { success: true };
+    }),
     getByState: publicProcedure.input(z.object({ stateCode: z.string() })).query(({ input }) => getSchoolsByState(input.stateCode)),
     featured: publicProcedure.query(() => getFeaturedSchools()),
     newest: publicProcedure.query(() => getNewestSchools(6)),

@@ -1,4 +1,5 @@
 import type { Express, Request, Response } from "express";
+import { US_STATE_NAMES } from "./_core/seoHead";
 
 const SITE_URL = process.env.SITE_URL || "https://www.findchristianschools.com";
 
@@ -22,6 +23,8 @@ Sitemap: ${SITE_URL}/sitemap.xml`
   // and it defaults to false, which would hide nearly all schools from Google.
   app.get("/sitemap.xml", async (_req: Request, res: Response) => {
     try {
+      // <lastmod> for generated sections: sitemap regeneration date.
+      const today = new Date().toISOString().slice(0, 10);
       const { getDb } = await import("./db");
       const db = await getDb();
       if (!db) {
@@ -52,7 +55,7 @@ Sitemap: ${SITE_URL}/sitemap.xml`
 
       const schoolUrls = schoolRows
         .filter(r => r.slug)
-        .map(r => `  <url><loc>${SITE_URL}/school/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+        .map(r => `  <url><loc>${SITE_URL}/school/${r.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
         .join("\n");
 
       // --- Colleges: match publicCollegeConditions() in db.ts ---
@@ -76,7 +79,7 @@ Sitemap: ${SITE_URL}/sitemap.xml`
           .limit(5000);
         collegeUrls = collegeRows
           .filter(r => r.slug)
-          .map(r => `  <url><loc>${SITE_URL}/college/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+          .map(r => `  <url><loc>${SITE_URL}/college/${r.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
           .join("\n");
       } catch {
         // colleges table may not exist yet if migration hasn't run
@@ -92,7 +95,7 @@ Sitemap: ${SITE_URL}/sitemap.xml`
           .limit(5000);
         raceUrls = raceRows
           .filter(r => r.slug)
-          .map(r => `  <url><loc>${SITE_URL}/race/${r.slug}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
+          .map(r => `  <url><loc>${SITE_URL}/race/${r.slug}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
           .join("\n");
       } catch {
         // races table may not exist yet if migration hasn't run
@@ -109,7 +112,10 @@ Sitemap: ${SITE_URL}/sitemap.xml`
           .limit(5000);
         blogUrls = blogRows
           .filter(r => r.slug)
-          .map(r => `  <url><loc>${SITE_URL}/blog/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`)
+          .map(r => {
+            const lm = r.updatedAt ? new Date(r.updatedAt as any).toISOString().slice(0, 10) : today;
+            return `  <url><loc>${SITE_URL}/blog/${r.slug}</loc><lastmod>${lm}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`;
+          })
           .join("\n");
       } catch {
         // blog_posts table may not exist yet if migration hasn't run
@@ -126,7 +132,7 @@ Sitemap: ${SITE_URL}/sitemap.xml`
           .limit(5000);
         newsUrls = newsRows
           .filter(r => r.slug)
-          .map(r => `  <url><loc>${SITE_URL}/news/${r.slug}</loc><changefreq>daily</changefreq><priority>0.7</priority></url>`)
+          .map(r => `  <url><loc>${SITE_URL}/news/${r.slug}</loc><lastmod>${today}</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>`)
           .join("\n");
       } catch {
         // news_items table may not exist yet if migration hasn't run
@@ -149,7 +155,7 @@ Sitemap: ${SITE_URL}/sitemap.xml`
           .limit(5000);
         enrichmentUrls = enrichmentRows
           .filter(r => r.slug)
-          .map(r => `  <url><loc>${SITE_URL}/enrichment/listing/${r.slug}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+          .map(r => `  <url><loc>${SITE_URL}/enrichment/listing/${r.slug}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
           .join("\n");
       } catch {
         // enrichment_listings table may not exist yet if migration hasn't run
@@ -157,19 +163,25 @@ Sitemap: ${SITE_URL}/sitemap.xml`
 
       // Enrichment category landing pages (static routes)
       const enrichmentStaticUrls = ["/enrichment", "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports", "/enrichment/camps", "/enrichment/vbs", "/enrichment/youth-groups", "/enrichment/music-arts", "/enrichment/homeschool", "/enrichment/submit", "/lister-terms"]
-        .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
+        .map(p => `  <url><loc>${SITE_URL}${p}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>`)
         .join("\n");
 
-      // Static pages
-      // Static pages
-      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/news", "/traveled", "/classical-christian-schools", "/book-club", "/videos", "/federal-tax-credit", "/teacher-resources", "/teacher-toolkit", "/homeschool-hub", "/parents", "/tools", "/tools/flashcards", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/tools/vocabulary-worksheet-generator", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms", "/statement-of-faith", "/dmca"]
-        .map(p => `  <url><loc>${SITE_URL}${p}</loc><changefreq>weekly</changefreq><priority>${p === "" ? "1.0" : "0.5"}</priority></url>`)
+      // Static pages. Canonical URLs only: /videos removed (page hidden until
+      // founder reveal), /terms listed under its canonical /terms-of-service,
+      // /privacy is the canonical privacy URL.
+      const staticPages = ["", "/search", "/states", "/colleges", "/races", "/jobs", "/events", "/blog", "/news", "/traveled", "/classical-christian-schools", "/book-club", "/federal-tax-credit", "/teacher-resources", "/teacher-toolkit", "/homeschool-hub", "/parents", "/tools", "/tools/flashcards", "/tools/worksheet-generator", "/tools/math-worksheet-generator", "/tools/spelling-worksheet-generator", "/tools/handwriting-worksheet-generator", "/tools/reading-worksheet-generator", "/tools/bible-verse-maker", "/tools/vocabulary-worksheet-generator", "/lesson-planner", "/about", "/contact", "/mission", "/disclaimer", "/privacy", "/terms-of-service", "/statement-of-faith", "/dmca", "/membership"]
+        .map(p => `  <url><loc>${SITE_URL}${p}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>${p === "" ? "1.0" : "0.5"}</priority></url>`)
+        .join("\n");
+
+      // State hub pages — all 50 states + DC (uppercase codes are canonical)
+      const stateUrls = Object.keys(US_STATE_NAMES)
+        .map(code => `  <url><loc>${SITE_URL}/state/${code}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`)
         .join("\n");
 
       // TravelED destination pages (static content)
       const traveledSlugs = ["washington-dc","philadelphia","boston","colonial-williamsburg","gettysburg","mount-vernon","plymouth","st-augustine","san-antonio","charleston","new-orleans","santa-fe","yellowstone","ark-encounter","museum-of-the-bible"];
       const traveledUrls = traveledSlugs
-        .map(s => `  <url><loc>${SITE_URL}/traveled/${s}</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
+        .map(s => `  <url><loc>${SITE_URL}/traveled/${s}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`)
         .join("\n");
 
       // Top cities by school count (for SEO landing pages)
@@ -194,13 +206,14 @@ Sitemap: ${SITE_URL}/sitemap.xml`
       const cityUrls = topCities
         .map(c => {
           const slug = c.city.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-          return `  <url><loc>${SITE_URL}/city/${c.stateCode}/${slug}</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>`;
+          return `  <url><loc>${SITE_URL}/city/${c.stateCode}/${slug}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.6</priority></url>`;
         })
         .join("\n");
 
       const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticPages}
+${stateUrls}
 ${traveledUrls}
 ${cityUrls}
 ${schoolUrls}

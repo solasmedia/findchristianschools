@@ -29,7 +29,7 @@ const STATIC_ROUTES = new Set([
   "/tools/reading-worksheet-generator", "/tools/bible-verse-maker",
   "/tools/vocabulary-worksheet-generator", "/tools/flashcards",
   "/teacher-resources", "/federal-tax-credit",
-  "/classical-christian-schools", "/book-club", "/newsletter",
+  "/classical-christian-schools", "/accreditation-readiness", "/book-club", "/newsletter",
   "/enrichment", "/enrichment/submit", "/lister-terms",
   "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports",
   "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
@@ -134,6 +134,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/classical-christian-schools": {
     title: "Classical Christian Schools — Find One Near You | FindChristianSchools.com",
     description: "Find classical Christian schools near you. The trivium method — grammar, logic, rhetoric — grounded in a biblical worldview. Search our directory of classical Christian academies.",
+  },
+  "/accreditation-readiness": {
+    title: "School Accreditation Readiness: A Guide for Christian School Leaders | FindChristianSchools.com",
+    description: "How Christian school accreditation actually works: the nine standards areas every accreditor examines, the 20 non-negotiables to have in place before you apply, candidacy timelines, honest costs, and how to start getting ready years early.",
   },
   "/teacher-resources": {
     title: "Teacher Resources — Free Worksheets, Lesson Plans & Tools | FindChristianSchools.com",

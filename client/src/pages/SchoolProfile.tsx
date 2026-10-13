@@ -635,6 +635,9 @@ export default function SchoolProfile() {
                   </div>
                 </div>
               )}
+
+              {/* Ask This School a Question CTA */}
+              <AskSchoolQuestion schoolId={school.id} schoolName={school.name} schoolPhone={school.phone} variant="card" />
             </div>
 
             {/* Sidebar */}
@@ -664,6 +667,7 @@ export default function SchoolProfile() {
                     </Button>
                   </a>
                 )}
+                <AskSchoolQuestion schoolId={school.id} schoolName={school.name} schoolPhone={school.phone} variant="button" />
               </div>
 
               {/* Location Map — moved to sidebar after Contact Info */}
@@ -1120,5 +1124,139 @@ function ReportListingInline({ schoolId, schoolName }: { schoolId: number; schoo
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+// ============ Ask This School a Question ============
+// Parent inquiry form. The server stores every question and reports back
+// whether it was also delivered to the school (only possible when the
+// school has claimed its listing and has a contact email on file). The
+// success copy below mirrors that result exactly — it never claims a
+// delivery that did not happen.
+function AskSchoolQuestion({
+  schoolId,
+  schoolName,
+  schoolPhone,
+  variant = "button",
+}: {
+  schoolId: number;
+  schoolName: string;
+  schoolPhone?: string | null;
+  variant?: "button" | "card";
+}) {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [grade, setGrade] = useState('');
+  const [message, setMessage] = useState(`Hi, I'd like to learn more about ${schoolName}.`);
+  const [result, setResult] = useState<{ deliveredToSchool: boolean } | null>(null);
+
+  const inquiryMutation = trpc.schools.submitInquiry.useMutation({
+    onSuccess: (data) => {
+      setResult({ deliveredToSchool: data.deliveredToSchool });
+    },
+    onError: (err) => {
+      toast.error(err.message || 'Failed to send your question');
+    },
+  });
+
+  const openForm = () => {
+    trackEvent("school_inquiry_click", { listing_type: "school" });
+    setOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    inquiryMutation.mutate({
+      schoolId,
+      parentName: name,
+      parentEmail: email,
+      parentPhone: phone || undefined,
+      childGrade: grade || undefined,
+      message,
+    });
+  };
+
+  return (
+    <>
+      {variant === "card" ? (
+        <div className="bg-white rounded-xl border border-gray-100 p-6 text-center">
+          <MessageSquare className="w-10 h-10 text-[#0055A4] mx-auto mb-3" />
+          <h2 className="text-lg font-semibold text-[#002855] mb-2">Have a Question About {schoolName}?</h2>
+          <p className="text-sm text-gray-600 mb-5 leading-relaxed max-w-lg mx-auto">
+            Ask about admissions, tuition, tours, or anything else on your mind. If {schoolName} has joined FindChristianSchools, your question goes straight to their inbox.
+          </p>
+          <Button onClick={openForm} className="bg-[#0055A4] hover:bg-[#003d7a] text-white border-0 px-6">
+            <MessageSquare className="w-4 h-4 mr-2" /> Ask This School a Question
+          </Button>
+        </div>
+      ) : (
+        <Button onClick={openForm} className="w-full mt-3 bg-[#0055A4] hover:bg-[#003d7a] text-white border-0">
+          <MessageSquare className="w-4 h-4 mr-2" /> Ask This School a Question
+        </Button>
+      )}
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-[#002855]">Ask {schoolName} a Question</DialogTitle>
+          </DialogHeader>
+          {result ? (
+            <div className="text-center py-6">
+              <CheckCircle className="w-12 h-12 text-[#6EBE44] mx-auto mb-3" />
+              <h3 className="font-semibold text-[#002855] mb-2">{result.deliveredToSchool ? "Question Sent!" : "Question Saved"}</h3>
+              {result.deliveredToSchool ? (
+                <p className="text-sm text-gray-600">Your question was sent to {schoolName}. They usually reply by email.</p>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  We've saved your question for {schoolName}. They haven't joined FindChristianSchools yet, so we can't deliver it directly
+                  {schoolPhone ? (
+                    <> — you can also reach them at <a href={`tel:${schoolPhone}`} className="text-[#0055A4] font-medium">{schoolPhone}</a>.</>
+                  ) : (
+                    "."
+                  )}
+                </p>
+              )}
+              <Button className="mt-4 bg-[#0055A4] hover:bg-[#003d7a] text-white border-0" onClick={() => setOpen(false)}>Close</Button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div>
+                <label className="text-xs font-medium text-gray-700">Your Name *</label>
+                <input type="text" required value={name} onChange={e => setName(e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]/20" />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-700">Your Email *</label>
+                <input type="email" required value={email} onChange={e => setEmail(e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]/20" />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-700">Phone (optional)</label>
+                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]/20" />
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-700">Grade You're Exploring (optional)</label>
+                <select value={grade} onChange={e => setGrade(e.target.value)} className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]/20">
+                  <option value="">Select a grade...</option>
+                  <option value="Preschool">Preschool</option>
+                  <option value="Kindergarten">Kindergarten</option>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(g => (
+                    <option key={g} value={`Grade ${g}`}>Grade {g}</option>
+                  ))}
+                  <option value="Multiple grades">Multiple grades</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-gray-700">Your Question *</label>
+                <textarea required value={message} onChange={e => setMessage(e.target.value)} rows={4} className="w-full mt-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4]/20" />
+              </div>
+              <Button type="submit" disabled={inquiryMutation.isPending} className="w-full bg-[#0055A4] hover:bg-[#003d7a] text-white border-0">
+                {inquiryMutation.isPending ? 'Sending...' : 'Send Question'}
+              </Button>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

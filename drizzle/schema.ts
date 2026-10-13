@@ -615,6 +615,14 @@ export const colleges = mysqlTable("colleges", {
   denomination: varchar("denomination", { length: 128 }),
   ipedsUnitId: varchar("ipedsUnitId", { length: 16 }),
   enrollment: int("enrollment"),
+  // IPEDS enrichment facts (populated by server/scripts/importIpeds.ts).
+  // tuition = published tuition & fees per year (undergraduate, in-state
+  // where applicable); graduationRate = overall rate, % completing within
+  // 150% of normal time; ipedsDataYear = survey vintage, e.g. "2023-24".
+  tuition: int("tuition"),
+  graduationRate: decimal("graduationRate", { precision: 5, scale: 2 }),
+  highestDegreeOffered: varchar("highestDegreeOffered", { length: 64 }),
+  ipedsDataYear: varchar("ipedsDataYear", { length: 16 }),
   latitude: decimal("latitude", { precision: 10, scale: 7 }),
   longitude: decimal("longitude", { precision: 10, scale: 7 }),
   source: varchar("source", { length: 64 }).default("ipeds").notNull(),

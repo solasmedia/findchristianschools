@@ -7,6 +7,7 @@ import { SeoHead } from "@/components/SeoHead";
 import { JsonLd } from "@/components/SeoJsonLd";
 import { Clock, Download, ArrowLeft, CheckCircle, Printer, Mail } from "lucide-react";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { ShareButton } from "@/components/ShareButton";
 
 function formatDate(dateStr?: string | Date | null) {
   if (!dateStr) return "";
@@ -376,6 +377,9 @@ export default function BlogPost() {
                 ${(post.resourcePriceCents / 100).toFixed(0)} premium resource
               </span>
             )}
+            <span className="ml-auto">
+              <ShareButton title={post.title} url={`/blog/${post.slug}`} />
+            </span>
           </div>
 
           {post.heroImageUrl && (

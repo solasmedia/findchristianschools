@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { Link } from "wouter";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
+import { schoolChoiceStateList } from "@shared/schoolChoice";
 import { GraduationCap, DollarSign, Users, FileText, CheckCircle, AlertCircle, ExternalLink, Calendar } from "lucide-react";
 
 export default function FederalTaxCredit() {
@@ -362,6 +364,29 @@ export default function FederalTaxCredit() {
             ))}
           </div>
           <p className="text-gray-400 text-xs mt-6 italic">State participation data as of October 2026, per IRS announcements (IR-2026-76 and the Oct 2026 Treasury update). We'll update this directory as SGO registries are published.</p>
+        </section>
+
+        {/* School Choice by State */}
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-[#002855] mb-2">School Choice Programs in Your State</h2>
+          <p className="text-gray-600 mb-6">
+            The federal credit is only part of the picture. Many states also run their own education savings
+            accounts, vouchers, and tax-credit scholarships that can stack with it. Pick your state for its
+            verified program details, award amounts, and official application sources.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {schoolChoiceStateList
+              .filter((s) => s.stateCode !== "DC")
+              .map((s) => (
+                <Link
+                  key={s.stateCode}
+                  href={`/state/${s.stateCode.toLowerCase()}`}
+                  className="bg-white border border-gray-200 text-[#002855] rounded-full px-4 py-2 text-sm font-medium hover:border-[#6EBE44] hover:shadow-sm transition"
+                >
+                  {s.state}
+                </Link>
+              ))}
+          </div>
         </section>
 
         {/* FAQ */}

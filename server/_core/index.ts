@@ -129,12 +129,6 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
-    // Temporary one-time import runner (inert unless RUN_ONE_TIME_IMPORTS
-    // is set). Detached and failure-isolated; delete with
-    // server/oneTimeImports.ts after the run.
-    void import("../oneTimeImports")
-      .then((m) => m.maybeRunOneTimeImports())
-      .catch((err) => console.error("[OneTimeImports] failed to load runner", err));
   });
 }
 

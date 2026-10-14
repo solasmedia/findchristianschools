@@ -770,6 +770,9 @@ export const newsItems = mysqlTable("news_items", {
   category: mysqlEnum("category", [
     "national", "state", "policy", "school_choice", "curriculum",
   ]).default("national").notNull(),
+  topic: varchar("topic", { length: 32 }).default("general").notNull(), // deterministic topic bucket for /news grouping (see newsFetcher classifyTopic)
+  reviewStatus: varchar("reviewStatus", { length: 16 }).default("published").notNull(), // published | held (flag-screen holds are never public until a human approves)
+  holdReason: varchar("holdReason", { length: 255 }), // flag terms that held the item, for the admin review queue
   stateCode: varchar("stateCode", { length: 2 }), // nullable, for state-tagged news
   publishedAt: timestamp("publishedAt"),
   fetchedAt: timestamp("fetchedAt").defaultNow().notNull(),

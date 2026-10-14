@@ -73,15 +73,14 @@ export const MODULES: CourseModule[] = [
       src: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1200&auto=format&fit=crop",
       alt: "A student writing questions in a notebook",
     },
-    intro:
-      "Before you can think clearly about anything — a headline, a project, a big decision — you have to know how to ask about it. This first module is about the skill every other module stands on: asking better questions.",
+    intro: "Before you can think clearly about anything — a headline, a project, a decision with real consequences — you have to know how to ask about it, because the quality of an answer can never rise above the quality of the question that produced it. This first module is about the skill every other module stands on: learning to ask questions that open a subject up instead of shutting it down.",
     sections: [
       {
         heading: "The teacher who asked questions",
         paragraphs: [
-          "Here is something easy to miss when you read the Gospels: Jesus asked questions. A lot of them. The Gospels record him asking hundreds of questions — far more than he answered directly.",
-          "He asked his followers, “Who do you say I am?” — a question that made them think, not just repeat. And in Mark 10, a blind man named Bartimaeus cried out for healing. His need could not have been more obvious. Jesus still stopped and asked him a question.",
-          "If Jesus asked questions when he already knew every answer, then asking is not a sign of weakness. It is how careful thinkers start. A good question is not a delay. It is the doorway.",
+          "Here is something easy to overlook when you read the Gospels: Jesus asked questions constantly — hundreds of them, recorded across the four accounts — and he asked far more questions than he ever answered directly, even though no answer was hidden from him.",
+          "He turned to his followers and asked, “Who do you say I am?” — a question designed to make them think rather than repeat what others had said. And in Mark 10, when a blind man named Bartimaeus cried out for healing, his need could hardly have been more obvious, yet Jesus still stopped and asked him a question before doing anything else.",
+          "If Jesus asked questions when he already knew every answer, then asking is not a confession of weakness or a waste of time. It is how careful thinkers begin. A good question is not a delay placed in front of the real work; it is the doorway the real work walks through.",
         ],
         verse: {
           text: "And Jesus said to him, “What do you want me to do for you?”",
@@ -91,9 +90,9 @@ export const MODULES: CourseModule[] = [
       {
         heading: "A brake and a steering wheel",
         paragraphs: [
-          "A question does two jobs at once. It is a brake: it slows you down before you react, repeat, or rush in. And it is a steering wheel: it points your thinking at the part that actually matters.",
-          "Most wrong turns in thinking are not about intelligence at all. They happen because people solve the first problem they see instead of the real one. Thirty seconds of asking beats thirty minutes of fixing the wrong problem.",
-          "So before you answer, argue, share, or decide, brake first. Ask: What is really going on here? What do I actually know? What am I assuming?",
+          "A well-aimed question does two jobs at once. It works as a brake, slowing you down before you react, repeat, or rush in on impulse. And it works as a steering wheel, pointing your attention toward the part of the situation that actually matters instead of the part that merely shouts the loudest.",
+          "Most wrong turns in thinking have surprisingly little to do with intelligence. They happen because people pour their energy into solving the first problem they notice instead of the real problem underneath it. Thirty seconds of honest asking will beat thirty minutes of confidently repairing the wrong thing, every single time.",
+          "So before you answer, argue, share, or decide, brake first and interrogate the situation. What is really going on here? What do I actually know, and how do I know it? What am I assuming without noticing? The answers to those three questions will quietly reorganize everything you do next.",
         ],
         verse: {
           text: "Know this, my beloved brothers: let every person be quick to hear, slow to speak, slow to anger.",
@@ -103,8 +102,8 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Closed questions get yes or no. Open questions get truth.",
         paragraphs: [
-          "A closed question can be answered with yes, no, or one word. It ends the conversation. An open question starts with what, how, or why — and it cannot be answered without real thought. It invites the truth out.",
-          "Neither kind is bad. Closed questions are fine for facts and times. But when something matters — a project, a purchase, a claim somebody wants you to believe — open questions are the ones that get you somewhere true. Compare these:",
+          "A closed question can be answered with yes, no, or a single word, and once it is answered, the conversation is over. An open question begins with what, how, or why; it cannot be answered without genuine thought, and it invites the truth out into the open where you can examine it.",
+          "Neither kind is a mistake. Closed questions serve perfectly well for facts, times, and quick confirmations. But when something genuinely matters — a project that is failing, a purchase that will cost you, a claim somebody is pressing you to believe — open questions are the ones that carry you somewhere true. Compare the difference:",
         ],
         examples: [
           {
@@ -127,104 +126,69 @@ export const MODULES: CourseModule[] = [
       {
         heading: "The Parking Lot",
         paragraphs: [
-          "Here is a tool worth stealing for the rest of your life. When a question pops up that you cannot answer right now, do not drop it and do not let it derail you. Park it.",
-          "Parking a question means writing it down — in a notebook, in your phone, on a sticky note — and deliberately coming back to it later. A parked question is not a dropped question. It is a question waiting for its turn.",
-          "This one habit will help you everywhere: in class, when a lesson raises something you do not understand yet; on a group project, when a side topic pulls the team away from the main job; and in your faith, when a hard question about God needs time and honesty instead of a rushed answer.",
+          "Here is a tool worth keeping for the rest of your life. When a question surfaces that you cannot answer on the spot, you have three options, and two of them are bad: you can drop it entirely, or you can let it derail whatever you were supposed to be doing. The third option is to park it.",
+          "Parking a question means writing it down — in a notebook, in a notes app, on a sticky note stuck where you will see it — and deliberately returning to it later, when you have the time and information it deserves. A parked question is not a dropped question. It is a question waiting for its turn instead of being lost.",
+          "This single habit pays off everywhere. In class, when a lesson raises something you do not yet understand and the teacher has already moved on. On a group project, when an interesting side topic threatens to pull the whole team away from the main job. And in your faith, when a hard question about God deserves time, honesty, and a real conversation instead of a rushed answer invented under pressure.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Start a parking lot page in a notebook or your notes app. Every time a real question shows up — about school, the news, a project, your faith — write it down instead of letting it float away. Bring one parked question to a parent, teacher, or pastor this week.",
+          text: "Start a parking lot page in a notebook or your notes app this week. Every time a genuine question surfaces — about school, the news, a project, or your faith — write it down in full instead of letting it drift away unanswered. Then choose one parked question and carry it to a parent, teacher, or pastor, and notice how much better the conversation goes when the question arrives written and thought through.",
         },
       },
     ],
     drill: {
       title: "Turn statements into questions",
-      intro:
-        "A statement can feel like a dead end. A question opens a way forward. Practice by turning each statement below into an open question — then check the model answer and compare. Yours does not have to match; it has to be open.",
+      intro: "A statement can feel like a dead end; a question opens a way forward. Each statement below arrives with a complication, so one question is not enough. Practice two moves: ask the open question that starts the digging, then the follow-up question that settles what actually gets done. Compare with the model pair — yours does not have to match, but both of your questions have to be open.",
       items: [
         {
-          statement: "“My science project is due on Friday.”",
-          model:
-            "What do I want my project to show, and what is my very first step today?",
+          statement: "“My science project is due on Friday, and I have not chosen a topic yet.”",
+          model: "First question: “What topic interests me enough that I could test something real about it in three days?” Follow-up, once a topic is chosen: “What is the smallest version of this project I can finish well by Friday, and what is my first step tonight?” The first question opens the subject; the second turns the answer into a plan.",
         },
         {
-          statement: "“I am saving up for a new bike.”",
-          model:
-            "How much do I need in total, what can I set aside each week, and what could I do to earn the rest?",
+          statement: "“I am saving for a new bike, but my brother's birthday comes first this month.”",
+          model: "First question: “What does the bike cost in total, and how much can I realistically set aside each week?” Follow-up: “How do I cover the birthday gift without quietly abandoning the bike goal — a smaller gift, an earned extra, or a one-month pause with a restart date?” Good follow-ups protect the plan from real life instead of pretending real life will not happen.",
         },
         {
-          statement: "“We won the game by a single point.”",
-          model:
-            "Which play made the biggest difference, and what could we practice before the next game?",
+          statement: "“We won the game by a single point, and coach says we were lucky.”",
+          model: "First question: “Which plays actually decided the game, and which of them can we repeat on purpose?” Follow-up: “What nearly cost us the game in the final minutes, and what will we drill this week so it does not?” Winning hides weaknesses; the follow-up question goes looking for them while there is still time to fix them.",
         },
       ],
     },
     quiz: [
       {
-        question: "In Mark 10, what did Jesus ask the blind man who clearly needed healing?",
-        answers: [
-          "Do you believe I can do this?",
-          "What do you want me to do for you?",
-          "Why did you not ask sooner?",
-          "Who told you where I was?",
-        ],
-        correct: 2,
-        explanation:
-          "“What do you want me to do for you?” (Mark 10:51). Jesus asked, even when the need seemed obvious.",
-        timeLimit: 20,
-      },
-      {
-        question: "Which of these is an OPEN question?",
-        answers: [
-          "Did you finish your homework?",
-          "Is the test on Friday?",
-          "What part of this assignment is hardest?",
-          "Do we have practice today?",
-        ],
+        question: "Nia's group poster is due tomorrow, half is blank, and nobody will say why. Best first question?",
+        answers: ["Whose fault is the blank half of the poster?", "Did everyone forget the deadline was tomorrow?", "What is still missing, and what blocked it?", "Should we ask the teacher for more time?"],
         correct: 3,
-        explanation:
-          "Open questions cannot be answered yes or no — they invite real thought and honest answers.",
+        explanation: "“What is still missing, and what blocked it?” is open: it names the gap and hunts the cause in a single move. Blame and yes-or-no questions end conversations instead of starting them.",
         timeLimit: 20,
       },
       {
-        question:
-          "Your teammate says after the game, “That was close!” What is the best follow-up question?",
-        answers: [
-          "Who scored the most points?",
-          "What moment turned the game in our favor?",
-          "Did we nearly lose it?",
-          "Was the other team any good?",
-        ],
+        question: "A headline claims a new study 'proves' something surprising. Which question digs deepest?",
+        answers: ["How many people have shared this headline?", "What did the study actually measure, and how?", "Do the scientists sound confident about it?", "Is this the first study I have seen today?"],
         correct: 2,
-        explanation:
-          "“What moment turned the game in our favor?” digs into what actually happened instead of settling for yes or no.",
+        explanation: "Asking what was measured, and by what method, goes straight to the evidence. Shares, confidence, and timing describe the crowd and the headline — not whether the claim is true.",
         timeLimit: 20,
       },
       {
-        question: "What does it mean to park a question in the Parking Lot?",
-        answers: [
-          "Drop it and forget it",
-          "Write it down and come back to it later",
-          "Only ask it during class",
-          "Save it for the final test",
-        ],
-        correct: 2,
-        explanation:
-          "Parking a question means writing it down and returning to it on purpose. Parked is not dropped.",
+        question: "During a team meeting, a side question keeps pulling everyone off the main problem. Best move?",
+        answers: ["Drop the side question and never raise it", "Stop the meeting and debate it right now", "Answer it quickly, even if the answer is a guess", "Park it in writing and return to it after"],
+        correct: 4,
+        explanation: "Parking protects both jobs: the main problem keeps the meeting, and the side question survives in writing instead of derailing the team or quietly disappearing.",
         timeLimit: 20,
       },
       {
-        question: "Why ask questions BEFORE jumping into a problem?",
-        answers: [
-          "It makes you look smart",
-          "It delays the hard work",
-          "You might be solving the wrong problem",
-          "Questions are always answered fast",
-        ],
+        question: "Leo asks, “Did the training help your time?” That question is weak mainly because it…",
+        answers: ["can be fully answered with one word: yes", "is too difficult for a coach to answer", "mentions training instead of the race", "should always begin with the word why"],
+        correct: 1,
+        explanation: "A yes-or-no question closes the door it opens. “How did the training change your time, and where did it help most?” would force real information into the open.",
+        timeLimit: 20,
+      },
+      {
+        question: "Before buying a used bike, which question set does the most work for the buyer?",
+        answers: ["Is it a color you like, and is it fast on hills?", "Can I pay today, and is the price final?", "Why are you selling it, and what has been repaired?", "Did you enjoy riding it, and for how long?"],
         correct: 3,
-        explanation:
-          "Thirty seconds of asking beats thirty minutes of fixing the wrong problem.",
-        timeLimit: 20,
+        explanation: "The seller's reason for selling and the bike's repair history are where hidden problems live. Color, speed, and nostalgia cannot tell you whether the bike is sound.",
+        timeLimit: 30,
       },
     ],
   },
@@ -239,15 +203,14 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/5964491/pexels-photo-5964491.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "Weighing an ingredient on a kitchen scale",
     },
-    intro:
-      "Every day, statements fly at you — from videos, friends, packaging, headlines, and your own feed. Some can be proven. Some are just what somebody thinks. And some sound solid but have never been checked. This module teaches you to sort them before they settle in your head as truth.",
+    intro: "Every day, statements fly at you from every direction — videos, friends, packaging, headlines, and your own feed. Some of them can be proven. Some are simply what somebody prefers. And some sound perfectly solid while resting on nothing that has ever been checked. This module teaches you to sort statements into those three kinds before they settle into your head and start behaving like truth.",
     sections: [
       {
         heading: "The Bereans checked it out",
         paragraphs: [
-          "In Acts 17, the apostle Paul taught in the city of Berea. The Bereans listened eagerly — and then they did something the Bible calls noble: they examined the Scriptures daily to see if what Paul said was true.",
-          "Notice what they did not do. They did not accept it just because an apostle said it. And they did not reject it because it sounded new. They checked it against what they could trust. Checking was not a lack of faith. It was faith taking its job seriously.",
-          "That is the habit this whole course builds, and it starts with a simple sort. Almost everything you hear is one of three things: a fact, an opinion, or a claim that still needs checking.",
+          "In Acts 17, the apostle Paul taught in the city of Berea, and the Bereans listened eagerly — and then they did something the Bible pointedly calls noble: they examined the Scriptures daily to see whether what Paul said was actually true.",
+          "Notice what they refused to do. They did not accept the teaching merely because an apostle delivered it, and they did not reject it merely because it sounded unfamiliar. They compared it against what they could already trust. Checking was not a failure of faith; it was faith taking its responsibility seriously.",
+          "That is the habit this entire course is built to produce, and it begins with one simple sort. Almost everything you hear belongs to one of three kinds: a fact, an opinion, or a claim that has not yet earned either label and still needs checking.",
         ],
         verse: {
           text: "Now these Jews were more noble than those in Thessalonica; they received the word with all eagerness, examining the Scriptures daily to see if these things were so.",
@@ -257,9 +220,9 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Three kinds of statements",
         paragraphs: [
-          "A fact is a statement that can be checked and shown to be true: it can be measured, counted, timed, or looked up in a reliable record. 'The game ended 24 to 17.' 'This rope is three meters long.' Facts do not care how anyone feels about them.",
-          "An opinion is what someone judges or prefers. 'That was the best game of the year.' 'Blue is the best color for a bike.' Opinions are not worthless — they tell you what a person values — but they cannot be proven the way a score can, and they should never be passed off as facts.",
-          "Then there is everything between: statements that sound like facts but arrive without proof. 'Most people agree…' 'Scientists say…' 'This glue holds up to 100 pounds.' Some of them are true. Some are not. Until they are checked, they live in the third box: needs checking.",
+          "A fact is a statement that can be checked and shown to be true: it can be measured, counted, timed, or looked up in a reliable record. 'The game ended 24 to 17.' 'This rope is three meters long.' Facts hold their position regardless of how anyone feels about them, which is exactly what makes them facts.",
+          "An opinion is what somebody judges or prefers: 'That was the best game of the year,' or 'Blue is the best color for a bike.' Opinions are not worthless — they reveal what a person values, and they can be argued well or badly — but they can never be proven the way a score can, and they should never be passed off as measurements.",
+          "Then there is everything between: statements that sound like facts but arrive carrying no proof at all. 'Most people agree…' 'Scientists say…' 'This glue holds up to 100 pounds.' Some of these are true and some are not, and from the outside they look identical. Until they are checked, they belong in the third box: needs checking.",
         ],
         verse: {
           text: "The simple believes everything, but the prudent gives thought to his steps.",
@@ -269,110 +232,79 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Clue words",
         paragraphs: [
-          "Statements often carry their own labels, if you know what to listen for. Measuring words — weighs, measures, scored, counted, at 3:00 — usually signal a fact, because they point at something you could check yourself.",
-          "Judging words — best, worst, amazing, boring, should, ought to — usually signal an opinion. They are grading something, not measuring it. And foggy words — everyone, most people, studies show, they say — usually signal the third box. Who is 'everyone'? Which studies? Fog is a sign to slow down and check.",
-          "One statement can mix all three: 'Our team won 3–1 (fact), so we are clearly the best team in the league (opinion), and everyone knows it (fog).' A clear thinker can take a sentence apart, piece by piece, and sort each piece on its own.",
+          "Statements often carry their own labels, if you know what to listen for. Measuring words — weighs, scored, counted, timed, at 3:00 exactly — usually signal a fact, because they point at something you could go and verify for yourself.",
+          "Judging words — best, worst, amazing, boring, should, ought to — usually signal an opinion, because they are grading something rather than measuring it. And foggy words — everyone, most people, studies show, they say — usually signal the third box. Who exactly is 'everyone'? Which studies, and did they say that? Fog is not an answer; it is a signal to slow down and check.",
+          "A single statement can smuggle all three kinds past you at once: 'Our team won 3–1' (a fact), 'so we are clearly the best team in the league' (an opinion), 'and everyone knows it' (fog). A clear thinker takes a sentence apart piece by piece and sorts each piece on its own merits, instead of letting the strongest piece carry the weakest.",
         ],
       },
       {
         heading: "The ten-second sort",
         paragraphs: [
-          "Here is the habit: when a statement lands, give it ten seconds before you believe it, repeat it, or act on it. Silently tag it — fact, opinion, or check. That tiny pause is the whole skill, and it works everywhere: in class, in a store, in a group chat, in a headline.",
-          "You will be surprised how much of what sounds like knowledge turns out to be opinion wearing a fact costume, or fog wearing a confident voice. Sorting does not make you doubt everything. It makes you sure about the right things.",
+          "So here is the habit: when a statement lands, give it ten seconds before you believe it, repeat it, or act on it. Silently tag it — fact, opinion, or needs checking. That tiny pause is the whole skill, and it works identically everywhere: in class, in a store, in a group chat, under a headline.",
+          "You will be surprised how much of what parades as knowledge turns out to be opinion wearing a fact costume, or fog wearing a confident voice. Sorting does not train you to doubt everything. It trains you to be sure about the right things, for reasons you can name.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Pick one video, article, or conversation each day and sort three of its statements: fact, opinion, or needs checking. Write the tags in a notebook. Notice which box fills up fastest — that tells you what kind of talk surrounds you.",
+          text: "Pick one video, article, or conversation each day this week and sort three of its statements: fact, opinion, or needs checking. Write the tags in a notebook with one line on why each statement landed where it did. By the end of the week, notice which box fills fastest — it tells you what kind of talk surrounds you, and how much of it has actually been proven.",
         },
       },
     ],
     drill: {
       title: "Sort the statement",
-      intro:
-        "Read each statement and decide which box it belongs in: fact, opinion, or needs checking. Then open the model answer and compare your reasoning. The tag matters less than the reason behind it.",
-      modelLabel: "The sort",
+      intro: "Each statement below mixes kinds on purpose. Do two jobs: sort it, and name the exact check — or the exact missing piece — that decides it. Then open the model answer and compare the reasoning, because the reasoning is the skill, not the label.",
       items: [
         {
-          statement: "“The final score was 24 to 17.”",
-          model:
-            "Fact. A score can be checked against the scorebook or the official record — it does not depend on anyone's preference.",
+          statement: "“Our school collected 412 cans last month, so our drive was the best in the county.”",
+          model: "Two pieces, two boxes. '412 cans' is a fact: countable, and the collection record settles it. 'Best in the county' still needs checking: best by what measure, and what did the other schools collect? A claim standing beside a true number does not become a measurement itself.",
         },
         {
-          statement: "“This is the best backpack ever made.”",
-          model:
-            "Opinion. 'Best ever' is a judgment. The speaker may love the backpack, but no measurement can prove a 'best ever.'",
+          statement: "“This trail mix has 30% more protein!”",
+          model: "Needs checking, and the missing piece is the comparison. Thirty percent more than what — the old recipe, a rival brand, a handful of peanuts? And protein per what amount — per serving, or per bag? Until the comparison and the amount are both named, the number is decoration, not information.",
         },
         {
-          statement: "“This cereal now has 20% more!”",
-          model:
-            "Needs checking. More than what — last year's box, another brand, the old size? The claim sounds like a fact, but the missing comparison is exactly what you would have to check.",
+          statement: "“Practice starts at 4:30, and honestly, evening practices are way better than morning ones.”",
+          model: "Sort the halves separately. 'Practice starts at 4:30' is a fact the schedule can confirm in seconds. 'Evening practices are way better' is an opinion — 'way better' grades the experience instead of measuring it. A true fact standing next to an opinion does not promote the opinion into a fact.",
         },
       ],
     },
     quiz: [
       {
-        question: "In Acts 17, how did the Bereans respond to Paul's teaching?",
-        answers: [
-          "They believed it all without checking",
-          "They examined the Scriptures daily to check it",
-          "They waited for someone famous to agree",
-          "They rejected it because it was new",
-        ],
+        question: "An ad announces: “Now with 30% more!” — and nothing else. How should a careful thinker file it?",
+        answers: ["Needs checking: more than what is never said", "A fact: the box itself is a reliable record", "An opinion: percentages are personal views", "A fact: printed numbers can always be trusted"],
+        correct: 1,
+        explanation: "A percentage without a comparison partner is fog in a number costume. More than the old version? A rival? Until the comparison is named, the claim belongs in needs checking.",
+        timeLimit: 20,
+      },
+      {
+        question: "Which statement can be SETTLED by checking a record, with no judgment involved?",
+        answers: ["Friday's quiz was the hardest of the term", "The library closes earlier in the summer", "Summer is the best season for reading", "Our class should read more chapters"],
         correct: 2,
-        explanation:
-          "The Bereans received the word eagerly AND examined it daily. Eagerness and checking went together.",
+        explanation: "Closing hours live in a published schedule — look it up and the question is closed. Hardest, best, and should are gradings and preferences, which no record can settle.",
         timeLimit: 20,
       },
       {
-        question: "Which of these statements is a FACT?",
-        answers: [
-          "This is the best rope ever made",
-          "Rope should always cost less",
-          "This rope is three meters long",
-          "Everyone prefers this rope",
-        ],
+        question: "“Everyone at school is getting the new game.” Which response handles the fog best?",
+        answers: ["Repeat it — when everyone says a thing, it is true", "Reject it — statements like that are false", "Ask who 'everyone' is and whether anyone counted", "Ignore it — fog words never matter at all"],
         correct: 3,
-        explanation:
-          "Length can be measured. 'Best,' 'should,' and 'everyone prefers' are judgment or fog.",
+        explanation: "The honest move is neither swallowing nor dismissing: it is demanding the count behind the fog. 'Everyone' usually shrinks dramatically the moment somebody actually counts.",
         timeLimit: 20,
       },
       {
-        question: "Which statement belongs in the 'needs checking' box?",
-        answers: [
-          "The recipe calls for two cups of flour",
-          "Our team scored 18 points in the game",
-          "Blue is a great color for a bike",
-          "A video says this glue holds 100 pounds",
-        ],
+        question: "A report says the bridge is 40 meters long and 'a beautiful design.' Sorting it correctly means…",
+        answers: ["both halves are facts because one is true", "the whole sentence is an opinion overall", "both halves are opinions about the bridge", "40 meters is a fact; 'beautiful' is opinion"],
         correct: 4,
-        explanation:
-          "The glue claim sounds like a fact but arrives with no test you can see. Check before you trust.",
+        explanation: "Mixed sentences get sorted piece by piece. The length can be measured; the beauty can only be judged — and the measured half never promotes the judged half.",
         timeLimit: 20,
       },
       {
-        question: "Which word is a clue that a statement is probably an opinion?",
-        answers: ["measured", "counted", "best", "Tuesday"],
-        correct: 3,
-        explanation:
-          "Judging words like best, worst, and amazing grade something. Measuring words point at checkable facts.",
-        timeLimit: 20,
-      },
-      {
-        question: "Why sort statements into fact, opinion, and needs checking?",
-        answers: [
-          "So you can win more arguments",
-          "So opinions stop existing",
-          "So you never have to check anything",
-          "So each statement gets only the trust it earned",
-        ],
-        correct: 4,
-        explanation:
-          "Sorting gives every statement the right amount of trust — full trust for proven facts, a pause for the rest.",
+        question: "Why does the ten-second sort matter most for statements you WANT to be true?",
+        answers: ["Wanting a claim true makes you skip checking", "Wanted statements are usually proven false", "Feelings about a claim change what it is", "The sort only works on claims you dislike"],
+        correct: 1,
+        explanation: "Claims that flatter what you already believe slide past your guard without inspection. The sort matters most exactly there — the Bereans checked even a message they were eager to receive.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 3,
     slug: "check-the-source",
@@ -384,23 +316,22 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/5491019/pexels-photo-5491019.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A magnifying glass held over newspaper print",
     },
-    intro:
-      "Before a claim reaches you, it passes through somebody's hands — a person, a channel, a company, a friend of a friend. This module is about looking at the hands, not just the message: who is telling you this, what do they want, and can you find it anywhere else?",
+    intro: "Before a claim reaches you, it passes through somebody's hands — a person, a channel, a company, a friend of a friend who heard it from somewhere. This module is about examining the hands, not just the message: who is telling you this, what do they stand to gain, and can the same claim be found standing anywhere else?",
     sections: [
       {
         heading: "Every message has a messenger",
         paragraphs: [
-          "Imagine two people tell you the bridge on your road is closed. One is the road crew chief standing at the bridge. The other is someone who saw a screenshot of a post about a bridge in another state. Same words, very different weight.",
-          "That is because information is only as strong as its source. A claim you see online has usually traveled: somebody saw something, posted about it, a channel clipped it, a friend shared the clip, and then it reached you. At every hop, pieces can fall off — the date, the place, the second half of the sentence.",
-          "Clear thinkers do not just ask, 'Is this interesting?' They ask, 'Where did this actually come from?' Three questions will carry you a long way.",
+          "Imagine two people tell you the bridge on your road is closed. One is the road crew chief, standing at the bridge in a safety vest. The other is somebody repeating a screenshot of a post about a bridge in another state. The words are identical; the weight they deserve is not remotely the same.",
+          "Information is only ever as strong as the source carrying it, and a claim you encounter online has usually traveled a considerable distance before reaching you: somebody witnessed an event, posted an account of it, a channel clipped the account, a friend shared the clip, and the fragment that remained is what finally arrived in front of you. At every hop along that journey, pieces quietly fall away — the date, the place, the qualifying second half of the sentence — until what survives may resemble the original event only loosely.",
+          "Clear thinkers therefore ask a different first question. Not 'Is this interesting?' but 'Where did this actually come from?' Three questions, asked in order, will carry you a very long way.",
         ],
       },
       {
         heading: "Three questions for any source",
         paragraphs: [
-          "First: who is telling me this? A named person or organization that was actually there, or that studied the thing carefully, carries more weight than an unnamed account repeating it. Second: what do they want? Every source wants something — to inform you, to sell you something, to persuade you, to entertain you. Wanting something does not make a source dishonest, but you deserve to know what the want is.",
-          "Third: can I find it somewhere else? When two separate, trustworthy places report the same thing independently, confidence grows. When a claim exists in exactly one screenshot and nowhere else on earth, that is information too.",
-          "God cares about honest measure — a scale that reads true is his delight. Treat sources the same way: a good source measures straight and lets you check its work.",
+          "First: who is telling me this? A named person or organization that was actually present, or that studied the subject carefully, carries more weight than an unnamed account repeating something at third hand. Second: what do they want? Every source wants something — to inform you, to sell you something, to persuade you, to entertain you. Wanting something does not make a source dishonest, but you are entitled to know what the want is before you decide how much trust it has earned.",
+          "Third: can I find it somewhere else? When two separate, trustworthy places report the same event independently of each other, confidence grows, because the same error is unlikely to occur twice in the same way. When a claim exists in exactly one screenshot and nowhere else on earth, that absence is information too.",
+          "God cares about honest measure; a scale that reads true is his delight. Hold sources to the same standard: a good source measures straight, states its interest plainly, and lets you check its work.",
         ],
         verse: {
           text: "A false balance is an abomination to the LORD, but a just weight is his delight.",
@@ -410,16 +341,16 @@ export const MODULES: CourseModule[] = [
       {
         heading: "The screenshot problem",
         paragraphs: [
-          "The weakest form a claim can travel in is a screenshot of a headline. It has no link to follow, no date you can trust, and no way to see what came before or after the cropped lines. Anyone can screenshot a headline from five years ago, or from a joke page, and send it around as today's news.",
-          "Compare three versions of one story. Version one: a screenshot saying a Saturday game is cancelled. Version two: a teammate's post saying he heard the game might move. Version three: the league's own schedule page, updated that morning. The words are similar. The sources are not — and the third one is the one worth acting on.",
-          "Rule of thumb: the closer a claim sits to the person or place it is about, the more weight it carries. A screenshot sits far away. Go closer.",
+          "The weakest form a claim can possibly travel in is a screenshot of a headline, because a screenshot strips away everything that would allow you to examine it: it carries no link to follow, no date you can trust, and no access to whatever was written immediately before or after the cropped lines. Anyone can screenshot a headline from five years ago — or from a page that publishes jokes formatted as news — and circulate it this morning as though it were a current, verified fact.",
+          "Compare three versions of a single story, and notice how the trustworthiness changes while the words barely move. Version one is a screenshot announcing that Saturday's game is cancelled. Version two is a teammate's post reporting that he heard the game might be moved. Version three is the league's own schedule page, updated that morning by the officials who run the league. The three versions are cousins in wording and strangers in reliability — and only the third has earned the right to rearrange your Saturday.",
+          "The rule of thumb deserves memorizing: the closer a claim sits to the person, place, or decision it describes, the more weight it can legitimately carry, because fewer hands have had the opportunity to alter, abbreviate, or misunderstand it. A screenshot sits at the maximum possible distance from the event itself. Whenever the claim matters, travel closer.",
         ],
       },
       {
         heading: "Before you tap share",
         paragraphs: [
-          "Sharing is publishing. The moment you forward something, your name rides on it — and if it turns out to be false, you helped spread it. The Bible's rule is blunt: do not spread a false report. The modern version takes ten seconds: pause, run the three questions, and check one other source before your thumb moves.",
-          "You do not need to become suspicious of everything. Most days, the three questions take moments: a named source, an honest want, a second place that agrees. That is enough to share with a clear conscience — and to quietly skip the rest.",
+          "Sharing is a form of publishing, and it deserves to be treated with a publisher's seriousness. The moment you forward something, your name and credibility ride on it, and if it turns out to be false, you participated in spreading it — regardless of the fact that you did not write it. The Bible's rule on the subject is blunt: do not spread a false report. The modern application requires only ten seconds: pause, run the three questions, and confirm the claim in one independent place before your thumb moves.",
+          "None of this requires becoming suspicious of everything. Most days, the three questions take only moments to run: a named source, an honest want that you can identify, and a second place that agrees. That is enough to share with a clear conscience — and enough to quietly let the rest pass by unshared.",
         ],
         verse: {
           text: "You shall not spread a false report.",
@@ -427,105 +358,66 @@ export const MODULES: CourseModule[] = [
         },
         callout: {
           title: "Try it this week",
-          text: "Before you forward one thing this week, track down its original source — the first place it appeared, not the loudest copy. Notice how the original usually says something quieter and more careful than the copies do.",
+          text: "Before you forward anything this week, track it back to its original source — the first place it appeared, not the loudest copy of it. Read what the original actually says, including the parts the copies dropped. Notice how the original is usually quieter, more careful, and less certain than the versions that traveled.",
         },
       },
     ],
     drill: {
       title: "Which version do you trust?",
-      intro:
-        "The same news arrives in three forms. Rank them in your head — most trustworthy to least — then open the model answers to compare. The lesson is in the reasons.",
-      modelLabel: "The verdict",
+      intro: "The same news arrives in three forms. Rank them in your head — most trustworthy to least — and then do the harder second job: for the weakest version, name the single check that would raise it. Then open the model answers to compare both your ranking and your repair.",
       items: [
         {
-          statement:
-            "Version A: A screenshot of a headline — 'Saturday's Game Cancelled!' — with no date and no source name visible.",
-          model:
-            "Weakest of the three. A screenshot can be old, cropped, or from a joke page, and there is no link to follow. Do not act on this one alone.",
+          statement: "Version A: A screenshot of a headline — 'Saturday's Game Cancelled!' — with no date and no source name visible.",
+          model: "Weakest of the three. A screenshot can be old, cropped, or lifted from a joke page, and it offers no link to follow. The repair: find the league's own fixture list or the original article. One visit to a named, dated source either confirms the cancellation or exposes the screenshot as a leftover from another season.",
         },
         {
-          statement:
-            "Version B: A teammate posts, 'Heard the game Saturday might be moved to the afternoon.'",
-          model:
-            "Middle. A real person you know, but it is secondhand — 'heard' and 'might' are fog words. Fine as a heads-up, not as a final answer.",
+          statement: "Version B: A teammate posts, 'Heard the game Saturday might be moved to the afternoon — coach mentioned it, I think.'",
+          model: "Middle. A real person you know, passing on something he half-heard — but 'heard,' 'might,' and 'I think' are three layers of fog stacked on one claim. The repair: ask the coach directly, or check the team chat where the coach posts. One question addressed to the actual decision-maker settles what three forwards cannot.",
         },
         {
-          statement:
-            "Version C: The league's own website schedule page, updated this morning, lists the game at 2:00 PM.",
-          model:
-            "Strongest. This is the source itself, close to the decision, with a date you can check. This is the version worth planning your Saturday around.",
+          statement: "Version C: The league's own website schedule page, updated this morning, lists the game at 2:00 PM.",
+          model: "Strongest. This is the source itself, as close to the decision as a claim can sit, carrying a date you can verify. Notice that it also disagrees with Version A — which is exactly why the ranking has to happen before you rearrange your Saturday around a screenshot.",
         },
       ],
     },
     quiz: [
       {
-        question: "What is the first question to ask about any claim you see?",
-        answers: [
-          "How many likes does it have?",
-          "Who is telling me this?",
-          "Is it surprising?",
-          "Did my friends share it?",
-        ],
-        correct: 2,
-        explanation:
-          "Start with the source. A claim is only as strong as the hands it passed through.",
-        timeLimit: 20,
-      },
-      {
-        question: "Why is a lone screenshot weak evidence for a claim?",
-        answers: [
-          "Screenshots are always fake",
-          "It is too short to read",
-          "It can crop away the date and the context",
-          "Real news never uses pictures",
-        ],
-        correct: 3,
-        explanation:
-          "A screenshot strips the date, the place, and the link. You cannot check what you cannot follow.",
-        timeLimit: 20,
-      },
-      {
-        question: "Two unrelated, trustworthy places report the same event. What grows?",
-        answers: [
-          "Your confidence it is true",
-          "The number of ads you see",
-          "Nothing at all",
-          "The need to share it fast",
-        ],
-        correct: 1,
-        explanation:
-          "Independent agreement is how confidence is built — one voice repeated is not the same thing.",
-        timeLimit: 20,
-      },
-      {
-        question: "In Proverbs 11:1, what does the LORD delight in?",
-        answers: [
-          "A loud voice",
-          "A just weight — an honest measure",
-          "The fastest answer",
-          "A popular opinion",
-        ],
-        correct: 2,
-        explanation:
-          "A just weight is a scale that reads true. Good sources measure straight, like honest scales.",
-        timeLimit: 20,
-      },
-      {
-        question: "A channel reviews a product it is also selling. What should you remember?",
-        answers: [
-          "The review must be a lie",
-          "Reviews are useless",
-          "It cannot be checked anywhere",
-          "The maker wants something — so check elsewhere",
-        ],
+        question: "A screenshot in the group chat says the school play is postponed. Nothing else is attached. Best action?",
+        answers: ["Forward it quickly so everyone can adjust", "Trust it — screenshots cannot be altered", "Ask the sender who originally posted it", "Check the school's own announcements page"],
         correct: 4,
-        explanation:
-          "Wanting to sell does not prove dishonesty. It does mean you verify the claims somewhere independent.",
+        explanation: "Go closer to the source: the school's own page is where a postponement is decided and posted. A screenshot has no date, no link, no context.",
+        timeLimit: 20,
+      },
+      {
+        question: "A shoe channel reviews a shoe it sells, calling it 'unbeatable.' The wisest reading is…",
+        answers: ["the review is certainly a complete pack of lies", "the channel's want is sales — verify elsewhere", "selling a shoe makes the review expert", "reviews by sellers are banned everywhere"],
+        correct: 2,
+        explanation: "Wanting to sell does not prove dishonesty, but it changes how much trust the review has earned. The claim gets checked against sources that gain nothing from your purchase.",
+        timeLimit: 20,
+      },
+      {
+        question: "Two unrelated local papers, reporting separately, describe the same road closure. Why does that matter?",
+        answers: ["Repetition alone makes any claim certain", "Papers are never allowed to make errors", "Independent agreement raises confidence", "Two stories means twice as much advertising"],
+        correct: 3,
+        explanation: "Independent agreement is the third source question at work: the same mistake is unlikely to be invented twice, in the same words, by people who did not copy each other.",
+        timeLimit: 20,
+      },
+      {
+        question: "A video about a 'miracle' study aid has 2 million views and no named researcher anywhere. The views count as…",
+        answers: ["strong evidence the aid actually works", "proof the researcher prefers privacy", "evidence the topic interests many people", "a substitute for checking the study"],
+        correct: 3,
+        explanation: "Popularity measures attention, not truth. With no named researcher, the first source question — who is telling me this? — has no answer, and the claim keeps only the weight it has earned.",
+        timeLimit: 20,
+      },
+      {
+        question: "Which of these sits CLOSEST to the event it describes, and so carries the most weight?",
+        answers: ["A podcast retelling last month's storm damage", "The county's road report, posted this morning", "A meme about the storm shared 500 times over", "A friend's summary of a stranger's video clip"],
+        correct: 2,
+        explanation: "The county reports on its own roads, firsthand and dated — closest to the event. Everything else is a copy of a copy, losing date, place, and detail at every hop.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 4,
     slug: "claim-it-prove-it",
@@ -537,15 +429,14 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/10822135/pexels-photo-10822135.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "Packaged foods with labels spread on a table",
     },
-    intro:
-      "The world runs on claims: packages promise, videos declare, posts announce. A claim is a statement dressed up as truth — and some claims have earned it, and some have not. This module teaches you to spot the claim, ask for its evidence, and stay calm when two things happen at the same time.",
+    intro: "The world runs on claims: packages promise, videos declare, posts announce. A claim is a statement dressed up as truth — and some claims have earned the costume, while others are merely wearing it. This module teaches you to spot the claim inside the costume, ask calmly for its evidence, and stay clear-headed when two things happen at the same time and beg to be confused.",
     sections: [
       {
         heading: "Test everything",
         paragraphs: [
-          "Paul wrote a few short words that could run this whole course: test everything, and hold fast to what is good. Testing is not the opposite of faith — it is what faith does with everything it hears. Hold fast to what passes. Let the rest go.",
-          "A claim is any statement presented as true that still needs its proof. 'This toothpaste helps prevent cavities.' 'This is the fastest route.' 'Our club raised the most money.' None of those is a fact yet. Each one is a claim, waiting for evidence to carry it.",
-          "Once you start seeing claims, you cannot unsee them. They are printed on every box, spoken in every ad, and baked into half the videos in your feed. That is good news: claims can be tested, and now you know how to ask.",
+          "Paul compressed the whole method into a few short words: test everything, and hold fast to what is good. Testing is not the opposite of faith; it is what faith does with everything it hears. Whatever passes the test, you hold fast to. Whatever fails it, you let go — without anger, and without apology.",
+          "A claim, defined precisely, is any statement presented as true that still requires its proof before it deserves belief. 'This toothpaste helps prevent cavities.' 'This is the fastest route across town.' 'Our club raised the most money this year.' None of these statements is a fact yet, whatever confidence their speakers project. Each one is a claim, standing in line, waiting for evidence substantial enough to carry its weight.",
+          "Once you have learned to recognize claims, you cannot stop seeing them, because they are printed on every package, spoken in every advertisement, and embedded in half the videos in your feed. That is good news rather than bad, because a claim — unlike a mood or a rumor — can be tested, and you now know the questions that perform the testing.",
         ],
         verse: {
           text: "Test everything; hold fast what is good.",
@@ -555,24 +446,24 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Spot the claim",
         paragraphs: [
-          "Claims wear costumes. The number costume: '9 out of 10 dentists recommend…' — numbers feel proven even when nobody tells you who did the counting. The crowd costume: 'Everyone is switching…' — everyone is a word that almost never gets counted at all.",
-          "The speed costume: 'Works instantly!' The comparison costume: 'Now 50% stronger!' Stronger than what — last year's version, a rival, or a wet noodle? Each costume is a claim hiding its missing proof.",
-          "Your first job is simply to spot it: what exactly is being said to be true here? Say it plainly, in your own words. Half the power of a claim evaporates the moment it stands in plain clothes.",
+          "Claims wear costumes, and the costumes follow patterns. The number costume: '9 out of 10 dentists recommend…' — numbers feel thoroughly proven even when nobody tells you who did the counting, how many were asked, or what the question actually was. The crowd costume: 'Everyone is switching…' — everyone being, conveniently, a word that almost never gets counted at all.",
+          "Then there is the speed costume: 'Works instantly!' And the comparison costume: 'Now 50% stronger!' Stronger than what, exactly — last year's version, a serious rival, or a wet noodle? Every costume performs the same trick: it makes a claim feel finished and proven while its actual proof is still missing.",
+          "Your first job, therefore, is simply to spot the claim underneath: what, precisely, is being said to be true here? Drag it into plain language and state it in your own words. Half the power of a dressed-up claim evaporates the moment it is standing in plain clothes, where its missing pieces become visible.",
         ],
       },
       {
         heading: "Ask for the evidence",
         paragraphs: [
-          "Evidence comes in strengths. At the top: a test you can watch, repeat, or check yourself — like timing two paper planes the same way, five throws each. Below that: a real study or test with the details shown — how many, compared to what, measured how.",
-          "Weaker still: a famous person's endorsement, which proves they were paid, or pleased, but not that the claim is true. And at the bottom: a slogan, which is a claim wearing a costume and carrying no proof at all.",
-          "So ask three things of any claim that matters: How many were tested? Compared to what? And who did the measuring? A claim that survives those questions has earned your trust. A claim that dodges them has told you something too.",
+          "Evidence comes in strengths, and the strengths can be ranked with confidence. At the top stands a test you can watch, repeat, or perform yourself — timing two paper planes under identical conditions, five throws each, and reading the recorded numbers. Immediately below that stands a genuine study or test whose details are displayed openly: how many subjects were tested, what they were compared against, and precisely how the measuring was conducted.",
+          "Weaker still is a famous person's endorsement, which proves only that the person was paid, or pleased, or both — never that the claim is true. And at the bottom stands the slogan: a claim wearing a costume, carrying no proof whatsoever, asking to be believed because it rhymes.",
+          "Therefore put three questions to any claim that actually matters to you, and listen carefully to whether it answers or evades. How many were tested? Compared to what? And who performed the measuring? A claim that survives those three questions has honestly earned a measure of your trust. A claim that dodges all three has also communicated something important — something its maker was hoping you would never notice.",
         ],
       },
       {
         heading: "Together is not because",
         paragraphs: [
-          "Here is the sneakiest claim of all. In July, ice cream sales rise. In July, swimming pool visits rise too. Did ice cream cause the swimming? Did swimming cause the ice cream? Neither — summer caused both. Two things happening together is not proof that one caused the other.",
-          "This trick powers a lot of confident talk: 'Ever since our team got new uniforms, we win more.' Maybe. Or the team also practiced more, and the schedule got easier. Before you credit one cause, ask what else changed at the same time.",
+          "Here is the most deceptive claim pattern of all, and it succeeds precisely because it sounds like simple observation. In July, ice cream sales rise sharply. In July, swimming pool visits rise sharply as well. Did the ice cream cause the swimming, or the swimming the ice cream? Neither — summer caused both, simultaneously, and the two rising lines merely share a common driver. Two developments occurring together do not, by themselves, constitute proof that one of them caused the other.",
+          "This pattern powers a remarkable amount of confident public talk. 'Ever since our team received new uniforms, we win more frequently.' Perhaps the uniforms deserve the credit. Or perhaps the team also practiced more during that month, and the schedule coincidentally grew easier at the same time. Before you assign credit to one cause, train yourself to ask what else changed alongside it — because the operative cause is very often standing quietly somewhere in that list, uncredited.",
         ],
         verse: {
           text: "Do not judge by appearances, but judge with right judgment.",
@@ -580,102 +471,66 @@ export const MODULES: CourseModule[] = [
         },
         callout: {
           title: "Try it this week",
-          text: "Catch one claim a day — from a box, an ad, or a video — and write down the proof you would ask for: how many, compared to what, who measured? By Friday you will have a page of questions most adults never ask.",
+          text: "Catch one claim every day this week — from a box, an advertisement, or a video — and write down the proof you would demand before believing it: how many, compared to what, and who measured? By Friday you will own a page of questions that most adults go their whole lives without asking.",
         },
       },
     ],
     drill: {
       title: "What proof would you ask for?",
-      intro:
-        "Each statement below is a claim wearing a costume. For each one, name the proof you would ask for before believing it — then compare with the model answer.",
-      modelLabel: "The proof to ask for",
+      intro: "Each statement below is a claim wearing a costume — and each arrives with evidence already attached, because claims usually do. Your job has two steps: name the proof that would actually settle it, and explain why the evidence already offered falls short. Then compare both halves with the model answer.",
       items: [
         {
-          statement: "“9 out of 10 dentists recommend this toothpaste.”",
-          model:
-            "Ask: How many dentists were asked — ten, or ten thousand? What exactly were they asked? And who paid for the asking — the toothpaste company, or someone independent?",
+          statement: "“9 out of 10 dentists recommend this toothpaste,” says the ad — under a photo of a smiling dentist holding the tube.",
+          model: "Ask: how many dentists were actually asked — ten, or ten thousand? What exactly were they asked, and were other brands on the list? And who paid for the asking — the toothpaste company, or somebody with nothing to sell? The photograph proves only that a dentist was photographed. A picture of evidence is a costume, not a count.",
         },
         {
-          statement: "“Everyone is switching to this backpack.”",
-          model:
-            "Ask: Who is 'everyone' — has anyone counted? How many people switched, out of how many asked? 'Everyone' usually shrinks a lot when somebody counts.",
+          statement: "“Everyone is switching to this backpack,” says the poster — above a photo of a long line outside the store.",
+          model: "Ask: who is 'everyone,' and has anybody counted the switchers out of all the buyers? The line in the photograph proves people queued on one day — possibly for a sale, possibly for one morning. It says nothing about how many switched, from what, or whether they stayed switched. A crowd is an illustration, not a measurement.",
         },
         {
-          statement: "“This battery lasts twice as long!”",
-          model:
-            "Ask: Twice as long as what — the old model, a rival brand, a candle? And in what test — playing video, or sitting in a drawer? A comparison without a partner is just a costume.",
+          statement: "“This battery lasts twice as long!” says the package — beside a chart showing one tall bar and one short bar.",
+          model: "Ask: twice as long as what — the old model, a rival brand, a candle? And under what test — playing video at full brightness, or sitting in a drawer? The chart looks like evidence until you notice its bars carry no labels and its scale no numbers. It is a costume drawn to resemble proof.",
         },
       ],
     },
     quiz: [
       {
-        question: "What is a claim?",
-        answers: [
-          "A fact that has been proven twice",
-          "A statement presented as true that needs proof",
-          "Any sentence with a number in it",
-          "A promise made by a friend",
-        ],
+        question: "A drink ad says “9 out of 10 athletes choose it.” Which question set tests the claim itself?",
+        answers: ["Is the drink expensive, and does it taste good?", "How many were asked, who asked, compared to what?", "Which famous athletes appear in the advert?", "How long has the company sold this drink?"],
         correct: 2,
-        explanation:
-          "A claim asks for your trust before showing its evidence. Testing is how it earns trust.",
+        explanation: "A percentage claim lives or dies by its counting: sample size, independence, comparison. Price, fame, and history test everything except the claim.",
         timeLimit: 20,
       },
       {
-        question: "An ad says, '9 out of 10 players prefer this shoe.' Best question to ask?",
-        answers: [
-          "Which famous players?",
-          "How much does the shoe cost?",
-          "What colors does it come in?",
-          "How many were asked, and who ran the test?",
-        ],
+        question: "A team started winning the same month it got new uniforms. Claiming the uniforms caused it ignores…",
+        answers: ["that practice time and schedules changed too", "the particular colors chosen for the uniforms", "how much the new uniforms cost the school", "whether the fans liked the new uniforms"],
+        correct: 1,
+        explanation: "Together is not because. When several things change at once, any one of them — or the easier schedule — may be doing the work, and crediting the uniforms is a guess dressed as a conclusion.",
+        timeLimit: 20,
+      },
+      {
+        question: "Which evidence would carry the MOST weight for the claim “this tent survives storms”?",
+        answers: ["A slogan on the box: 'Storm-tested tough!'", "A celebrity camper says she loves the tent", "Three friends report one calm night in it", "A filmed test: tent in wind and rain, timed"],
         correct: 4,
-        explanation:
-          "How many, and who measured — those two questions strip the costume off most number claims.",
+        explanation: "A repeatable test in actual storm conditions outranks the slogan (the claim itself), the endorsement (payment or pleasure), and one calm night (no storm at all).",
+        timeLimit: 30,
+      },
+      {
+        question: "A package announces “Now 50% stronger!” The claim is weakest exactly where it hides…",
+        answers: ["the comparison's partner: stronger than what", "the name of the factory that made the item", "the date the package was printed and shipped out", "whether the printer used bold type or not"],
+        correct: 1,
+        explanation: "A comparison with no visible partner can be made true against almost anything — including last year's model or a wet noodle. Naming the partner is where the claim becomes testable.",
         timeLimit: 20,
       },
       {
-        question: "Ice cream sales and swimming both rise in July. What does that prove?",
-        answers: [
-          "Ice cream makes people swim",
-          "Swimming makes people buy ice cream",
-          "Nothing about cause — summer drives both",
-          "Ice cream sales cause hot weather",
-        ],
-        correct: 3,
-        explanation:
-          "Together is not because. A third thing — summer — explains both rising at once.",
-        timeLimit: 20,
-      },
-      {
-        question: "What does 1 Thessalonians 5:21 tell us to do with what we hear?",
-        answers: [
-          "Believe the first report",
-          "Share it before checking",
-          "Test everything and hold fast what is good",
-          "Doubt everything forever",
-        ],
-        correct: 3,
-        explanation:
-          "Testing is not doubting — it is how truth gets held onto once it has been checked.",
-        timeLimit: 20,
-      },
-      {
-        question: "Which is the strongest evidence that a glue really holds 20 pounds?",
-        answers: [
-          "The slogan on the package",
-          "A famous person's endorsement",
-          "A test you can watch and repeat yourself",
-          "A review with no details",
-        ],
-        correct: 3,
-        explanation:
-          "A repeatable test beats an endorsement, and an endorsement beats a slogan. Evidence has strengths.",
+        question: "“Ever since I switched notebooks, my grades rose.” What else must be checked before crediting the notebook?",
+        answers: ["Whether the notebook has enough pages left", "Whether habits or easier units changed too", "Whether classmates admire the new notebook", "Whether the notebook was bought on a weekday"],
+        correct: 2,
+        explanation: "Together is not because. New habits, tutoring, or easier units could each explain the rise — the notebook must beat those rivals, not ignore them.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 5,
     slug: "ask-why-five-times",
@@ -687,21 +542,20 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/19895873/pexels-photo-19895873.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A teenager repairing a bicycle in a workshop",
     },
-    intro:
-      "Some problems keep coming back — the same flat tire, the same dead battery, the same wilting plant — because every fix so far has treated only the top layer. This module teaches you to keep asking why until you reach the root: the one cause that, fixed once, ends the pattern.",
+    intro: "Some problems keep coming back — the same flat tire, the same dying battery, the same wilting plant — because every repair so far has treated only the top layer of the trouble. This module teaches you to keep asking why, level after level, until you reach the root: the one cause down at the bottom that, fixed a single time, ends the pattern for good.",
     sections: [
       {
         heading: "The problem that keeps coming back",
         paragraphs: [
-          "Patch a bike tire on Monday, and it holds. Patch it again on Friday, and it holds. By the third patch in a month, a clear thinker stops blaming the tube and starts asking a better question: why does this keep happening?",
-          "Most problems have layers. What you see — the flat — is the top layer, the symptom. Underneath it sits a chain of causes, each one explaining the layer above it. Fix only the symptom, and the chain is still down there, patiently producing the next flat.",
-          "The tool for digging is almost embarrassingly simple: ask 'why?' about five times, each time asking it about the answer you just got. Five is not magic. It is just far enough, most days, to reach the bottom.",
+          "Patch a bicycle tire on Monday, and it holds. Patch the same tire again on Friday, and it holds as well. By the third patch inside a single month, however, a clear thinker stops blaming the tube and begins asking a considerably better question: why does this keep happening to this particular tire, in this particular pattern?",
+          "Most recurring problems possess layers, and confusing the layers is what keeps them alive. What you notice first — the flat — is merely the topmost layer: the symptom. Underneath it sits an entire chain of causes, each link explaining the layer directly above it. Repair only the symptom, and the chain remains fully intact below the surface, patiently manufacturing the next failure on approximately the same schedule as the last.",
+          "The tool for digging through those layers is almost embarrassingly simple: ask 'why?' roughly five times, each time asking it about the answer you just received. Five is not a magic number. It is simply far enough, on most days and for most problems, to reach the bottom.",
         ],
       },
       {
         heading: "Deep water, drawn out",
         paragraphs: [
-          "The book of Proverbs pictures it this way: purposes run deep, like water down a well, and a person of understanding draws them out. Causes are the same. They are rarely lying on the surface. They get drawn out, one honest answer at a time.",
+          "The book of Proverbs pictures exactly this: purposes run deep, like water far down a well, and a person of understanding draws them out. Causes behave the same way. They are rarely lying on the surface waiting to be noticed; they are drawn out, one honest answer at a time, by somebody patient enough to keep pulling the rope.",
         ],
         verse: {
           text: "The purpose in a man's heart is like deep water, but a man of understanding will draw it out.",
@@ -711,114 +565,81 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Two rules for the digging",
         paragraphs: [
-          "Rule one: answer each why with a fact you can check — something you can look at, measure, or test — not a guess about someone's motives. 'The tire is cracked' can be checked. Guesses cannot carry a chain.",
-          "Rule two: follow one chain at a time, and stop when you reach a cause you can actually fix. That cause is the root. Everything above it was the root showing itself, layer by layer.",
-          "Ask the questions out loud or write them down, one under the other. A chain you can see is a chain you can test.",
+          "Rule one: answer every why with a fact you can check — something you can look at, measure, or test — never with a guess about somebody's motives. 'The tire is visibly cracked' can be checked by anyone. A chain is only as strong as its weakest answer, and guesses cannot carry weight.",
+          "Rule two: follow one chain at a time, and stop when you arrive at a cause you can actually fix. That fixable cause is the root. Everything above it in the chain was the root announcing itself, layer by layer, in the only language symptoms speak.",
+          "Ask the questions out loud, or better, write them down one beneath the other where the whole chain stays visible. A chain you can see is a chain you can test — and a chain you can test is a chain you can trust.",
         ],
       },
       {
         heading: "Worked example: the third flat tire",
         paragraphs: [
-          "Problem: a bike gets its third flat in a month. Why #1 — why did the tire go flat? A sharp thorn punctured the tube. Why #2 — why did the thorn get through the tire? It slipped through a crack in the tire's sidewall.",
-          "Why #3 — why is the sidewall cracked? The rubber is old and dried out; the tire has been on the bike for years. Why #4 — why has an old tire stayed on so long? Every flat got patched, so replacing the tire never seemed urgent. Why #5 — why patch every time? It felt quicker each time than stopping to ask why the flats kept coming.",
-          "There is the root: an old, cracked tire that patches kept alive. The fix is not a fourth patch — it is a new tire. This same digging has solved problems a thousand times bigger: a famous monument in Washington was slowly wearing away, crews kept cleaning and repairing the stone, and the real cause turned out to be buried far below the surface — even the size of the problem changes nothing about the digging.",
+          "Consider a concrete case. Problem: a bicycle has suffered its third flat inside a month. Why number one — why did the tire go flat on this occasion? Because a sharp thorn punctured the tube. Why number two — why was the thorn able to penetrate the tire at all? Because it slipped through a crack that had opened in the tire's sidewall.",
+          "Why number three — why is the sidewall cracked? Because the rubber is old and thoroughly dried out; the tire has been mounted on the bicycle for years. Why number four — why has an aged tire remained in service so long? Because every flat received a patch, so replacement never felt genuinely urgent. Why number five — why patch it on every occasion? Because patching felt quicker, each individual time, than stopping to investigate why the flats kept recurring.",
+          "There is the root: an old, cracked tire that a series of quick patches kept alive past its time. Notice that the honest fix is not a fourth patch — it is a new tire. And the same digging has solved problems a thousand times larger: a famous monument in Washington was slowly wearing away while crews kept cleaning and repairing the stone, until somebody asked why, repeatedly, and the real cause turned out to be buried far below the surface problem. The size of the problem changes nothing about the digging.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Choose one problem that has happened twice. Before you fix it again, write your chain of whys on paper. Fix the root you find — and notice whether the problem comes back a third time.",
+          text: "Choose one problem that has now happened to you twice. Before you repair it a second time, write the full chain of whys on paper, insisting that every answer be something you could actually check. Fix the root you find at the bottom — then notice whether the problem dares to come back a third time.",
         },
       },
     ],
     drill: {
       title: "Finish the chain",
-      intro:
-        "Each chain below is started for you — the problem and the first two whys. Keep asking why until you reach a root you can fix once. Then open the model chain and compare.",
+      intro: "Each chain below is started for you — the problem and the first two whys. Keep asking why until you reach a root you can fix once. Then open the model chain and compare.",
       modelLabel: "The rest of the chain",
       items: [
         {
-          statement:
-            "Problem: The tomato plants keep wilting. Why #1: The roots are dry. Why #2: Water runs off the soil instead of soaking in.",
-          model:
-            "Why #3: The soil is packed hard and bare, so water sheets off the top. Why #4: No mulch was ever spread to cover it. Why #5: Planting day was rushed, and soil cover never made the list. Root fix: loosen the soil and add mulch once — then watering actually reaches the roots.",
+          statement: "Problem: The tomato plants keep wilting. Why #1: The roots are dry. Why #2: Water runs off the soil instead of soaking in.",
+          model: "Why #3: The soil is packed hard and bare, so water sheets off the top. Why #4: No mulch was ever spread to cover it. Why #5: Planting day was rushed, and soil cover never made the list. Root fix: loosen the soil and add mulch once — then watering actually reaches the roots.",
         },
         {
-          statement:
-            "Problem: A phone battery keeps dying by noon. Why #1: The battery drains fast all morning. Why #2: Two apps run in the background the whole time.",
-          model:
-            "Why #3: The apps restart themselves after being closed. Why #4: Their settings allow background activity all day. Why #5: The settings were never changed from the day the phone was set up. Root fix: change the settings once — no more carrying a charger like a daily patch.",
+          statement: "Problem: A phone battery keeps dying by noon. Why #1: The battery drains fast all morning. Why #2: Two apps run in the background the whole time.",
+          model: "Why #3: The apps restart themselves after being closed. Why #4: Their settings allow background activity all day. Why #5: The settings were never changed from the day the phone was set up. Root fix: change the settings once — no more carrying a charger like a daily patch.",
         },
         {
-          statement:
-            "Problem: Finished homework keeps vanishing before class. Why #1: It is not in the folder where it belongs. Why #2: Loose papers get stuffed into the backpack wherever they fit.",
-          model:
-            "Why #3: At the end of class there is no fixed moment to file papers away. Why #4: The routine is 'grab everything and go.' Root fix: one home for homework — a single folder — and ten seconds to file before leaving class. Four whys was enough here; the root is what matters, not the count.",
+          statement: "Problem: Finished homework keeps vanishing before class. Why #1: It is not in the folder where it belongs. Why #2: Loose papers get stuffed into the backpack wherever they fit.",
+          model: "Why #3: At the end of class there is no fixed moment to file papers away. Why #4: The routine is 'grab everything and go.' Root fix: one home for homework — a single folder — and ten seconds to file before leaving class. Four whys was enough here; the root is what matters, not the count.",
         },
       ],
     },
     quiz: [
       {
-        question: "Why ask 'why' more than once about a problem?",
-        answers: [
-          "The first answer is usually the symptom",
-          "Repeating yourself is persuasive",
-          "Five is a lucky number",
-          "Adults like long answers",
-        ],
-        correct: 1,
-        explanation:
-          "The first answer names what you can see. The root sits a few answers deeper.",
-        timeLimit: 20,
-      },
-      {
-        question: "In the flat tire example, what was the root cause of the repeated flats?",
-        answers: [
-          "Sharp thorns on the road",
-          "A fourth patch was needed",
-          "An old, cracked tire that never got replaced",
-          "The tube was poor quality",
-        ],
-        correct: 3,
-        explanation:
-          "The patches treated the symptom. The old tire was the cause producing flat after flat.",
-        timeLimit: 20,
-      },
-      {
-        question: "What makes an answer to a 'why' question a good one?",
-        answers: [
-          "It blames the right person",
-          "It is a fact you can check",
-          "It sounds confident",
-          "It ends the conversation",
-        ],
-        correct: 2,
-        explanation:
-          "Checkable facts keep the chain honest. Guesses break the dig.",
-        timeLimit: 20,
-      },
-      {
-        question: "Proverbs 20:5 compares the purpose in a person's heart to what?",
-        answers: ["A straight road", "A locked door", "A loud drum", "Deep water"],
+        question: "The library printer jams every Monday. Paper is cleared each time, yet it jams again. Best next move?",
+        answers: ["Clear the paper faster so Monday starts sooner", "Ban printing on Mondays until it behaves", "Replace the printer without checking anything", "Ask why the jams cluster on Mondays specifically"],
         correct: 4,
-        explanation:
-          "Deep water — drawn out by a person of understanding, one honest answer at a time.",
+        explanation: "The pattern is the clue: Monday-only jams point to something Mondays do differently — a weekend shutdown, a Monday surge, idle paper. Ask why about the pattern first.",
+        timeLimit: 30,
+      },
+      {
+        question: "A chain of whys is only trustworthy when each answer in it is…",
+        answers: ["something checkable, not a motive guess", "the answer the questioner was hoping to hear", "long enough to sound properly technical", "agreed by everyone standing in the room"],
+        correct: 1,
+        explanation: "'The tray was loaded wet' can be checked; 'the staff are careless' is a motive guess. A chain built on guesses collapses at that link.",
         timeLimit: 20,
       },
       {
-        question: "Your plant keeps wilting even though you water it daily. Best next step?",
-        answers: [
-          "Water it twice a day forever",
-          "Ask why the water is not reaching the roots",
-          "Buy a new plant every week",
-          "Move it to a different window",
-        ],
+        question: "One why-answer says seedlings bend toward the window because the shelf light is weak. What makes it a GOOD link?",
+        answers: ["It ends the chain at a satisfying number", "It can be tested: move one pot and compare", "It shifts attention away from the watering", "It sounds more scientific than the others"],
         correct: 2,
-        explanation:
-          "More of the same fix is another patch. Ask why until you find what to fix once.",
+        explanation: "A good link makes a prediction you can test: if weak light is the cause, the moved pot should straighten while the others keep bending. Testability is what separates a cause from a story.",
+        timeLimit: 20,
+      },
+      {
+        question: "A hose bursts at the same joint monthly. Whys reach: washer old → never replaced → patches felt quicker. Root?",
+        answers: ["The water pressure inside the city mains", "The habit of patching instead of replacing", "The exact brand of hose bought last year", "The joint's position at the end of the hose"],
+        correct: 2,
+        explanation: "The root is the deepest fixable cause: the patching habit that kept a worn washer in service. Pressure might explain one burst, never every burst.",
+        timeLimit: 20,
+      },
+      {
+        question: "When should a why-chain STOP, even if more whys are technically possible?",
+        answers: ["When the answers start to feel repetitive", "When it reaches exactly five questions", "When it reaches a cause you can actually fix", "When somebody in the room gets tired of it"],
+        correct: 3,
+        explanation: "Five is a guide, not a law. The chain ends at the root: the deepest cause that is both checkable and fixable. Digging past it into territory nobody can change is philosophy, not repair.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 6,
     slug: "plan-try-check-fix",
@@ -830,14 +651,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/31958038/pexels-photo-31958038.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A student holding a red paper airplane in a classroom",
     },
-    intro:
-      "Nobody gets better at something by accident, and nobody gets it right the first time, either. What works — for builders, bakers, ball players, and lemonade stands — is a small loop: plan a change, try it, check what honestly happened, and fix what the check revealed. Then loop again.",
+    intro: "Nobody gets better at something by accident, and nobody gets it right on the first attempt either. What actually works — for builders, bakers, ball players, and lemonade stands alike — is a small, honest loop: plan one change, try it, check what really happened, and fix whatever the check reveals. Then run the loop again, a little smarter than before.",
     sections: [
       {
         heading: "First, count the cost",
         paragraphs: [
-          "Jesus once asked a question that belongs in every workshop and kitchen: which of you, wanting to build a tower, does not first sit down and count the cost? Planning is not stalling. It is sitting down before you stand up — deciding what you will build, what it will take, and how you will know it worked.",
-          "The builders who finish towers are not the ones who never hit problems. They are the ones who planned, watched what actually happened, and adjusted. Four short steps, run in a loop, will improve almost anything you aim them at.",
+          "Jesus once asked a question that belongs in every workshop and kitchen: which of you, wanting to build a tower, does not first sit down and count the cost of finishing it? Planning is not stalling, and it is not fear. It is sitting down before you stand up — deciding what you intend to build, what it will require, and how you will know whether it worked.",
+          "The builders who actually finish towers are not the ones who never meet problems. They are the ones who planned, watched what happened with open eyes, and adjusted without drama. Four short steps, run in a loop, will improve almost anything you are willing to aim them at.",
         ],
         verse: {
           text: "For which of you, desiring to build a tower, does not first sit down and count the cost, whether he has enough to complete it?",
@@ -847,124 +667,88 @@ export const MODULES: CourseModule[] = [
       {
         heading: "The four steps",
         paragraphs: [
-          "Plan it: pick one change to make, and decide ahead of time how you will measure it. 'Sell more lemonade' is a wish; 'offer a second flavor and tally every sale' is a plan. Try it: run the plan for real, small enough to finish — one Saturday, one week, one practice. Change one or two things at a time, or you will never know which change did the work.",
-          "Check it: look at the honest results — the count, the time, the tally — not the results you hoped for. Fix it: keep what worked, adjust what did not, and carry the lesson into the next plan. Then the loop turns again, a little smarter than last time.",
-          "Notice what the loop refuses to do: it never declares victory or defeat from one try. A single attempt is data, not a verdict. The verdict comes from the loop — and the loop is always allowed to turn once more.",
+          "Plan it: select one change to make, and decide in advance how you will measure its effect. 'Sell more lemonade' is a wish; 'offer a second flavor and tally every single sale' is a plan. Try it: run the plan for real, at a size small enough to finish — one Saturday, one week, one practice. Change one or two things at a time, because if you change six, you will never know which one did the work.",
+          "Check it: examine the honest results — the count, the time, the tally sheet — and not the results you were hoping for. Fix it: keep what demonstrably worked, adjust what did not, and carry the lesson forward into the next plan. Then the loop turns again, better informed than the last revolution.",
+          "Notice what the loop refuses to do: it never declares victory or defeat on the strength of a single attempt. One try is data, not a verdict. The verdict emerges from the loop itself — and the loop is always permitted to turn once more.",
         ],
       },
       {
         heading: "Worked example: the lemonade stand loop",
         paragraphs: [
-          "Plan: two friends want their Saturday lemonade stand to beat last week's 18 cups. They ask a few neighbors what they would buy, decide to add a berry flavor, put a sign at the corner, and tally every sale on a sheet. Try: Saturday comes; they sell both flavors and mark the tally sheet cup by cup.",
-          "Check: the count says 26 cups — and berry outsold plain two to one. Three customers also asked for a smaller size for little kids. Fix: next week they stock more berry supplies, add a small size, and keep the corner sign that clearly worked.",
-          "Nobody doubled anything with a speech. They ran one small loop, read the tally honestly, and let the check write the next plan. That is how a stand — or a study routine, or a free throw — actually improves: loop by loop.",
+          "Plan: two friends want their Saturday lemonade stand to beat last week's total of 18 cups. They ask a few neighbors what they would actually buy, decide to add a berry flavor, place a sign at the corner, and tally every sale on a sheet. Try: Saturday arrives; they sell both flavors and mark the tally sheet, cup by cup, all day.",
+          "Check: the count says 26 cups — and berry outsold plain by two to one. Three customers, unprompted, also asked whether a smaller size existed for little kids. Fix: next week they stock more berry supplies, introduce the small size, and keep the corner sign that clearly earned its place.",
+          "Nobody doubled anything with a motivational speech. They ran one small loop, read a tally sheet honestly, and allowed the check to write the next plan. That is how a stand — or a study routine, or a free throw — genuinely improves: loop by loop, each one standing on evidence from the last.",
         ],
       },
       {
         heading: "Loops beat launches",
         paragraphs: [
-          "Big launches feel impressive: the giant study weekend, the total room reorganization, the brand-new everything. But a giant effort with no check is just a guess with confetti. Small loops win because each one teaches you something the next one uses.",
-          "Keep the loop written down: four lines in a notebook — Plan, Try, Check, Fix — with a date. A written loop cannot quietly rewrite itself in your memory, and a month of pages is the best proof there is that you are actually getting better at something.",
+          "Big launches feel impressive: the heroic study weekend, the total room reorganization, the brand-new everything begun on Monday. But a giant effort with no check built into it is merely a guess wearing confetti. Small loops win because each revolution teaches you something the next one gets to use.",
+          "Keep the loop written down: four lines in a notebook — Plan, Try, Check, Fix — each with a date. A written loop cannot quietly rewrite itself inside your memory afterward, and a month of those pages is the most convincing proof available that you are actually improving at something.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Pick something small — a free-throw routine, a homework habit, a recipe. Run one full loop on it this week: one planned change, one honest check, one fix. Write the four lines down.",
+          text: "Choose something small this week — a free-throw routine, a homework habit, a recipe you keep meaning to master. Run one complete loop on it: one planned change, one honest check, one fix carried forward. Write the four lines down with the date, and let the page, not your feelings, report how it went.",
         },
       },
     ],
     drill: {
       title: "Run the loop on a paper airplane",
-      intro:
-        "A paper airplane keeps folding in the air after about two meters. Walk it through one full loop: for each step, decide what you would do — then compare with the model.",
+      intro: "A paper airplane keeps folding in the air after about two meters. Walk it through one full loop: for each step, decide what you would do — then compare with the model.",
       modelLabel: "The loop step",
       items: [
         {
-          statement:
-            "Step 1 — Plan it: What one change will you test, and how will you measure it?",
-          model:
-            "Change one thing: clip a paperclip to the nose for weight. Measure it the same way every time — five throws from the same line, paced off in meters. One change, one ruler: that is a plan.",
+          statement: "Step 1 — Plan it: What one change will you test, and how will you measure it?",
+          model: "Change one thing: clip a paperclip to the nose for weight. Measure it the same way every time — five throws from the same line, paced off in meters. One change, one ruler: that is a plan.",
         },
         {
-          statement:
-            "Steps 2 and 3 — Try it and check it: The five throws go 2, 3, 2, 4, and 3 meters, and the plane still banks left. What does the check honestly say?",
-          model:
-            "The clip helped a little — most throws beat the old two meters — but it did not fix the left bank. A check reports both halves: what improved and what did not. No pretending, no despair.",
+          statement: "Steps 2 and 3 — Try it and check it: The five throws go 2, 3, 2, 4, and 3 meters, and the plane still banks left. What does the check honestly say?",
+          model: "The clip helped a little — most throws beat the old two meters — but it did not fix the left bank. A check reports both halves: what improved and what did not. No pretending, no despair.",
         },
         {
           statement: "Step 4 — Fix it: What do you carry into the next loop?",
-          model:
-            "Keep the paperclip — the check says it earned its place. Fix the next thing: bend the left wing tip slightly up to fight the bank, then run the loop again and let the new throws vote.",
+          model: "Keep the paperclip — the check says it earned its place. Fix the next thing: bend the left wing tip slightly up to fight the bank, then run the loop again and let the new throws vote.",
         },
       ],
     },
     quiz: [
       {
-        question: "What are the four steps of the loop, in order?",
-        answers: [
-          "Try it, plan it, fix it, check it",
-          "Plan it, try it, check it, fix it",
-          "Check it, fix it, plan it, try it",
-          "Plan it, check it, try it, fix it",
-        ],
-        correct: 2,
-        explanation: "Plan, try, check, fix — and then the loop turns again, smarter.",
+        question: "A baker changes flour, oven heat, AND proofing time, and the bread improves. What has she lost?",
+        answers: ["Knowing which change actually did the work", "The chance to sell the improved bread", "Any reason to run the loop a second time", "The right to call the result an improvement"],
+        correct: 1,
+        explanation: "Three changes at once produce one result with three suspects. The loop's discipline — one or two changes per turn — exists precisely to keep cause and effect readable.",
         timeLimit: 20,
       },
       {
-        question: "In Luke 14, what does Jesus say a tower builder should do first?",
-        answers: [
-          "Start building before doubts come",
-          "Borrow more than he needs",
-          "Sit down and count the cost",
-          "Hire the largest crew available",
-        ],
+        question: "A jump-rope team tests a new routine once; it flops. The loop's honest verdict is…",
+        answers: ["the routine is proven useless forever", "one trial is data, not a verdict yet", "the team should hide the trial result", "the plan must have been written wrong"],
+        correct: 2,
+        explanation: "A single attempt can fail because of weather, nerves, or one bad day. The loop treats it as information, adjusts something, and turns again before any verdict is allowed.",
+        timeLimit: 20,
+      },
+      {
+        question: "What makes “offer a second flavor and tally every sale” a PLAN while “sell more” is only a wish?",
+        answers: ["It mentions two flavors instead of one", "It is written neatly in a notebook with a date", "It names the change and its measurement", "It promises the result before the trial"],
         correct: 3,
-        explanation:
-          "Count the cost first. Planning before building is the Bible's own advice.",
+        explanation: "A plan specifies the change and the measurement before the trial begins, so the check afterward can be honest. A wish names only the outcome it happens to hope for.",
         timeLimit: 20,
       },
       {
-        question: "What did the tally sheet do for the lemonade stand?",
-        answers: [
-          "It decorated the stand",
-          "It counted real sales, so the check was honest",
-          "It advertised the berry flavor",
-          "It replaced the need to plan",
-        ],
-        correct: 2,
-        explanation:
-          "The check is only as honest as the count. Tally marks beat memories.",
-        timeLimit: 20,
-      },
-      {
-        question: "When you try a change, how much should you change at once?",
-        answers: [
-          "Everything, to save time",
-          "Nothing, to be safe",
-          "Only the easiest thing",
-          "One or two things, so you know what worked",
-        ],
+        question: "The check shows sales rose — but rain also kept the rival stand closed that day. The careful reader says…",
+        answers: ["the plan worked; no further questions needed", "the check is worthless and should be burned", "credit everything to the new corner sign", "the rise is real, but its cause is not proven"],
         correct: 4,
-        explanation:
-          "Change everything at once, and the check cannot tell you which change did the work.",
-        timeLimit: 20,
+        explanation: "Honest checking reports both halves: what improved, and what else might explain the improvement. Naming the rival's absence keeps the next fix aimed at the truth instead of at a lucky guess.",
+        timeLimit: 30,
       },
       {
-        question: "Your check shows the change did not help. What does the loop say?",
-        answers: [
-          "The project is a failure",
-          "Never try that again",
-          "Fix it: adjust, and run the loop again",
-          "Hide the results and move on",
-        ],
-        correct: 3,
-        explanation:
-          "A disappointing try is data, not a verdict. Fix what the check revealed and loop again.",
+        question: "A study-habit loop checks after one week: no gain. Which response follows the loop best?",
+        answers: ["Declare studying a lost cause for the term", "Change one element and run the loop again", "Change every element at once next week", "Repeat the identical plan, only louder"],
+        correct: 2,
+        explanation: "A flat check is information, not a funeral. Adjust one element — the time of day, the place, the phone's location — and let the next loop report what that single change actually does.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 7,
     slug: "first-things-first",
@@ -976,14 +760,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/12797275/pexels-photo-12797275.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A wall covered with sticky notes waiting to be sorted",
     },
-    intro:
-      "Not every problem deserves the same Saturday. Some matter a lot and take ten minutes to fix. Some would eat a whole weekend and change almost nothing. This module gives you a simple four-box sort for deciding what gets your energy first — and what can honestly wait, or be skipped on purpose.",
+    intro: "Not every problem deserves the same Saturday. Some matter enormously and take ten minutes to repair; others would consume an entire weekend and change almost nothing that matters. This module hands you a simple four-box sort for deciding what receives your energy first — and what can honestly wait, or be deliberately skipped without guilt.",
     sections: [
       {
         heading: "Jethro's advice to Moses",
         paragraphs: [
-          "In Exodus 18, Moses was judging every dispute in Israel by himself, from morning until evening, while the line of people stretched out of sight. His father-in-law Jethro watched for one day and delivered a verdict that still stands: what you are doing is not good. You will wear yourself out — the work is too heavy for one person, in one long unsorted line.",
-          "Jethro's fix was not 'work harder.' It was order: capable helpers for the smaller matters, the hardest cases brought to Moses, and everything in its proper place. The same work, sorted, suddenly became doable. Most overwhelmed weeks do not need more hours. They need a sort.",
+          "In Exodus 18, Moses was judging every dispute in Israel personally, from morning until evening, while the line of waiting people stretched out of sight. His father-in-law Jethro observed the system for a single day and delivered a verdict that still stands: what you are doing is not good. You will certainly wear yourselves out, because the work is too heavy for one person carrying it in one long, unsorted line.",
+          "Notice that Jethro's remedy was not 'work harder.' It was order: capable helpers appointed over the smaller matters, only the hardest cases carried up to Moses, and everything resting in its proper place. The same total work, once sorted, suddenly became doable. Most overwhelmed weeks do not need more hours. They need a sort.",
         ],
         verse: {
           text: "What you are doing is not good. You and the people with you will certainly wear yourselves out, for the thing is too heavy for you. You are not able to do it alone.",
@@ -993,27 +776,27 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Two honest questions",
         paragraphs: [
-          "Every problem on your list gets two questions. First: how much does it matter? If it gets fixed, what changes — for your goal, your family, your team, your week? Some fixes change everything downstream. Some change nothing but the look of a drawer.",
-          "Second: how hard is it? Count honestly in time, effort, and cost. Ten minutes or two weekends? A ladder or a phone call? Neither question is about how LOUD the problem is, or how long it has been nagging. Loud is not the same as important, and old is not the same as urgent.",
-          "Two honest answers per problem. That is the whole machine. The four boxes below are just where the answers land.",
+          "Every problem on your list must answer two questions before it earns a place in your week. First: how much does it actually matter? If this problem gets fixed, what genuinely changes as a consequence — for your goal, your family, your team, your schedule? Some repairs alter everything downstream of them for months. Others alter nothing whatsoever beyond the internal appearance of a drawer.",
+          "Second: how difficult is it, calculated honestly in time, effort, and cost? Ten minutes, or two complete weekends? A ladder and a tube of sealant, or a single telephone call? Observe what neither question concerns: neither asks how LOUD the problem is, nor how long it has been nagging at you. Loud is not a synonym for important, and old is not a synonym for urgent, and confusing those pairs is precisely how entire weeks disappear.",
+          "Two honest answers per problem: that is the entire machine. The four boxes that follow are simply where the pairs of answers land.",
         ],
       },
       {
         heading: "The four boxes",
         paragraphs: [
-          "Matters a lot, and not hard: DO FIRST. These are the quick wins that unlock everything else — fixing them now changes your whole week for minutes of work. Matters a lot, and hard: PLAN WELL. These deserve real time, a schedule, and broken-down steps — not a panicked Saturday, but a proper plan.",
-          "Matters a little, and not hard: DO IF TIME. Filler tasks — fine in the gaps of a day, never allowed to eat the day. Matters a little, and hard: MAYBE SKIP. Deliberately letting these go is not laziness; it is honesty about a finite week. Your energy is a budget. Skipping on purpose is how the budget survives.",
+          "Matters a great deal, and is not difficult: DO FIRST. These are the quick repairs that unlock everything else in the week — resolving them now transforms your schedule in exchange for minutes of effort, which is the most favorable exchange rate your time will ever be offered. Matters a great deal, and is difficult: PLAN WELL. These deserve genuine time, a realistic schedule, and steps broken down in advance and executed in sequence — not a panicked Saturday, but a proper plan, carried out piece by piece.",
+          "Matters a little, and not hard: DO IF TIME. Filler tasks, legitimate in the gaps of a day and never permitted to eat the day itself. Matters a little, and hard: MAYBE SKIP. Deliberately letting these go is not laziness; it is honesty about a finite week. Your energy is a budget, and skipping on purpose is how the budget survives to fund what matters.",
         ],
         callout: {
           title: "The four boxes",
-          text: "Do First — matters a lot, not hard. Plan Well — matters a lot, hard. Do If Time — matters a little, easy. Maybe Skip — matters a little, hard. Two questions, four boxes, one honest Saturday.",
+          text: "Do First — matters a lot, not hard: quick repairs that unlock the week. Plan Well — matters a lot, hard: real projects that deserve a schedule. Do If Time — matters a little, easy: honest filler for gaps. Maybe Skip — matters a little, hard: the deliberate art of letting go. Two questions, four boxes, one honest Saturday.",
         },
       },
       {
         heading: "Boxes move",
         paragraphs: [
-          "The sort is not carved in stone. A slow tire leak sits quietly in Plan Well until the big ride is Saturday — then it jumps to Do First. A science fair three weeks out is Plan Well; three days out, its pieces become Do First, one at a time. Re-sort your list about once a week, or whenever a deadline moves.",
-          "And remember Jethro's other half of the fix: some items on your list can be carried by someone else. A problem does not become yours just because you were the one who noticed it. Prepare your work in the right order, and the work gets done.",
+          "The sort is not carved in stone, because the facts underneath it keep moving. A slow tire leak sits quietly in Plan Well until the big ride lands on Saturday — then it jumps, correctly, to Do First. A science fair three weeks away is Plan Well; the same fair three days away turns its remaining pieces into Do First, one at a time. Re-sort your list about once a week, and immediately whenever a deadline moves.",
+          "And remember the second half of Jethro's remedy: some items on your list can legitimately be carried by somebody else. A problem does not become yours merely because you were the person who noticed it first. Prepare your work in the right order, assign what can be assigned, and the work gets done.",
         ],
         verse: {
           text: "Prepare your work outside; get everything ready for yourself in the field, and after that build your house.",
@@ -1023,107 +806,72 @@ export const MODULES: CourseModule[] = [
     ],
     drill: {
       title: "Sort the six",
-      intro:
-        "Six practical problems, one list. For each one, ask the two questions — how much does it matter, how hard is it — and name its box. Then compare with the model sort.",
-      modelLabel: "The box",
+      intro: "Six practical problems, one list. For each one, ask the two questions — how much does it matter, and how hard is it — and name its box. Then read the second half of each model answer: every sort includes the change that would MOVE the problem into a different box, because boxes move.",
       items: [
         {
-          statement:
-            "Your bike tire has a slow leak, and the big group ride is this Saturday.",
-          model:
-            "Do First. It matters a lot — no tire, no ride — and patching or swapping a tube is quick. This is a small fix guarding a big day.",
+          statement: "Your bike tire has a slow leak, and the big group ride is this Saturday.",
+          model: "Do First. It matters enormously — no tire, no ride — and patching or swapping a tube is quick work. What would move it: if the ride were cancelled, the same repair drops to Do If Time, because nothing would then depend on the day it gets done.",
         },
         {
-          statement:
-            "The science fair is in three weeks. Your project needs a board, supplies, and two experiments run and recorded.",
-          model:
-            "Plan Well. It matters a lot and it is genuinely big. Break it into pieces — supplies this week, experiments next, board last — and give the pieces real slots on the calendar.",
+          statement: "The science fair is in three weeks. Your project needs a board, supplies, and two experiments run and recorded.",
+          model: "Plan Well. It matters a great deal and it is genuinely large, so it earns broken-down pieces — supplies this week, experiments next, board last — each with a real slot on the calendar. What would move it: discovering in fair week that one experiment was never recorded turns that single piece into Do First overnight.",
         },
         {
-          statement:
-            "The team signup sheet is a paper list that keeps getting lost before games.",
-          model:
-            "Plan Well. It matters a lot — players and rides depend on it — and the real fix, one shared list with a keeper, takes a focused hour to set up, not two minutes. Plan it, build it once.",
+          statement: "The team signup sheet is a paper list that keeps getting lost before games.",
+          model: "Plan Well. Players and rides depend on it, so it matters — and the real repair, one shared list with a named keeper, takes a focused hour to build properly rather than two minutes. What would move it: if the season ended next week, building the system becomes Maybe Skip, and simply photographing the existing sheet becomes Do First.",
         },
         {
-          statement:
-            "Your desk drawer is a tangle of pens, batteries, and cables.",
-          model:
-            "Do If Time. Sorting it is easy and mildly useful, but nothing about your week depends on it. A fine gap-filler — never a Saturday.",
+          statement: "Your desk drawer is a tangle of pens, batteries, and cables.",
+          model: "Do If Time. Untangling it is easy and mildly useful, but nothing in your week depends on it — a fine gap-filler, never a Saturday. What would move it: very little honestly moves the drawer itself. Even the day it hides the one charger your project needs, the problem that jumps boxes is the charger, not the drawer.",
         },
         {
-          statement:
-            "Repainting the garden fence a new color would take two full days. The fence is sturdy and looks fine as it is.",
-          model:
-            "Maybe Skip. Two days of hard work that changes almost nothing is the most expensive kind of task there is. Skip it on purpose and spend the weekend on a box that matters.",
+          statement: "Repainting the garden fence a new color would take two full days. The fence is sturdy and looks fine as it is.",
+          model: "Maybe Skip. Two days of hard work that changes almost nothing is the most expensive kind of task there is; skip it on purpose and spend the weekend where it counts. What would move it: peeling paint and bare, weathering wood would — protection matters in a way that color never did, and the job becomes Plan Well.",
         },
         {
-          statement:
-            "The hall closet where the sports gear lives has no hooks, so gear piles on the floor. Four hooks and fifteen minutes would fix it.",
-          model:
-            "Do First. Small effort, daily payoff — every practice day starts smoother. Matters more than it looks, costs less than it looks.",
+          statement: "The hall closet where the sports gear lives has no hooks, so gear piles on the floor. Four hooks and fifteen minutes would fix it.",
+          model: "Do First. Small effort, daily payoff: every practice day starts smoother because of it. It matters more than it looks and costs less than it looks. What would move it: honestly, very little — which is precisely the profile of a Do First. When nothing realistic moves a problem out of quick-and-important, stop deliberating and do it.",
         },
       ],
     },
     quiz: [
       {
-        question: "What are the two questions that sort a problem into the four boxes?",
-        answers: [
-          "Who caused it, and who fixes it?",
-          "How much does it matter, and how hard is it?",
-          "Is it new, and is it fun?",
-          "How loud is it, and who is watching?",
-        ],
+        question: "Saturday: the carpool form (10 min, ride depends on it) and repainting a scuffed wall (all day, looks fine). Sort them.",
+        answers: ["Both are Do First: Saturday is for all jobs", "Form: Do First; wall repaint: Maybe Skip", "Form: Plan Well; wall repaint: Do First", "Form: Do If Time; wall repaint: Plan Well"],
         correct: 2,
-        explanation:
-          "Mattering and difficulty — answered honestly — place every problem in its box.",
+        explanation: "The form carries the ride and costs ten minutes: maximum importance, minimum effort. The repaint eats a day and changes nothing that matters.",
+        timeLimit: 30,
+      },
+      {
+        question: "A science fair moves from three weeks away to THIS Friday. What honestly happens to its unfinished pieces?",
+        answers: ["They stay Plan Well until Friday morning", "They jump to Do First, one piece at a time", "They become Maybe Skip under the pressure", "They move to Do If Time to reduce stress"],
+        correct: 2,
+        explanation: "Boxes move when the facts move. An arriving deadline turns planned work into immediate work — piece by piece, in the order the pieces are needed.",
         timeLimit: 20,
       },
       {
-        question: "A problem matters a lot and is not hard to fix. Which box?",
-        answers: ["Plan Well", "Do First", "Maybe Skip", "Do If Time"],
-        correct: 2,
-        explanation:
-          "Do First: high value, low cost. These quick wins unlock the rest of the week.",
-        timeLimit: 20,
-      },
-      {
-        question: "What did Jethro tell Moses about judging every dispute alone?",
-        answers: [
-          "He was doing it perfectly",
-          "The people should be more patient",
-          "The work was too heavy — he would wear out",
-          "He should judge faster",
-        ],
+        question: "Which problem is Plan Well rather than Do First?",
+        answers: ["A loose bike chain, ten minutes, ride today", "A torn poster edge needing one strip of tape", "Rebuilding the club's whole signup system", "Four hooks for the gear closet, fifteen minutes"],
         correct: 3,
-        explanation:
-          "Exodus 18: the thing was too heavy for one man. Jethro's fix was order, not effort.",
+        explanation: "A large, important job earns a schedule and broken-down steps. The other three are quick repairs with outsized payoff: Do First by definition.",
         timeLimit: 20,
       },
       {
-        question: "A problem matters little and would take all weekend. Best box?",
-        answers: ["Do First", "Plan Well", "Do If Time", "Maybe Skip"],
+        question: "A teammate insists the LOUDEST problem — a squeaky gym door — must top the list. The two honest questions ask instead…",
+        answers: ["how many people the squeak has annoyed today", "how long the squeak has been going unrepaired", "how much fixing it changes, and what it costs", "how embarrassing the squeak is during games"],
+        correct: 3,
+        explanation: "Volume is not a sorting question. The machine asks what changes if the problem gets fixed, and what the fixing honestly costs in time and effort — annoyance and age answer neither question.",
+        timeLimit: 20,
+      },
+      {
+        question: "Your sorted list includes a task a younger sibling could do just as well in ten minutes. Jethro's half of the fix says…",
+        answers: ["add it to your list twice to remember it", "do it yourself anyway; help is a distraction", "move it to Maybe Skip until they volunteer", "assign it: noticing a problem isn't owning it"],
         correct: 4,
-        explanation:
-          "Maybe Skip: heavy cost, tiny change. Skipping on purpose protects the week.",
-        timeLimit: 20,
-      },
-      {
-        question: "Why re-sort your problem list each week?",
-        answers: [
-          "The boxes change color over time",
-          "Problems move boxes as deadlines and facts change",
-          "Sorting is a chore you must repeat daily",
-          "Each list must have exactly four items",
-        ],
-        correct: 2,
-        explanation:
-          "A leak is quiet until the ride is Saturday. Fresh facts and near deadlines move boxes.",
+        explanation: "Jethro's remedy was distribution, not endurance: helpers carried the smaller matters. Noticing a problem first does not make it yours.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 8,
     slug: "number-your-days",
@@ -1135,14 +883,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/12911169/pexels-photo-12911169.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "An open weekly planner on a desk with pens and sticky notes",
     },
-    intro:
-      "Ask a room of students where yesterday went and you will mostly get shrugs. Days feel long while you live them and vanish when you look back. This module is about seeing your time clearly — where it actually goes, in real hours — and then spending tomorrow on purpose instead of by accident.",
+    intro: "Ask a roomful of students where yesterday went and you will mostly collect shrugs. Days feel long while you are living them and vanish when you look back at them. This module is about seeing your time with unusual clarity — where it actually goes, in real, countable hours — and then spending tomorrow on purpose instead of by accident.",
     sections: [
       {
         heading: "A prayer about counting",
         paragraphs: [
-          "Psalm 90 is Moses' prayer, and in the middle of it sits a surprising request: teach us to number our days. Not to make them longer. Not to squeeze more into them. To number them — to count them like something precious and finite, the way you count money you cannot replace.",
-          "Moses says the fruit of that counting is a heart of wisdom. It works like this: a student who knows the day holds exactly 24 hours — no more coming — starts asking what those hours are FOR. Time stops being weather that happens to you and becomes a budget you spend. And budgets can be planned.",
+          "Psalm 90 is Moses' prayer, and in the middle of it sits a surprising request: teach us to number our days. Not to make the days longer. Not to squeeze more activity into them. To number them — to count them the way you count something precious and finite, the way you count money that cannot be replaced once it is spent.",
+          "Moses says the fruit of that counting is a heart of wisdom, and the mechanism is easy to watch working. A student who knows the day holds exactly twenty-four hours — no more are coming, no refunds are issued — starts asking what those hours are actually FOR. Time stops being weather that happens to you and becomes a budget you are responsible for spending. And budgets, unlike weather, can be planned.",
         ],
         verse: {
           text: "So teach us to number our days that we may get a heart of wisdom.",
@@ -1152,17 +899,17 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Where a day actually goes",
         paragraphs: [
-          "Here is the honest math of a school day: about 8 hours sleeping, 7 at school, 2 eating and getting ready and traveling, which leaves roughly 7 hours that are actually yours to aim. Most students guess those 7 hours completely wrong — usually by forgetting the phone-shaped one. Games, scrolling, and videos commonly take 3 of the 7 without ever announcing themselves.",
-          "The fix is not guilt. The fix is a log: for one ordinary day, write down what actually filled the hours, in rough blocks. Not spy-level detail — blocks. School, sleep, meals, practice, homework, family, screens, rest. Add them up and check they make 24. A log tells the truth that guesses never do, and you cannot plan what you have never seen.",
-          "Notice what a log always protects: sleep is a real block, not whatever is left over. A numbered day defends the blocks that make the other blocks work.",
+          "Here is the honest arithmetic of a school day: roughly eight hours sleeping, seven at school, two more eaten by meals, getting ready, and traveling — which leaves approximately seven hours that are actually yours to aim. Most students guess the contents of those seven hours completely wrong, usually by forgetting the phone-shaped one: games, scrolling, and videos commonly consume three of the seven without ever announcing themselves.",
+          "The remedy is not guilt; the remedy is a log. For one ordinary day, write down what actually filled the hours, in rough blocks rather than spy-level detail: school, sleep, meals, practice, homework, family, screens, rest. Add the blocks and check that they total twenty-four. A log reports a truth that guesses never reach, and you cannot plan a day you have never actually seen.",
+          "Notice what a log always protects: sleep appears as a real block with a size of its own, not as whatever happens to be left over after everything else has eaten. A numbered day defends the blocks that make all the other blocks function.",
         ],
       },
       {
         heading: "Plan tomorrow tonight",
         paragraphs: [
-          "Planning a day takes about five minutes the night before, and it is embarrassingly simple: give the big things a home first. Sleep, school, practice, family dinner — the fixed boulders go on the schedule before anything else moves. Then fit homework and projects into the free blocks with actual clock times, and let the smaller things fill what remains.",
-          "A block written down — '4:30 to 5:00, science project' — behaves completely differently from a hope like 'sometime tomorrow.' The block has a door; the hope has a shrug. When the block's time arrives, starting is easier, because the decision was already made last night by a calmer version of you.",
-          "That is the whole secret of people who 'find time': they do not find it. They assign it — making the best use of the time, on paper, before the day can spend itself.",
+          "Planning a day takes about five minutes, done the night before, and the method is embarrassingly simple: give the big things a home first. Sleep, school, practice, family dinner — the fixed boulders take their places on the schedule before anything else is allowed to move. Then homework and projects fit into the remaining blocks, attached to actual clock times, and the smaller things fill whatever is left.",
+          "A block written down — '4:30 to 5:00, science project' — behaves completely differently from a hope like 'sometime tomorrow.' The block has a door you can walk through; the hope has a shrug. When the block's hour arrives, beginning is easier, because the decision was already made the night before by a calmer, less tempted version of you.",
+          "That is the entire secret of people who are said to 'find time': they never find it at all. They assign it — making the best use of the time, on paper, before the day is given the chance to spend itself.",
         ],
         verse: {
           text: "Making the best use of the time, because the days are evil.",
@@ -1172,110 +919,72 @@ export const MODULES: CourseModule[] = [
       {
         heading: "The kind swap",
         paragraphs: [
-          "Once a log shows you the truth, change comes as a swap, not a sacrifice. Find one block that gives you very little — the third scroll session of the day rarely gives anything the first two didn't — and trade part of it for something that gives more: thirty minutes of practice, project work, or plain sleep.",
-          "Swaps stay small and honest. Nobody is asking for a monastic schedule; the plan that survives is the one that still contains a life. One good swap a week, kept, will quietly buy back a hundred hours a year — and every hour bought back is an hour aimed on purpose.",
+          "Once a log has shown you the truth, change arrives as a swap rather than a sacrifice. Find one block that gives you very little in return — the third scrolling session of a day rarely delivers anything the first two had not already provided — and trade part of it for something that returns more: thirty minutes of practice, of project work, or of plain, undefended sleep.",
+          "Keep swaps small and honest. Nobody is being asked for a monastic schedule; the plan that survives contact with real life is the one that still contains a life inside it. One good swap a week, actually kept, will quietly buy back a hundred hours across a year — and every hour bought back is an hour aimed on purpose.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Log tomorrow honestly — just the blocks. Add them up to 24. Then circle one swap: thirty minutes from a low-value block, given to something you actually want to grow. Make the swap once and see how it feels.",
+          text: "Log tomorrow honestly — just the blocks, nothing fancier. Add them up and demand a total of twenty-four. Then circle one swap: thirty minutes out of a low-value block, given to something you genuinely want to grow. Execute the swap once, at a written time, and observe how the day feels when one piece of it was spent on purpose.",
         },
       },
     ],
     drill: {
       title: "Log a day, spot a swap",
-      intro:
-        "Meet Sam's Tuesday, already logged. Read the log carefully, answer each question in your head, then compare with the model read. Same numbers — the skill is in what you notice.",
+      intro: "Meet Sam's Tuesday, already logged. Read the log carefully, answer each question in your head, then compare with the model read. Same numbers — the skill is in what you notice.",
       modelLabel: "The read",
       items: [
         {
-          statement:
-            "The log: school 7 hours, sleep 8, homework 1, soccer practice 1.5, meals and family 2, games and scrolling 3, getting ready and travel 1.5. Where did the day go?",
-          model:
-            "The blocks add to 24 — the day is fully spent, like every day. The surprise hiding in plain sight is the 3 hours of games and scrolling: more than homework and practice combined. Nothing to feel bad about — but now it is visible, and what is visible can be planned.",
+          statement: "The log: school 7 hours, sleep 8, homework 1, soccer practice 1.5, meals and family 2, games and scrolling 3, getting ready and travel 1.5. Where did the day go?",
+          model: "The blocks add to 24 — the day is fully spent, like every day. The surprise hiding in plain sight is the 3 hours of games and scrolling: more than homework and practice combined. Nothing to feel bad about — but now it is visible, and what is visible can be planned.",
         },
         {
-          statement:
-            "Find one swap that buys 30 minutes a day for the science project — without touching sleep, school, or practice.",
-          model:
-            "Take 30 minutes from the 3-hour games-and-scrolling block. Everything protected stays protected, the project gains a daily half hour — three and a half hours a week — and there are still 2.5 hours of games. A swap, not a sacrifice.",
+          statement: "Find one swap that buys 30 minutes a day for the science project — without touching sleep, school, or practice.",
+          model: "Take 30 minutes from the 3-hour games-and-scrolling block. Everything protected stays protected, the project gains a daily half hour — three and a half hours a week — and there are still 2.5 hours of games. A swap, not a sacrifice.",
         },
         {
-          statement:
-            "Now give tomorrow's science project a real home on the schedule. What exactly do you write down tonight?",
-          model:
-            "Write it as a block with a clock time: '4:30–5:00 — science project, before games.' A block on the schedule is a plan; 'sometime tomorrow' is a hope. Numbered days get planned in ink, not wishes.",
+          statement: "Now give tomorrow's science project a real home on the schedule. What exactly do you write down tonight?",
+          model: "Write it as a block with a clock time: '4:30–5:00 — science project, before games.' A block on the schedule is a plan; 'sometime tomorrow' is a hope. Numbered days get planned in ink, not wishes.",
         },
       ],
     },
     quiz: [
       {
-        question: "What does Psalm 90:12 ask God to teach us?",
-        answers: [
-          "To make the days feel longer",
-          "To number our days, for a heart of wisdom",
-          "To forget yesterday quickly",
-          "To fill every minute with work",
-        ],
-        correct: 2,
-        explanation:
-          "Numbering our days — counting them as precious and finite — produces wisdom about time.",
-        timeLimit: 20,
-      },
-      {
-        question: "Why keep a one-day time log?",
-        answers: [
-          "To catch yourself being lazy",
-          "To impress your teacher",
-          "To see where hours actually go, not where you guess",
-          "To fill the day completely",
-        ],
+        question: "Sam's log: games and scrolling 3 hours, homework 40 minutes, project untouched for a week. Best first response?",
+        answers: ["Cut all games until the project is finished", "Add an hour of homework every single night", "Swap 30 minutes of scrolling for project time", "Sleep less on school nights to free an hour"],
         correct: 3,
-        explanation:
-          "Guesses about time are reliably wrong. A log shows the real blocks — and real blocks can be planned.",
+        explanation: "Aim one small, keepable swap at the largest low-value block. Punishment schedules collapse by Thursday, and sleep is a protected block, not a funding source.",
         timeLimit: 20,
       },
       {
-        question: "When planning tomorrow, what gets a place on the schedule first?",
-        answers: [
-          "Whatever is loudest",
-          "The big things: sleep, school, practice, family",
-          "Games and videos",
-          "Nothing — plans should stay loose",
-        ],
+        question: "Two plans: “homework sometime” vs “5:00–5:30, math, at the desk.” Why does the second actually happen?",
+        answers: ["It names a time, task, and place to start", "It uses numbers, and numbers feel stricter", "It is longer, so it looks more serious overall", "It promises the homework will be enjoyable"],
+        correct: 1,
+        explanation: "A written block turns a decision into an appointment: at 5:00, starting needs no new willpower. “Sometime” leaves it to your most tempted self.",
+        timeLimit: 20,
+      },
+      {
+        question: "A student's logged blocks total 26 hours for one day. What has the log just revealed?",
+        answers: ["The student is unusually productive and fast", "Some blocks were double-counted or guessed", "The day contained more time than most days", "Logging is useless for this particular student"],
         correct: 2,
-        explanation:
-          "Boulders first: the fixed, important blocks get homes before the small things fill the gaps.",
+        explanation: "A day holds twenty-four hours, so a 26-hour total proves guesses or overlaps in the log. Correcting the count is the log doing its job.",
         timeLimit: 20,
       },
       {
-        question: "In this module, a 'swap' means…",
-        answers: [
-          "Doing two things at the same time",
-          "Trading homework with a friend",
-          "Skipping sleep for one night",
-          "Trading a low-value block for something that gives more",
-        ],
+        question: "Which block should a numbered day defend FIRST when the schedule gets squeezed?",
+        answers: ["The games block, since rest prevents burnout", "The homework block, moved into late evening", "The extra scrolling block, kept out of habit", "The sleep block, since everything runs on it"],
         correct: 4,
-        explanation:
-          "A swap trades part of a block that gives little for time that builds something — kindly and honestly.",
+        explanation: "Sleep powers every other block; borrowing from it taxes school, practice, and patience at once. Boulders are placed first and moved last.",
         timeLimit: 20,
       },
       {
-        question: "Which plan is most likely to actually happen?",
-        answers: [
-          "'I will work on it sometime tomorrow'",
-          "'4:30–5:00, science project' written down tonight",
-          "'I will do it when I feel like it'",
-          "'Someone will remind me, probably'",
-        ],
-        correct: 2,
-        explanation:
-          "A written block with a clock time is a decision already made. A hope is not a plan.",
+        question: "People who “find time” are really doing what, according to this module?",
+        answers: ["Assigning hours on paper before the day starts", "Working faster than everyone around them", "Cutting out everything enjoyable in the day", "Waking earlier than the rest of the household"],
+        correct: 1,
+        explanation: "Time is assigned in advance, in writing — never found lying around. The assignment, not speed or alarm clocks, is what makes the hours appear.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 9,
     slug: "a-place-for-everything",
@@ -1287,14 +996,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/10567234/pexels-photo-10567234.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A tidy desk with an open drawer, a folder, and a basket",
     },
-    intro:
-      "A messy space is not a character flaw. It is usually a missing system: things without homes wander. This module is about organization as a thinking tool — because a mind busy rummaging for its own gear has less left for the work itself.",
+    intro: "A messy space is not a character flaw; it is usually a missing system, because things without homes wander. This module treats organization as what it actually is — a thinking tool — since a mind busy rummaging for its own equipment has measurably less of itself left for the work the equipment was for.",
     sections: [
       {
         heading: "Joseph's warehouses",
         paragraphs: [
-          "In Genesis 41, Pharaoh dreams of seven fat cows and seven thin ones, and Joseph explains: seven years of plenty are coming, then seven years of famine. Joseph's plan is, at heart, an organization plan: during the good years, gather the grain, store it city by city, counted and kept — so that when the famine years arrive, Egypt is ready instead of desperate.",
-          "Notice that nothing about the plan is magical. It is bins, counts, and places, maintained for seven years. History remembers it as the reason a nation ate. Order, done quietly and early, is one of the strongest tools a thinker owns — and Scripture's instruction about how things should be done points the same way: decently, and in order.",
+          "In Genesis 41, Pharaoh dreams of seven fat cows and seven thin ones, and Joseph explains the meaning: seven years of plenty are coming, followed by seven years of famine. Joseph's celebrated plan is, at its heart, an organization plan: during the good years, gather the grain, store it city by city, counted and kept under guard — so that when the famine years arrive, Egypt is ready instead of desperate.",
+          "Notice that nothing in the plan is magical. It is bins, counts, and assigned places, maintained faithfully for seven years. History remembers it as the reason an entire nation ate. Order, installed quietly and early, is one of the strongest tools a thinker owns — and Scripture's own instruction about how things should be conducted points the same direction: decently, and in order.",
         ],
         verse: {
           text: "But all things should be done decently and in order.",
@@ -1304,126 +1012,88 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Why order helps you think",
         paragraphs: [
-          "Every search costs something real: minutes, yes — but also attention, calm, and momentum. The student who burns ten minutes hunting for a charger, a folder, and a permission slip starts homework already drained, and the thinking suffers before the first problem is read.",
-          "'A place for everything' does not mean a showroom. It means every thing you use regularly has ONE home that you can name without thinking — the way you can name where your shoes sleep. When a thing has no home, you become its home: your memory carries it, your eyes keep tripping over it, and your brain pays rent on it all day.",
-          "A system you can trust pays that rent back. The two minutes saved here and there matter less than the quiet: everything in its place means your attention is free for questions, claims, roots, and loops — the real work of this course.",
+          "Every search charges you something real: minutes, certainly — but also attention, calm, and momentum. The student who burns ten minutes hunting for a charger, a folder, and a permission slip begins homework already drained, and the thinking suffers before the first problem has even been read.",
+          "'A place for everything' does not mean a showroom. It means that every object you use regularly has exactly ONE home, which you can name without thinking — the way you can name where your shoes sleep. When a thing has no home, you become its home instead: your memory carries it, your eyes keep tripping over it, and your brain pays rent on it all day long.",
+          "A system you can trust pays that rent back to you. The minutes saved here and there matter less than the quiet: everything resting in its place means your attention is free for questions, claims, roots, and loops — the genuine work of this course.",
         ],
       },
       {
         heading: "Build a system in four moves",
         paragraphs: [
-          "Move one: dump and sort. Take ONE pile — a backpack, a desk, a gear bin — empty it completely, and group what comes out by the job it does: school, sports, tools, tech, papers. You cannot design a home for a pile you have not sorted.",
-          "Move two: group by job, as you sort. Move three: give each group exactly one home, as close as possible to where it is used — hooks where the bag lands, the charger where the phone sleeps. Move four: label it like you mean it. A label sounds childish until a tired Tuesday arrives; labels are how a system survives tired Tuesdays.",
-          "Four moves, one pile at a time. A whole room is a weekend project; a backpack is twenty minutes — and twenty honest minutes beats a grand plan that never starts.",
+          "Move one: dump and sort. Take ONE pile — a backpack, a desk, a gear bin — empty it completely, and group what comes out by the job it performs: school, sports, tools, tech, papers. You cannot design a home for a pile you have never honestly sorted, which is why the dump is not optional.",
+          "Move two is the sorting itself: group by job, ruthlessly, including the awkward items. Move three: give each group exactly one home, positioned as close as possible to where the group is actually used — hooks where the bag lands, the charger where the phone sleeps. Move four: label it like you mean it. A label sounds childish until a tired Tuesday arrives; labels are precisely how a system survives tired Tuesdays.",
+          "Four moves, one pile at a time. A whole room is a weekend project; a backpack is twenty minutes — and twenty honest minutes of system-building outweigh a grand reorganization that is always scheduled for someday and never begun.",
         ],
       },
       {
         heading: "Keep it alive",
         paragraphs: [
-          "Systems do not usually die in a collapse; they erode at the edges. Two small habits keep one alive. First, the drop zone: one basket or tray near the door where new chaos is ALLOWED to land — emptied and sorted twice a week, so the edges have a border. Second, the two-minute reset: before dinner or bed, return five things to their homes. Two minutes of maintenance, daily, beats a heroic purge twice a year.",
-          "And when a system fails, treat it like Module 6 taught you: check honestly, fix the step that broke, and loop. The system serves you. You do not serve the system.",
+          "Systems rarely die in a collapse; they erode at the edges. Two small habits keep one alive. First, the drop zone: one basket or tray near the door where new chaos is explicitly ALLOWED to land — emptied and sorted twice a week, so the edges of the system have a border instead of a breach. Second, the two-minute reset: before dinner or bed, return five things to their homes. Two minutes of maintenance, daily, outperforms a heroic purge staged twice a year.",
+          "And when a system fails anyway, treat the failure the way Module 6 taught you: check honestly, identify the step that broke, fix that step, and loop. The system exists to serve you. You do not exist to serve the system.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Build one small system this week — the backpack, the desk, or the sports bag. Dump, sort, one home per group, label it. Take a before and after photo for yourself. The after photo is the proof your future self needs.",
+          text: "Build one small system this week — the backpack, the desk, or the sports bag. Dump it, sort it by job, assign one home per group, and label the homes. Take a before photograph and an after photograph for yourself. The after photograph is the evidence your future self will need on the day the system looks impossible to maintain.",
         },
       },
     ],
     drill: {
       title: "Design the system: the backpack",
-      intro:
-        "One backpack, currently carrying: textbooks, gym shoes, a lunchbox, loose papers, a charger, a water bottle, and three pens of unknown status. Walk the four moves with it — decide each step, then compare with the model design.",
+      intro: "One backpack, currently carrying: textbooks, gym shoes, a lunchbox, loose papers, a charger, a water bottle, and three pens of unknown status. Walk the four moves with it — decide each step, then compare with the model design.",
       modelLabel: "The design",
       items: [
         {
-          statement:
-            "Move one: what do you do first, before choosing pockets or buying anything?",
-          model:
-            "Dump and sort. Empty the whole bag and group by job: school books, gym gear, food, papers, tech. Three pens get tested on the spot — dead ones leave. You cannot design a home for a pile you have not sorted.",
+          statement: "Move one: what do you do first, before choosing pockets or buying anything?",
+          model: "Dump and sort. Empty the whole bag and group by job: school books, gym gear, food, papers, tech. Three pens get tested on the spot — dead ones leave. You cannot design a home for a pile you have not sorted.",
         },
         {
-          statement:
-            "Now give each group exactly one home inside the same bag.",
-          model:
-            "Books in the large pocket, flat against your back. Papers in one folder in the middle pocket — the same folder that ended the vanishing-homework chain in Module 5. Gym shoes in the front pocket. Charger, coiled, in the small pocket. Water bottle in the side sleeve. Every group, one address.",
+          statement: "Now give each group exactly one home inside the same bag.",
+          model: "Books in the large pocket, flat against your back. Papers in one folder in the middle pocket — the same folder that ended the vanishing-homework chain in Module 5. Gym shoes in the front pocket. Charger, coiled, in the small pocket. Water bottle in the side sleeve. Every group, one address.",
         },
         {
-          statement:
-            "A week later, the front pocket holds receipts, a broken pencil, and a mystery key. Is the system broken?",
-          model:
-            "No — it needs its maintenance: a two-minute reset. Front pocket goes back to gym gear only, the pencil leaves, and the key gets a real home or a question mark in the drop zone. Systems are kept, not just built.",
+          statement: "A week later, the front pocket holds receipts, a broken pencil, and a mystery key. Is the system broken?",
+          model: "No — it needs its maintenance: a two-minute reset. Front pocket goes back to gym gear only, the pencil leaves, and the key gets a real home or a question mark in the drop zone. Systems are kept, not just built.",
         },
       ],
     },
     quiz: [
       {
-        question: "In Genesis 41, what did Joseph organize during the seven good years?",
-        answers: [
-          "A new calendar for Egypt",
-          "Grain, stored city by city for the famine years",
-          "Pharaoh's chariot fleet",
-          "A building project in the capital",
-        ],
-        correct: 2,
-        explanation:
-          "Gathering and storing the grain during the plenty is what carried Egypt through the famine.",
-        timeLimit: 20,
-      },
-      {
-        question: "What does 'a place for everything' actually mean?",
-        answers: [
-          "A room that always looks perfect",
-          "Owning less than ten things",
-          "Every thing you use has one home you can name",
-          "Labeling your bedroom door",
-        ],
-        correct: 3,
-        explanation:
-          "One home per thing, namable without thinking. The point is a trustworthy system, not a showroom.",
-        timeLimit: 20,
-      },
-      {
-        question: "What is the FIRST move when building a system for a pile?",
-        answers: [
-          "Buy matching containers",
-          "Throw most of it away",
-          "Ask a friend to sort it",
-          "Dump it out and sort it into groups",
-        ],
-        correct: 4,
-        explanation:
-          "Dump and sort first. Homes get designed for groups you can actually see.",
-        timeLimit: 20,
-      },
-      {
-        question: "Why do labels matter in a simple system?",
-        answers: [
-          "They help the system survive a tired day",
-          "They make the system look official",
-          "They are required by parents",
-          "They stop things from getting lost forever",
-        ],
+        question: "Marta's desk system worked for a month, then papers crept back. The response this module prescribes is…",
+        answers: ["a two-minute reset — systems are maintained", "a full weekend purge, bigger than the first", "new containers, since the old ones failed", "accepting that systems don't suit her style"],
         correct: 1,
-        explanation:
-          "On a tired Tuesday, a label carries the decision so your memory doesn't have to.",
+        explanation: "Systems fade by erosion at the edges, and maintenance is the cure. A purge treats an upkeep problem as a construction problem, at weekend prices.",
         timeLimit: 20,
       },
       {
-        question: "Your system gets messy again after two weeks. Best response?",
-        answers: [
-          "Give up — systems don't work for you",
-          "A two-minute reset — systems are kept, not just built",
-          "Buy a bigger backpack",
-          "Wait for the yearly cleanup",
-        ],
-        correct: 2,
-        explanation:
-          "Erosion at the edges is normal. Small maintenance is the fix — check, adjust, keep going.",
+        question: "The backpack holds books, gym gear, papers, and tech in one mixed pile. Move one of the system is…",
+        answers: ["buy a larger backpack with more pockets", "label the single pocket with four tidy labels", "empty it fully; group items by their job", "throw away anything not used this month"],
+        correct: 3,
+        explanation: "Dump and sort precedes pockets and labels: every later move depends on seeing the pile grouped by job. Designing first means designing blind.",
+        timeLimit: 20,
+      },
+      {
+        question: "Why does a thing without a home end up 'renting space' in your head all day?",
+        answers: ["Because untidy rooms are always distracting", "Because labels are missing from the drawer", "Because your eyes prefer organized things", "Your memory must track what no system holds"],
+        correct: 4,
+        explanation: "What no system holds, memory and attention carry instead — noticed repeatedly, searched for repeatedly. The rent is paid in thinking power.",
+        timeLimit: 20,
+      },
+      {
+        question: "A drop zone by the door fills faster than it gets emptied. The loop-minded fix is to…",
+        answers: ["ban the drop zone and forbid all landing there", "buy a second, larger drop zone this week", "find why it overflows; adjust the routine", "empty it once a year in a full cleanout"],
+        correct: 3,
+        explanation: "Check the failing step instead of enlarging it: the emptying rhythm may be too rare for the traffic, or the zone sits at the wrong doorway.",
+        timeLimit: 20,
+      },
+      {
+        question: "Joseph's grain plan is this module's model mainly because it shows order as…",
+        answers: ["a way to impress Pharaoh with neat stores", "work that only kings and officials can do", "proof that hoarding supplies is always wise", "preparation installed before the crisis came"],
+        correct: 4,
+        explanation: "The plan's genius was timing: counted stores built in the plenty for a famine nobody could yet see. Order installed early is what readiness means.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 10,
     slug: "dont-let-feelings-drive",
@@ -1435,14 +1105,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/13369418/pexels-photo-13369418.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A student sitting with her phone, taking a moment",
     },
-    intro:
-      "Feelings are real, and they are useful — like the warning lights on a dashboard. But a dashboard light has never driven a car anywhere worth going. This module is about the pause between feeling something strongly and doing something quickly — because headlines, apps, and ads are all built to close that gap.",
+    intro: "Feelings are real, and they are genuinely useful — like the warning lights on a dashboard. But a dashboard light has never driven a car anywhere worth going. This module is about the pause that lives between feeling something strongly and doing something quickly, because headlines, applications, and advertisements are all professionally built to close that gap before your judgment wakes up.",
     sections: [
       {
         heading: "Hold it back",
         paragraphs: [
-          "Proverbs draws the contrast in one line: the fool gives full vent to his spirit — everything he feels comes straight out, at full volume, at full speed — but the wise man quietly holds it back. Read it carefully: the wise man HAS a spirit, has feelings, has reactions. He just holds them long enough for thought to arrive before they drive.",
-          "That is the whole module in one sentence. Feelings are not the enemy. Speed is. A reaction that waits ten seconds for a clear head is the same feeling, with a driver.",
+          "Proverbs draws the contrast inside a single line: the fool gives full vent to his spirit — everything he feels comes straight out, at full volume and full speed — but the wise man quietly holds it back. Read the line carefully: the wise man HAS a spirit, has feelings, has reactions in full. He simply holds them long enough for thought to arrive before they are allowed to drive.",
+          "That is the entire module compressed into one sentence. Feelings are not the enemy of clear thinking. Speed is. A reaction that waits ten seconds for a clear head is the same feeling — with a driver in the seat.",
         ],
         verse: {
           text: "A fool gives full vent to his spirit, but a wise man quietly holds it back.",
@@ -1452,126 +1121,88 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Information, not instructions",
         paragraphs: [
-          "Treat a strong feeling the way you would treat a dashboard light: it reports something; it does not steer. A surge of excitement during a product video is information — this was DESIGNED to excite me — not an instruction that says buy it now. A jolt of alarm at a headline is information — look closer — not proof the story happened exactly as the headline screamed.",
-          "Even the spike of outrage at a referee's call is information: the stakes feel high, and your view from the bench may be missing an angle. The feeling did its reporting job in half a second. What happens next belongs to the rest of you: questions, sources, evidence — the tools you already own.",
-          "Feelings report. Reason decides. Actions follow the decision, not the spike.",
+          "Treat a strong feeling the way you would treat a dashboard light: it reports something; it does not steer. A surge of excitement during a product video is information — this presentation was DESIGNED to excite me — not an instruction reading 'buy it now.' A jolt of alarm beneath a headline is information — look closer at this — not proof that the event happened exactly as the headline screamed it.",
+          "Even the spike of outrage at a referee's call is information: the stakes feel high to you, and your particular angle from the bench may be concealing part of the play. The feeling completed its reporting job in half a second. Everything that happens next belongs to the rest of you: questions, sources, evidence — the tools you already own.",
+          "Feelings report. Reason decides. Actions follow the decision — never the spike.",
         ],
       },
       {
         heading: "Built to make you react",
         paragraphs: [
-          "It helps to know that the pressure you feel is manufactured. Apps and headlines earn their keep from speed: your tap before you think, your share before you check, your purchase before the pause. That is why the words of urgency never sleep — act now, last chance, everyone is buying, you will not believe number four.",
-          "Urgency is a design choice, and noticing the design is half the defense. When a post makes your thumb move faster than your brain, that is not your personality failing. That is a machine working as built — and a machine can be declined.",
-          "Sports give the cleanest picture of all: a call that looks outrageous in the last minute looks different on the replay an hour later. Both views were of the same play. The difference was time. The pause is where your replay lives.",
+          "It helps considerably to know that the pressure you feel is manufactured. Applications and headlines earn their keep from speed: your tap before you think, your share before you check, your purchase before the pause has a chance to form. That is why the vocabulary of urgency never sleeps — act now, last chance, everyone is buying, you will not believe number four.",
+          "Urgency is a design choice, and noticing the design is half the defense against it. When a post makes your thumb move faster than your brain, that is not your personality failing a test. That is a machine operating exactly as it was built — and a machine can be declined.",
+          "Sports supply the cleanest picture available: a call that looks outrageous in the final minute looks measurably different on the replay an hour later. Both views were views of the same play. The only thing that changed was time. The pause is where your replay lives.",
         ],
       },
       {
         heading: "The pause routine",
         paragraphs: [
-          "When the spike hits, run four steps. STOP: hands off the screen, the button, the send key. BREATHE: one slow breath out — ten seconds is plenty, and it is remarkable what ten seconds does. CHECK: run the tools you know — who is the source (Module 3), what exactly is the claim and its proof (Module 4)? CHOOSE: now act — share it, buy it, answer it, or skip it — on purpose.",
-          "Practice the routine on small things, when nothing is at stake: an exciting video, a surprising post, a call in a game you are watching. A routine practiced at low stakes is the one that shows up at high stakes. Nobody rises to the occasion; they fall back on their practice.",
+          "When the spike hits, run four steps. STOP: hands off the screen, the button, the send key. BREATHE: one slow breath out — ten seconds is plenty, and it is remarkable what ten honest seconds can do. CHECK: run the tools you already know — who is the source (Module 3), and what exactly is the claim, with what proof (Module 4)? CHOOSE: now act — share it, buy it, answer it, or skip it — deliberately, on purpose.",
+          "Practice the routine on small things, while nothing is at stake: an exciting video, a surprising post, a debatable call in a game you are merely watching. A routine practiced at low stakes is the routine that will be available at high stakes. Nobody rises to the occasion; everybody falls back on their practice.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Once a day, catch one spike — an exciting video, a shocking headline, a tempting offer — and run the full routine out loud: stop, breathe, check, choose. Four steps, ten seconds. Notice how often the choice changes after the check.",
+          text: "Once a day this week, catch one spike — an exciting video, a shocking headline, a tempting offer — and run the full routine out loud: stop, breathe, check, choose. Four steps, ten seconds. Pay attention to how frequently the choice at the end differs from the impulse at the beginning; that difference is the routine paying you.",
         },
       },
     ],
     drill: {
       title: "Run the pause",
-      intro:
-        "Three everyday spikes. For each one, walk the routine — stop, breathe, check, choose — and decide what the checked version of you would do. Then compare with the model.",
+      intro: "Three everyday spikes. For each one, walk the routine — stop, breathe, check, choose — and decide what the checked version of you would do. Then compare with the model.",
       modelLabel: "The pause, run",
       items: [
         {
-          statement:
-            "A post screams: 'BREAKING — your favorite game is being banned next week!' Your thumb is already moving toward share.",
-          model:
-            "Stop. Breathe. Check: who posted this — the game's own site, or an unnamed page? Search the claim in one other place. Ninety seconds later you will know whether you are sharing news or sharing a hook.",
+          statement: "A post screams: 'BREAKING — your favorite game is being banned next week!' Your thumb is already moving toward share.",
+          model: "Stop. Breathe. Check: who posted this — the game's own site, or an unnamed page? Search the claim in one other place. Ninety seconds later you will know whether you are sharing news or sharing a hook.",
         },
         {
-          statement:
-            "A video shows a gadget and repeats, 'Only a few left — link below!' Your savings jar suddenly seems very interesting.",
-          model:
-            "Stop. Breathe. Check: is 'a few left' a fact, or a claim in a costume (Module 4)? Choose with the jar in mind: let it sit 24 hours. A good buy tomorrow is still a good buy. A pressured buy usually is not.",
+          statement: "A video shows a gadget and repeats, 'Only a few left — link below!' Your savings jar suddenly seems very interesting.",
+          model: "Stop. Breathe. Check: is 'a few left' a fact, or a claim in a costume (Module 4)? Choose with the jar in mind: let it sit 24 hours. A good buy tomorrow is still a good buy. A pressured buy usually is not.",
         },
         {
-          statement:
-            "The referee calls a foul on your teammate in the last minute, and half the bench is on its feet.",
-          model:
-            "Stop. Breathe. Check: what did you actually see, and what might your angle have hidden? Choose: play the next minute as well as you can. The call will not change. Your next play can. Feelings reported the stakes — they do not get the whistle.",
+          statement: "The referee calls a foul on your teammate in the last minute, and half the bench is on its feet.",
+          model: "Stop. Breathe. Check: what did you actually see, and what might your angle have hidden? Choose: play the next minute as well as you can. The call will not change. Your next play can. Feelings reported the stakes — they do not get the whistle.",
         },
       ],
     },
     quiz: [
       {
-        question: "How does Proverbs 29:11 contrast the fool and the wise man?",
-        answers: [
-          "The wise man never feels anything",
-          "The wise man quietly holds it back",
-          "The fool thinks before speaking",
-          "The wise man vents the loudest",
-        ],
-        correct: 2,
-        explanation:
-          "The wise man has feelings — he holds them long enough for thought to arrive before acting.",
+        question: "A post claims your favorite game is 'being banned Friday' and begs for shares. Your thumb is moving. Run the routine:",
+        answers: ["Share first — you can always delete it later", "Comment angrily at the account that posted it", "Ask three friends whether they have heard it", "Stop, then check the game's official channels"],
+        correct: 4,
+        explanation: "Stop interrupts the thumb; check sends the claim to the game's own channels, where a ban would be announced. Sharing first still publishes it to everyone who saw it.",
         timeLimit: 20,
       },
       {
-        question: "In this module, strong feelings are best treated as…",
-        answers: [
-          "Orders that must be obeyed at once",
-          "Signs that something is wrong with you",
-          "Information to notice, not instructions to obey",
-          "Things to hide from everyone",
-        ],
+        question: "A training-shoe video leaves you certain you need the shoes tonight. That certainty is best treated as…",
+        answers: ["proof the shoes will improve your running", "information: the video was built to excite", "a sign the shoes are priced fairly today", "instructions your budget must obey at once"],
+        correct: 2,
+        explanation: "The feeling reported accurately: the video worked on you as designed. Information gets examined; instructions get obeyed. Keeping those separate is the module.",
+        timeLimit: 20,
+      },
+      {
+        question: "Why does urgency language ('last chance!') deserve suspicion all by itself?",
+        answers: ["Urgent offers are always more expensive", "Honest sellers are never in any hurry", "Honest products never need quick decisions", "It is designed to outrun your checking step"],
+        correct: 4,
+        explanation: "Urgency's function is mechanical: shrink the gap between feeling and action until no check can fit inside it. Noticing the design restores the pause that the design was built to remove.",
+        timeLimit: 20,
+      },
+      {
+        question: "At a game, a call enrages the bench. The CHECK step, applied to the call itself, asks…",
+        answers: ["how loudly the crowd can protest the call", "whether the referee should be replaced this season", "what you truly saw, and what your angle hid", "who on the bench feels angriest about it"],
         correct: 3,
-        explanation:
-          "Feelings report, like dashboard lights. Reason decides what the report means.",
+        explanation: "Checking a call audits your own evidence: sightline, distance, the angle a replay would show. Protest volume is the spike talking, not the check.",
         timeLimit: 20,
       },
       {
-        question: "Why are headlines and apps built to make you react fast?",
-        answers: [
-          "Speed makes the news more accurate",
-          "Fast reactions earn their makers taps, shares, and sales",
-          "Slow readers complained",
-          "Urgency is required by law",
-        ],
+        question: "The pause routine works at high stakes mainly because it was…",
+        answers: ["memorized as four words in the right order", "practiced repeatedly when stakes were small", "invented for referees and game officials", "designed to suppress every strong feeling"],
         correct: 2,
-        explanation:
-          "Urgency is a design. Noticing the design is half the defense against it.",
-        timeLimit: 20,
-      },
-      {
-        question: "What are the four steps of the pause routine?",
-        answers: [
-          "React, post, argue, apologize",
-          "Stop, breathe, check, then choose",
-          "Count, shout, run, hide",
-          "See it, want it, buy it, post it",
-        ],
-        correct: 2,
-        explanation:
-          "Stop, breathe, check, choose — ten seconds between the spike and the action.",
-        timeLimit: 20,
-      },
-      {
-        question: "A post says 'Act now — almost gone!' about a jacket. Wisest move?",
-        answers: [
-          "Buy it before someone else does",
-          "Share it so friends can buy too",
-          "Pause, check the claim, decide with a cool head",
-          "Argue with the seller in the comments",
-        ],
-        correct: 3,
-        explanation:
-          "Run the pause. A good buy tomorrow is still a good buy; pressure is not evidence.",
+        explanation: "Under pressure, people do not rise to the occasion; they fall back on their practice. Small-stakes repetitions install the routine so that it is available on the day it actually matters.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 11,
     slug: "spot-the-trick",
@@ -1583,14 +1214,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/590014/pexels-photo-590014.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "A printed bar chart on paper, examined closely with a pen",
     },
-    intro:
-      "Some arguments try to win honestly, with evidence. Others try to win quickly, with tricks. This module names three of the most common — the straw man, the cherry-picked number, and the either/or squeeze — so you can spot them in ads, posts, and debates before they carry you off.",
+    intro: "Some arguments attempt to win honestly, on evidence. Others attempt to win quickly, on technique. This module names three of the most common tricks — the straw man, the cherry-picked number, and the either/or squeeze — so that you can spot them operating inside advertisements, posts, and debates before they carry you somewhere you never agreed to go.",
     sections: [
       {
         heading: "Seems right — until examined",
         paragraphs: [
-          "Proverbs saw it coming thousands of years before the internet: the first person to state a case sounds completely right — until somebody else arrives and examines him. Every trick in this module depends on the same hope: that you will never be the one who examines.",
-          "Tricks are not always told by villains. They are the standard equipment of ads, arguments, and posts, because they work fast and examining takes a minute. Your defense is not suspicion. It is a short list of names. A trick you can name is a trick that has lost most of its power.",
+          "Proverbs saw it coming thousands of years before the internet existed: the first person to state a case sounds entirely right — until somebody else arrives and examines him. Every trick in this module depends for its survival on the same hope: that you will never be the one who examines.",
+          "Tricks are not always deployed by villains. They are the standard equipment of advertisements, arguments, and posts, because they work quickly and examining takes a minute. Your defense is therefore not suspicion of everybody. It is a short list of names. A trick you can name is a trick that has already lost most of its power over you.",
         ],
         verse: {
           text: "The one who states his case first seems right, until the other comes and examines him.",
@@ -1600,124 +1230,85 @@ export const MODULES: CourseModule[] = [
       {
         heading: "Trick one: the straw man",
         paragraphs: [
-          "A straw man argument attacks something nobody actually said. Somebody proposes changing one rule about hats in the cafeteria, and the reply comes back: 'So you think school should have NO rules at all?' Nobody said that. But the invented version is soft, silly, and easy to knock flat — like a man made of straw, built to fall.",
-          "Watch for the tell: the reply is much more extreme than the claim it answers. The defense is calm and short: 'That is not the claim. The claim is one rule, changed.' Name the real claim, return to it, and let the straw man fall on its own.",
+          "A straw man argument attacks something nobody actually said. Somebody proposes changing a single rule about hats in the cafeteria, and the reply arrives instantly: 'So you think school should have NO rules at all?' Nobody said that — but the invented version is soft, extreme, and wonderfully easy to knock flat, like a man constructed out of straw for the purpose of falling over.",
+          "Watch for the tell: the reply is dramatically more extreme than the claim it purports to answer. The defense is calm and short: 'That is not the claim. The claim is one rule, changed.' Name the genuine claim, return the argument to it, and allow the straw man to fall over on its own, unassisted.",
         ],
       },
       {
         heading: "Trick two: cherry-picked numbers",
         paragraphs: [
-          "Cherries are sweet — and a number picked the way you pick cherries, choosing only the prettiest, can be perfectly true and perfectly misleading at once. 'Sales doubled this year!' From one box to two: true, and not the story. 'Winners of 4 of the last 5!' — spoken by a team whose full season quietly says something else.",
-          "The boldest version lives in charts. Draw a chart whose scale starts at 85, and a score of 92 towers over a score of 90 like a skyscraper over a house. The numbers are real. The picture is bent. The defense is one question: may I see the whole orchard — the full chart, the full season, the real starting point?",
+          "Cherries are sweet — and a number selected the way you select cherries, choosing only the prettiest specimens, can be perfectly true and perfectly misleading at the same time. 'Sales doubled this year!' From one box to two boxes: entirely true, and not remotely the story. 'Winners of four of the last five!' — announced by a team whose full season, examined whole, quietly tells a different one.",
+          "The boldest version of the trick lives inside charts. Draw a chart whose scale begins at 85, and a score of 92 towers over a score of 90 like a skyscraper over a cottage. The numbers are perfectly real. The picture is bent. The defense is a single question: may I see the whole orchard — the complete chart, the full season, the honest starting point?",
         ],
       },
       {
         heading: "Trick three: the either/or squeeze",
         paragraphs: [
-          "'You are either with us or against us.' 'Buy the premium version, or settle for junk.' Two doors get painted on the wall, and every other door in the building quietly disappears. That is the either/or squeeze: a menu of two, served as if it were the whole restaurant.",
-          "Reality usually holds more doors: with you on this AND unsure about that; the standard version; a different brand entirely; waiting a month. The defense is one question, asked pleasantly: 'What are the other options?' You will be amazed how often the third door was standing there the whole time — and how often the squeeze collapses the moment you ask.",
+          "'You are either with us or against us.' 'Buy the premium version, or settle for junk.' Two doors get painted onto the wall, and every other door in the building quietly disappears from view. That is the either/or squeeze: a menu of two, served with confidence as though it were the entire restaurant.",
+          "Reality generally holds more doors: with you on this AND undecided about that; the standard version; an entirely different brand; waiting a month and deciding with better information. The defense is one question, asked pleasantly: 'What are the other options?' You will be astonished how often the third door was standing there the whole time — and how quickly the squeeze collapses the moment somebody asks.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Spot one trick in the wild this week — in an ad, a post, a chart, or a debate — and name it out loud: straw man, cherry-picked, or either/or. Naming it is the skill. Keep a tally; the orchard is bigger than you think.",
+          text: "Spot one trick operating in the wild this week — inside an advertisement, a post, a chart, or a debate — and name it out loud: straw man, cherry-picked, or either/or. Naming it is the skill itself; everything after the naming is cleanup. Keep a tally as the week goes on. The orchard is considerably larger than you think.",
         },
       },
     ],
     drill: {
       title: "Name the trick",
-      intro:
-        "Three short claims, three tricks. Read each one, name the trick, and say why it bends the truth. Then compare with the model answers.",
-      modelLabel: "The trick",
+      intro: "Three short claims, three tricks. For each one, do two jobs: name the trick, and write the question that exposes the whole picture it was hiding. A trick named is weakened; a trick questioned is disarmed. Compare both halves with the model answers.",
       items: [
         {
-          statement:
-            "An ad announces: 'Our juice has 50% less sugar than the leading cola!' The juice is being compared with a cola — not with other juices.",
-          model:
-            "Cherry-picked comparison. The number may be true, but the partner was chosen to flatter it. Ask for the fair comparison: how does this juice stack up against other juices?",
+          statement: "An ad announces: 'Our juice has 50% less sugar than the leading cola!' The juice is being compared with a cola — not with other juices.",
+          model: "Cherry-picked comparison. The number may be perfectly true, but the partner was selected to flatter it — cola was never this juice's real competition. The exposing question: 'How does this juice compare with other juices, sugar for sugar?' Demand the fair comparison, and the impressive number shrinks to its honest size.",
         },
         {
-          statement:
-            "A chart shows Team A's bar towering over Team B's — but the chart's scale starts at 85 points, and the real scores are 92 and 90.",
-          model:
-            "The cut-off axis trick. A two-point gap became a 'landslide' by hiding the bottom of the chart. Ask for the full scale, starting at zero, and watch the mountain shrink to a step.",
+          statement: "A chart shows Team A's bar towering over Team B's — but the chart's scale starts at 85 points, and the real scores are 92 and 90.",
+          model: "The cut-off axis. A two-point gap has been dressed as a landslide by hiding the bottom of the chart, where the bars honestly begin. The exposing question: 'May I see the full chart, starting at zero?' Watch the mountain shrink into a step the moment the whole picture is restored.",
         },
         {
-          statement:
-            "In a debate, one student says: 'My opponent wants our school to have no rules at all!' The opponent had proposed changing one rule about hats.",
-          model:
-            "Straw man. A small, specific proposal got rebuilt into an extreme one that is easy to attack. Name the real claim — one rule, changed — and argue about that instead.",
+          statement: "In a debate, one student says: 'My opponent wants our school to have no rules at all!' The opponent had proposed changing one rule about hats.",
+          model: "Straw man. A small, specific proposal — one rule, changed — has been rebuilt into an extreme one that collapses easily. The exposing move is a restatement: 'What did the opponent actually propose?' Drag the argument back to the real claim, and the straw man falls without being touched.",
         },
       ],
     },
     quiz: [
       {
-        question: "What is a straw man argument?",
-        answers: [
-          "An argument made of facts",
-          "Attacking a fake, weaker version of someone's claim",
-          "A debate held outdoors",
-          "Agreeing with the other side",
-        ],
-        correct: 2,
-        explanation:
-          "The straw man replaces the real claim with an extreme invention — then knocks the invention down.",
+        question: "“Our cereal has half the sugar of the leading candy bar!” The first move of a clear thinker is to…",
+        answers: ["congratulate the cereal on a healthy recipe", "check whether the claim's numbers are exact", "ask why candy is the comparison partner", "assume the claim must be entirely invented"],
+        correct: 3,
+        explanation: "The comparison partner is where the trick lives: candy flatters almost anything. The fair test — cereal against cereals — is what the ad declined to show.",
         timeLimit: 20,
       },
       {
-        question: "A chart starts its scale at 85, making 92 vs 90 look huge. What is the trick?",
-        answers: [
-          "A cut-off axis — the chart's bottom is hidden",
-          "The numbers must be invented",
-          "Charts are always honest",
-          "The colors are doing it",
-        ],
+        question: "In a debate, Ana proposes one later lunch period. Ben replies, “Ana wants no schedule at all!” Name it, and the reply.",
+        answers: ["Either/or squeeze; ask for the third option", "Straw man; restate the actual proposal made", "Cherry-pick; demand the full season record", "Cut-off axis; ask to see the chart from zero"],
+        correct: 2,
+        explanation: "Ben replaced a modest proposal with an extreme invention built to fall — a straw man. The disarming reply restates what Ana actually proposed and returns the debate to the real claim.",
+        timeLimit: 20,
+      },
+      {
+        question: "A chart shows recycling 'soaring' — 41% last year, 44% now, on a scale running 40 to 45. The honest chart…",
+        answers: ["starts at zero, where the change looks small", "uses taller bars to show the change better", "omits last year to keep the picture simple", "starts at 40 so the rise is easy to notice"],
         correct: 1,
-        explanation:
-          "Real numbers, bent picture. Ask for the full scale starting at zero.",
+        explanation: "The cropped scale manufactures a landslide out of a three-point step. Drawn from zero, the same true numbers tell their true size — an improvement that is honestly small and honestly real.",
         timeLimit: 20,
       },
       {
-        question: "Proverbs 18:17 says the first case seems right until what happens?",
-        answers: [
-          "It gets the most likes",
-          "The week ends",
-          "The other side comes and examines it",
-          "Someone famous repeats it",
-        ],
-        correct: 3,
-        explanation:
-          "Examining is the moment tricks fear. Be the one who examines.",
+        question: "“Either buy the pro controller, or play at a disadvantage forever.” The hidden move in this squeeze is…",
+        answers: ["the price of the controller is being hidden", "the word 'forever' is doing all the work here", "the controller's quality is being exaggerated", "every other option is quietly being removed"],
+        correct: 4,
+        explanation: "The squeeze serves two options as though they were everything. Standard gear, other brands, borrowing, and waiting vanish until somebody asks for them back.",
         timeLimit: 20,
       },
       {
-        question: "'You are either on our side or against us.' Which trick is this?",
-        answers: [
-          "The straw man",
-          "A cherry-picked number",
-          "The either/or squeeze — hiding the other options",
-          "No trick at all",
-        ],
-        correct: 3,
-        explanation:
-          "Two doors painted on the wall. The defense is asking what the other options are.",
-        timeLimit: 20,
-      },
-      {
-        question: "What is the best defense when a number feels cherry-picked?",
-        answers: [
-          "Believe it if it is repeated often",
-          "Ask for the whole picture: full chart, full record",
-          "Pick a bigger number back",
-          "Ignore all numbers forever",
-        ],
+        question: "“Winners of 4 of our last 5 matches!” says the poster for a team that finished the season 6–14. The number is…",
+        answers: ["false: a 6–14 team cannot have won four", "true but cherry-picked from a rough season", "proof the team peaked at exactly the right time", "an either/or squeeze aimed at new recruits"],
         correct: 2,
-        explanation:
-          "The whole orchard beats the picked cherries: full charts, full seasons, real starting points.",
+        explanation: "Every word can be accurate while the selection misleads: five chosen matches standing in for twenty played. The defense is the whole orchard — the full record.",
         timeLimit: 20,
       },
     ],
   },
-
   {
     number: 12,
     slug: "think-like-jesus",
@@ -1729,14 +1320,13 @@ export const MODULES: CourseModule[] = [
       src: "https://images.pexels.com/photos/19895774/pexels-photo-19895774.jpeg?auto=compress&cs=tinysrgb&w=1200",
       alt: "Students working together around a project table",
     },
-    intro:
-      "Twelve modules, one aim: to think the way Jesus thought — carefully, fairly, and humbly, with truth in one hand and kindness in the other. This last module pulls the whole toolbox together on one real job, the way you will actually use it.",
+    intro: "Twelve modules, one aim: to think the way Jesus thought — carefully, fairly, and humbly, holding truth in one hand and kindness in the other. This final module pulls the whole toolbox together onto one real job, in the combinations you will actually use them, because in real life the tools never arrive one at a time.",
     sections: [
       {
         heading: "Check yourself first",
         paragraphs: [
-          "Jesus warned about the comedy of a man with a log in his own eye offering to remove a speck from his brother's. The point is not 'never judge' — in John 7 he commands right judgment. The point is order: first take the log out of your own eye, and THEN you will see clearly to help with the speck.",
-          "For a thinker, that order is everything. Before you grade someone else's claim, run your own beliefs through the same tests you have been practicing: Would I accept this evidence from the other side? Did I check MY source? Is there a log — a wish, a habit, a headline I swallowed whole — sitting in my own eye? Humility is not weakness in thinking. It is accuracy about the thinker.",
+          "Jesus warned about the comedy of a man with a log protruding from his own eye offering to extract a speck from his brother's. The point is not 'never judge' — in John 7 he explicitly commands right judgment. The point is order: first remove the log from your own eye, and THEN you will see clearly enough to help with the speck.",
+          "For a thinker, that order is everything. Before grading somebody else's claim, run your own convictions through the identical tests you have been practicing all course: Would I accept this quality of evidence if it came from the other side? Did I check MY source with the same suspicion? Is there a log — a wish, a habit, a headline swallowed whole — currently sitting in my own eye? Humility is not weakness in thinking. It is accuracy about the thinker.",
         ],
         verse: {
           text: "First take the log out of your own eye, and then you will see clearly to take the speck out of your brother's eye.",
@@ -1746,126 +1336,88 @@ export const MODULES: CourseModule[] = [
       {
         heading: "The whole toolbox, together",
         paragraphs: [
-          "Look at what you are carrying now. Ask better questions, and park the rest for later (Module 1). Sort every statement: fact, opinion, or needs checking (Module 2). Check the source before you share — who, what do they want, where else (Module 3). Spot the claim and ask for its evidence; together is not because (Module 4).",
-          "When a problem keeps coming back, ask why five times until the root shows (Module 5). Improve anything with the loop: plan it, try it, check it, fix it (Module 6). Sort work by what matters and what it takes (Module 7). Number your days and plan tomorrow on purpose (Module 8).",
-          "Give everything a home you can trust (Module 9). When the spike hits, stop, breathe, check, choose (Module 10). And name the trick when an argument bends — straw man, cherry-picked, either/or (Module 11). Eleven tools. They were never eleven separate subjects; they are one way of paying attention.",
+          "Look at what you are carrying now. Ask better questions, and park the ones you cannot yet answer (Module 1). Sort every statement you meet: fact, opinion, or needs checking (Module 2). Check the source before you share anything — who is speaking, what do they want, where else does it stand (Module 3). Spot the claim and demand its evidence, remembering that together is not because (Module 4).",
+          "When a problem keeps returning, ask why five times until the root shows itself (Module 5). Improve anything at all with the loop: plan it, try it, check it, fix it (Module 6). Sort your work by what it matters and what it takes (Module 7). Number your days and plan tomorrow tonight, on purpose (Module 8).",
+          "Give everything you use a home you can trust without thinking (Module 9). When the emotional spike arrives, stop, breathe, check, and only then choose (Module 10). And name the trick whenever an argument bends the truth for advantage — straw man, cherry-picked, either/or (Module 11). Eleven tools in total. They were never eleven separate subjects competing for your memory. They are a single way of paying attention to the world, divided into lessons only so that it could be learned.",
         ],
       },
       {
         heading: "The case: fix the fun-run",
         paragraphs: [
-          "Put it all to work. Your school's fun-run needs fixing: last year the paper signup list was lost twice, 30 runners never got shirts, and a rumor about the date chased families for a week. The organizing team — students, like you — starts the way this course starts: with questions. What exactly went wrong last year? Who kept the list? What did runners actually need?",
-          "Then they dig. Why was the list lost? Paper. Why did one loss matter so much? No copy existed anywhere. Why not? One person held it, alone, in a bag. The root is not 'be more careful' — it is a missing system. The fix: one shared signup list with a keeper, a photo backup, and a home base at the club table (Modules 5 and 9).",
-          "A claim arrives to be tested: 'Nobody signed up last year because the run was boring.' The team sorts it (Module 2): the count says 84 runners signed up — not nobody — and 'boring' is an opinion worth hearing properly, through three short questions on the signup form, instead of a verdict worth printing (Modules 3 and 4). The date rumor gets checked at the source — the school office — before anyone repeats it (Modules 3 and 10).",
+          "Now put the entire toolbox to work on one realistic job. Your school's annual fun-run requires rescuing: last year the paper signup list was lost twice, thirty runners never received the shirts they had ordered, and an incorrect rumor about the date chased families for an entire week. The organizing team — students, precisely like you — begins exactly where this course begins: with questions, asked before any solutions are proposed. What exactly went wrong last year? Who physically kept the list, and where was it kept? What did the runners actually need that nobody arranged to provide?",
+          "Then the team digs. Why was the list lost? Because it was paper, carried in a bag. Why did a single loss matter so much? Because no copy existed anywhere. Why not? Because one person held it, alone, with no backup and no home base. The root is not 'be more careful' — it is a missing system. The fix follows from the root: one shared signup list with a named keeper, a photographed backup, and a fixed home at the club table (Modules 5 and 9).",
+          "Inevitably, a claim arrives demanding to be tested: 'Nobody signed up last year because the run was boring.' The team sorts it before touching anything else (Module 2): the official count records eighty-four registered runners — which is not nobody, however it felt at the time — and 'boring' is an opinion, which deserves to be heard properly through three short questions printed on the signup form, rather than repeated as a verdict (Modules 3 and 4). The date rumor, meanwhile, is checked at its authoritative source, the school office, before anybody repeats it to another family (Modules 3 and 10).",
         ],
       },
       {
         heading: "Running the job, and the point of it all",
         paragraphs: [
-          "The task list gets the four boxes (Module 7): the route permit and shirt order are Plan Well; water stations become Do First once the route is set; poster polish is Do If Time; a drone video is Maybe Skip. Jobs get time blocks across four weeks (Module 8), and the signup gets a trial run: one lunch period at one table, checked honestly, fixed, then launched to the whole school (Module 6). Eighty-four runners become a hundred and ten, every one of them with a shirt that fits.",
-          "That is what thinking clearly is FOR. Not winning arguments — a fun-run is not an argument. It is for loving people well with a prepared mind: runners get a day that works because somebody asked, checked, dug, sorted, planned, and paused. Jesus asked questions that stopped crowds, saw through traps set for him, and always knew which thing mattered first. Think like that, and you will be useful everywhere you go.",
+          "The task list receives the four boxes (Module 7): the route permit and the shirt order are Plan Well; water stations become Do First the moment the route is settled; poster polish is Do If Time; a drone video is a cheerful Maybe Skip. Jobs are dealt into dated time blocks across four weeks (Module 8), and the new signup system gets a trial run first — one lunch period, one table, checked honestly, fixed, and only then launched to the whole school (Module 6). Eighty-four runners become a hundred and ten, every one of them wearing a shirt that fits.",
+          "That is what thinking clearly is FOR. Not winning arguments — a fun-run is not an argument. It is for loving people well with a prepared mind: runners receive a day that works because somebody asked, checked, dug, sorted, planned, and paused at the right moments. Jesus asked questions that stopped crowds mid-sentence, saw cleanly through traps constructed for him, and always knew which thing mattered first. Think like that, and you will be useful absolutely everywhere you go.",
         ],
         callout: {
           title: "You are ready for the final test",
-          text: "Complete all 12 modules and the final test unlocks: one question from every module, and a printable certificate with your name on it. The certificate is paper. The toolbox is the real graduation.",
+          text: "Complete all twelve modules and the final test unlocks: one question from every module, each one asking you to use the tool rather than name it, and a printable certificate carrying your name. The certificate is only paper. The toolbox — carried in your head, available on your worst day — is the real graduation.",
         },
       },
     ],
     drill: {
       title: "Run the whole toolbox: the fun-run fix",
-      intro:
-        "The case from the lesson, step by step. For each step, name the tools the team is using before you open the model answer. Most steps use more than one.",
+      intro: "The case from the lesson, step by step. For each step, name the tools the team is using before you open the model answer. Most steps use more than one.",
       modelLabel: "The toolbox at work",
       items: [
         {
-          statement:
-            "Step 1: Last year's signup list was lost twice and 30 runners missed their shirts. The team refuses to just 'try harder.' Where do they start?",
-          model:
-            "With questions and digging (Modules 1 and 5). Why was the list lost: paper. Why did it matter: no copy. Why not: one keeper, no system. The root fix is a system (Module 9) — one shared list, a photo backup, one named keeper — not a sterner warning about carefulness.",
+          statement: "Step 1: Last year's signup list was lost twice and 30 runners missed their shirts. The team refuses to just 'try harder.' Where do they start?",
+          model: "With questions and digging (Modules 1 and 5). Why was the list lost: paper. Why did it matter: no copy. Why not: one keeper, no system. The root fix is a system (Module 9) — one shared list, a photo backup, one named keeper — not a sterner warning about carefulness.",
         },
         {
-          statement:
-            "Step 2: A parent says, 'Nobody came last year because the run was boring.' How does the team handle the claim?",
-          model:
-            "Sort it (Module 2): 'nobody came' is a checkable claim — the count was 84, so not nobody. 'Boring' is an opinion: worth hearing, not printing as fact. The team asks for evidence and better information (Modules 3 and 4) — three short questions on this year's signup form.",
+          statement: "Step 2: A parent says, 'Nobody came last year because the run was boring.' How does the team handle the claim?",
+          model: "Sort it (Module 2): 'nobody came' is a checkable claim — the count was 84, so not nobody. 'Boring' is an opinion: worth hearing, not printing as fact. The team asks for evidence and better information (Modules 3 and 4) — three short questions on this year's signup form.",
         },
         {
-          statement:
-            "Step 3: The job list is long — route permit, shirts, water stations, posters, rain plan, music, medals — and the run is in four weeks. How does the team run it?",
-          model:
-            "First things first (Module 7): permit and shirts are Plan Well; water stations, Do First once the route is set; poster polish, Do If Time. Jobs get dated blocks (Module 8), and the signup is trialled at one lunch table, checked, and fixed before launch (Module 6) — one calm month instead of one chaotic week.",
+          statement: "Step 3: The job list is long — route permit, shirts, water stations, posters, rain plan, music, medals — and the run is in four weeks. How does the team run it?",
+          model: "First things first (Module 7): permit and shirts are Plan Well; water stations, Do First once the route is set; poster polish, Do If Time. Jobs get dated blocks (Module 8), and the signup is trialled at one lunch table, checked, and fixed before launch (Module 6) — one calm month instead of one chaotic week.",
         },
       ],
     },
     quiz: [
       {
-        question: "In Matthew 7, what does Jesus say to remove from your own eye first?",
-        answers: [
-          "The speck",
-          "The log in your own eye",
-          "Your glasses",
-          "Nothing at all",
-        ],
+        question: "Fun-run entries doubled, but shirt orders used last year's list, so 20 runners lack shirts. First tool to reach for?",
+        answers: ["The four boxes: sort the shirt problem first", "Ask why: why did ordering use a stale list?", "The pause routine: calm the shirt queue down", "Spot the trick: someone's numbers misled you"],
         correct: 2,
-        explanation:
-          "Log first, speck second: check yourself with the same tests before checking others.",
+        explanation: "A failure repeated across years is a recurring problem, and those get dug, not sorted. Why the stale list was used leads down to the missing system: the root.",
+        timeLimit: 30,
+      },
+      {
+        question: "Before the debate, you discover your favorite argument rests on a chart you never examined. The log-first move is to…",
+        answers: ["use it anyway; the other side does the same", "attack the opposing chart twice as hard", "examine your own chart before using it", "memorize more verses to win the exchange"],
+        correct: 3,
+        explanation: "Matthew 7 sets the order: your own evidence passes your own tests first. A chart you would shred from the other side earns no respect on yours.",
         timeLimit: 20,
       },
       {
-        question: "A claim about your project sounds off. What is the toolbox's first move?",
-        answers: [
-          "Ask questions and sort fact from opinion",
-          "Repeat the claim more loudly",
-          "Wait for someone else to fix it",
-          "Decide by how it feels",
-        ],
+        question: "A rumor says the fun-run date moved. The team checks the school office before replying. Which pair of tools is that?",
+        answers: ["Check the source, with the pause routine", "Ask why five times, with the four boxes", "Sort the statement, with a place for everything", "Number your days, with the improvement loop"],
         correct: 1,
-        explanation:
-          "Questions first (Module 1), sorting second (Module 2) — the toolbox opens in order.",
+        explanation: "The office is the closest source to the decision (Module 3), and checking before repeating is the pause doing its work (Module 10). The rumor gets examined instead of forwarded.",
         timeLimit: 20,
       },
       {
-        question: "Which module's tool fixes a problem that keeps coming back?",
-        answers: [
-          "Number Your Days",
-          "Spot the Trick",
-          "Ask Why Five Times — dig to the root",
-          "A Place for Everything",
-        ],
+        question: "Which single habit from the course would have prevented the MOST of last year's fun-run failures?",
+        answers: ["Sorting every statement made at meetings", "Asking why five times after the event ended", "Running the signup as a checked system", "Numbering the days of the planning month"],
         correct: 3,
-        explanation:
-          "Recurring problems have roots. Ask why until you reach the cause you can fix once.",
+        explanation: "The lost list, missing copies, and shirt chaos were one failure in three costumes: no system owned the signup. A keeper and a backup prevent all three at the root.",
         timeLimit: 20,
       },
       {
-        question: "The fun-run team trials signups at one lunch table first. Which tool is that?",
-        answers: [
-          "The pause routine",
-          "The loop: plan, try small, check, fix",
-          "The cherry-pick check",
-          "The four boxes",
-        ],
-        correct: 2,
-        explanation:
-          "Plan it, try it small, check honestly, fix it — then launch. The loop, doing its work.",
-        timeLimit: 20,
-      },
-      {
-        question: "Thinking like Jesus, in this course, means…",
-        answers: [
-          "Winning every argument",
-          "Never questioning anything",
-          "Truth with humility — fair, careful, and kind",
-          "Memorizing the most verses",
-        ],
-        correct: 3,
-        explanation:
-          "Right judgment with a checked heart: accurate about claims, humble about yourself, kind to people.",
+        question: "Thinking like Jesus, applied to a heated disagreement about a school policy, looks most like…",
+        answers: ["test your own side first, then listen fairly", "winning the exchange with the sharpest reply", "avoiding any judgment about the policy entirely", "quoting the most verses until the room agrees"],
+        correct: 1,
+        explanation: "Log first, then right judgment: your own claims pass your own tests, the other side gets examined rather than caricatured, and the truth is pursued with humility instead of volume.",
         timeLimit: 20,
       },
     ],
   },
-
 ];
 
 export function getModuleBySlug(slug: string): CourseModule | undefined {

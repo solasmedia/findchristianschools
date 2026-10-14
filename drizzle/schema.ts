@@ -76,6 +76,8 @@ export const schools = mysqlTable("schools", {
   ownerId: int("ownerId"),
   latitude: decimal("latitude", { precision: 10, scale: 7 }),
   longitude: decimal("longitude", { precision: 10, scale: 7 }),
+  geocodeSource: varchar("geocodeSource", { length: 64 }),
+  geocodedAt: timestamp("geocodedAt"),
   featured: boolean("featured").default(false).notNull(),
   isApproved: boolean("isApproved").default(false).notNull(),
   promoCode: varchar("promoCode", { length: 50 }), // e.g., "FOUNDER50" for Founders promo

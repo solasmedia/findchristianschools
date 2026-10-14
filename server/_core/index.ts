@@ -3,7 +3,6 @@ import express from "express";
 import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
@@ -55,7 +54,6 @@ async function startServer() {
   // Strict rate limiting on auth endpoints (prevent brute force)
   app.use("/api/trpc/adminAuth", rateLimitExpress(RATE_LIMITS.auth, "auth") as any);
   registerStorageProxy(app);
-  registerOAuthRoutes(app);
   // Stripe checkout endpoint
   const stripeRouter = await import("../routes/stripe");
   app.use("/api/stripe", stripeRouter.default);

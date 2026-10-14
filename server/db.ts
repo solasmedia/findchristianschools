@@ -2152,7 +2152,10 @@ export async function getNewsItems(params: {
   // Kick off a background refresh when stale (never blocks)
   refreshNewsIfStale().catch(() => {});
   const db = await conn();
-  const conditions = [eq(newsItems.isActive, true)];
+  // Held items are excluded twice over: they are stored inactive, and the
+  // reviewStatus condition keeps them out even if a row is ever flipped
+  // active by hand before a human decision.
+  const conditions = [eq(newsItems.isActive, true), ne(newsItems.reviewStatus, "held")];
   if (params.category) {
     conditions.push(eq(newsItems.category, params.category as typeof newsItems.category.enumValues[number]));
   }
@@ -2173,6 +2176,7 @@ export async function getNewsItems(params: {
         sourceUrl: newsItems.sourceUrl,
         summary: newsItems.summary,
         category: newsItems.category,
+        topic: newsItems.topic,
         stateCode: newsItems.stateCode,
         publishedAt: newsItems.publishedAt,
         imageUrl: newsItems.imageUrl,
@@ -2263,6 +2267,10 @@ export async function getNewsStats() {
   const db = await conn();
   try {
     const [total] = await db.select({ n: count() }).from(newsItems);
+    const [held] = await db
+      .select({ n: count() })
+      .from(newsItems)
+      .where(eq(newsItems.reviewStatus, "held"));
     const [lastFetch] = await db
       .select()
       .from(newsFetchLog)
@@ -2270,10 +2278,53 @@ export async function getNewsStats() {
       .limit(1);
     return {
       totalItems: Number(total?.n ?? 0),
+      heldItems: Number(held?.n ?? 0),
       lastFetch: lastFetch ?? null,
     };
   } catch {
-    return { totalItems: 0, lastFetch: null };
+    return { totalItems: 0, heldItems: 0, lastFetch: null };
+  }
+}
+
+/**
+ * Public feed metadata for the /news page's honesty line: the real time
+ * of the last completed ingest run (never a fabricated "today").
+ */
+export async function getNewsMeta() {
+  const db = await conn();
+  try {
+    const [last] = await db
+      .select({ finishedAt: newsFetchLog.finishedAt })
+      .from(newsFetchLog)
+      .where(eq(newsFetchLog.status, "success"))
+      .orderBy(desc(newsFetchLog.startedAt))
+      .limit(1);
+    const [active] = await db
+      .select({ n: count() })
+      .from(newsItems)
+      .where(and(eq(newsItems.isActive, true), ne(newsItems.reviewStatus, "held")));
+    return {
+      lastUpdatedAt: last?.finishedAt ?? null,
+      totalActive: Number(active?.n ?? 0),
+    };
+  } catch {
+    return { lastUpdatedAt: null, totalActive: 0 };
+  }
+}
+
+/** Admin review queue: items held by the deterministic flag screen. */
+export async function getHeldNewsItems() {
+  const db = await conn();
+  try {
+    const rows = await db
+      .select()
+      .from(newsItems)
+      .where(eq(newsItems.reviewStatus, "held"))
+      .orderBy(desc(newsItems.fetchedAt))
+      .limit(100);
+    return rows;
+  } catch {
+    return [];
   }
 }
 

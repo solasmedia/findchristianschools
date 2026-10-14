@@ -1,7 +1,6 @@
 import { Heart } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 
 interface SaveSchoolButtonProps {

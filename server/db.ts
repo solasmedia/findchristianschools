@@ -15,6 +15,7 @@ import {
   eq,
   gte,
   inArray,
+  isNotNull,
   isNull,
   like,
   lte,
@@ -460,6 +461,122 @@ export async function getSchoolNcesFacts(schoolId: number) {
     .where(eq(schoolNcesFacts.schoolId, schoolId))
     .limit(1);
   return rows[0] ?? null;
+}
+
+export interface NearbySchool {
+  id: number;
+  name: string;
+  slug: string;
+  city: string;
+  state: string;
+  stateCode: string;
+  gradeStart: string | null;
+  gradeEnd: string | null;
+  denomination: string | null;
+  /** Straight-line distance from the profile school, or null when either
+   *  school has no geocoded coordinates. */
+  distanceMiles: number | null;
+}
+
+// Nearby schools for a profile's "More schools near …" rail (client UI and
+// the server-injected crawler block share this one implementation).
+// Order: same city first, then nearest by distance using the geocoded
+// coordinates, then same county / rest of state as a graceful fallback for
+// schools without coordinates. Public listings only, never the school itself.
+export async function getNearbySchools(
+  schoolId: number,
+  limit = 6
+): Promise<NearbySchool[]> {
+  const db = await conn();
+  const self = await getSchoolById(schoolId);
+  if (!self) return [];
+  const selfLat = Number(self.latitude);
+  const selfLng = Number(self.longitude);
+  const hasSelfCoords =
+    Number.isFinite(selfLat) &&
+    Number.isFinite(selfLng) &&
+    (selfLat !== 0 || selfLng !== 0);
+  const distanceFor = (s: any): number | null => {
+    if (!hasSelfCoords) return null;
+    const lat = Number(s.latitude);
+    const lng = Number(s.longitude);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0))
+      return null;
+    return Math.round(haversineMiles(selfLat, selfLng, lat, lng) * 10) / 10;
+  };
+  const picked: NearbySchool[] = [];
+  const seen = new Set<number>([self.id]);
+  const push = (s: any) => {
+    if (seen.has(s.id) || picked.length >= limit) return;
+    seen.add(s.id);
+    picked.push({
+      id: s.id,
+      name: s.name,
+      slug: s.slug,
+      city: s.city,
+      state: s.state,
+      stateCode: s.stateCode,
+      gradeStart: s.gradeStart,
+      gradeEnd: s.gradeEnd,
+      denomination: s.denomination,
+      distanceMiles: distanceFor(s),
+    });
+  };
+
+  // 1) Same city (premium first, then name — same ordering as state hubs)
+  const sameCity = await db
+    .select()
+    .from(schools)
+    .where(
+      and(
+        ...publicSchoolConditions(),
+        eq(schools.stateCode, self.stateCode),
+        eq(schools.city, self.city),
+        ne(schools.id, self.id)
+      )
+    )
+    .orderBy(desc(schools.isPremium), asc(schools.name))
+    .limit(limit);
+  sameCity.forEach(push);
+
+  // 2) Nearest by distance within a bounding box (~55 mi N/S, ~75 mi E/W)
+  if (picked.length < limit && hasSelfCoords) {
+    const latDelta = 0.8;
+    const lngDelta = 1.1;
+    const candidates = await db
+      .select()
+      .from(schools)
+      .where(
+        and(
+          ...publicSchoolConditions(),
+          eq(schools.stateCode, self.stateCode),
+          ne(schools.id, self.id),
+          isNotNull(schools.latitude),
+          isNotNull(schools.longitude),
+          gte(schools.latitude, (selfLat - latDelta).toFixed(7)),
+          lte(schools.latitude, (selfLat + latDelta).toFixed(7)),
+          gte(schools.longitude, (selfLng - lngDelta).toFixed(7)),
+          lte(schools.longitude, (selfLng + lngDelta).toFixed(7))
+        )
+      )
+      .limit(400);
+    candidates
+      .map((s) => ({ s, d: distanceFor(s) }))
+      .filter((x): x is { s: any; d: number } => x.d != null)
+      .sort((a, b) => a.d - b.d)
+      .forEach(({ s }) => push(s));
+  }
+
+  // 3) Fallback fill: same county first, then the rest of the state
+  if (picked.length < limit) {
+    const stateRows = await getSchoolsByState(self.stateCode);
+    if (self.county) {
+      stateRows.filter((s: any) => s.county === self.county).forEach(push);
+    }
+    stateRows.forEach(push);
+  }
+
+  return picked.slice(0, limit);
 }
 
 export async function getSchoolsByState(stateCode: string) {

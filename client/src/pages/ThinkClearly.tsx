@@ -379,7 +379,7 @@ export default function ThinkClearly() {
                 certificate, and that's it.
               </p>
               <p className="text-blue-200 text-sm mt-3 font-medium">
-                Right now: Module 1 of 12 is available, so the final test is still locked.
+                All 12 modules are live — finish them all and your final test unlocks.
               </p>
             </div>
             <Link

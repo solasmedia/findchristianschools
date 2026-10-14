@@ -65,6 +65,9 @@ async function startServer() {
   // Think Clearly course — teacher Kahoot spreadsheet downloads
   const { registerKahootRoutes } = await import("../kahoot");
   registerKahootRoutes(app);
+  // TEMP one-time geocode runner (Phase 2) — removed after the run
+  const { registerGeocodeRunnerRoutes } = await import("../geocodeRunner");
+  registerGeocodeRunnerRoutes(app);
   // SEO: sitemap.xml and robots.txt
   const { registerSeoRoutes } = await import("../seo");
   registerSeoRoutes(app);

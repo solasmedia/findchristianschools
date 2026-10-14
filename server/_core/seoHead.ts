@@ -30,6 +30,7 @@ const STATIC_ROUTES = new Set([
   "/tools/vocabulary-worksheet-generator", "/tools/flashcards",
   "/teacher-resources", "/federal-tax-credit",
   "/classical-christian-schools", "/accreditation-readiness", "/book-club", "/newsletter",
+  "/think-clearly", "/think-clearly/ask-better-questions", "/think-clearly/final-test",
   "/enrichment", "/enrichment/submit", "/lister-terms",
   "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports",
   "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
@@ -138,6 +139,18 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/accreditation-readiness": {
     title: "School Accreditation Readiness: A Guide for Christian School Leaders | FindChristianSchools.com",
     description: "How Christian school accreditation actually works: the nine standards areas every accreditor examines, the 20 non-negotiables to have in place before you apply, candidacy timelines, honest costs, and how to start getting ready years early.",
+  },
+  "/think-clearly": {
+    title: "Think Clearly: A Free Critical Thinking Course for Grades 8–12 | FindChristianSchools.com",
+    description: "Think Clearly is a free 12-module critical thinking course for Christian students in grades 8–12. Ten minutes a module, no sign-up, quizzes included, plus Kahoot-ready files for teachers.",
+  },
+  "/think-clearly/ask-better-questions": {
+    title: "Ask Better Questions — Think Clearly, Module 1 | FindChristianSchools.com",
+    description: "Thinking starts with a question, not an answer. Module 1 of the free Think Clearly course: open vs closed questions, the Parking Lot, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/final-test": {
+    title: "Think Clearly Final Test & Certificate | FindChristianSchools.com",
+    description: "The Think Clearly final test unlocks when all 12 course modules are complete. Pass it to print your certificate of completion.",
   },
   "/teacher-resources": {
     title: "Teacher Resources — Free Worksheets, Lesson Plans & Tools | FindChristianSchools.com",

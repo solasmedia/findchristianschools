@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { SeoHead } from "@/components/SeoHead";
 import { JsonLd } from "@/components/SeoJsonLd";
+import NewsThumb from "@/components/NewsThumb";
 import { Newspaper, Search, FileText, ExternalLink, MapPin } from "lucide-react";
 
 const CATEGORIES = [
@@ -44,11 +45,76 @@ const CATEGORY_LABELS: Record<string, string> = {
   curriculum: "Curriculum",
 };
 
+/** Deterministic topic sections (mirror of NEWS_TOPICS in server/newsFetcher.ts). */
+const TOPIC_SECTIONS: { value: string; label: string }[] = [
+  { value: "school_choice_policy", label: "School Choice & Policy" },
+  { value: "christian_schools", label: "Christian Schools" },
+  { value: "homeschooling", label: "Homeschooling" },
+  { value: "funding_tax_credit", label: "Funding & the Tax Credit" },
+  { value: "accreditation", label: "Accreditation & Standards" },
+  { value: "faith_culture", label: "Faith & Culture in Education" },
+  { value: "general", label: "More Education News" },
+];
+
+/** Modest daily list: cap how many items each topic section displays. */
+const PER_TOPIC_CAP = 6;
+
 function formatDate(dateStr?: string | Date | null) {
   if (!dateStr) return "";
   const d = dateStr instanceof Date ? dateStr : new Date(dateStr);
   if (isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+}
+
+function formatUpdated(dateStr?: string | Date | null) {
+  if (!dateStr) return "";
+  const d = dateStr instanceof Date ? dateStr : new Date(dateStr);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZone: "America/New_York",
+    timeZoneName: "short",
+  });
+}
+
+function NewsCard({ item }: { item: any }) {
+  return (
+    <Link href={`/news/${item.slug}`}>
+      <article className="rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden bg-white h-full flex flex-col">
+        <NewsThumb
+          src={item.imageUrl}
+          alt=""
+          className="w-full aspect-[16/9] shrink-0"
+        />
+        <div className="p-5 flex-1 flex flex-col">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="text-xs font-medium text-[#0055A4] bg-blue-50 px-2.5 py-1 rounded-full">
+              {CATEGORY_LABELS[item.category] ?? item.category}
+            </span>
+            {item.stateCode && (
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                <MapPin className="w-3 h-3" /> {item.stateCode}
+              </span>
+            )}
+          </div>
+          <h3 className="text-base font-bold text-[#002855] mb-2 line-clamp-2">
+            {item.title}
+          </h3>
+          {item.summary && (
+            <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">{item.summary}</p>
+          )}
+          <div className="flex items-center gap-3 text-xs text-gray-500 mt-auto pt-2">
+            <span className="font-medium text-[#0055A4]">{item.sourceName}</span>
+            <span>{formatDate(item.publishedAt)}</span>
+          </div>
+        </div>
+      </article>
+    </Link>
+  );
 }
 
 export default function News() {
@@ -57,16 +123,26 @@ export default function News() {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
+  const isFiltered = !!(search || category || stateCode);
+
   const { data, isLoading } = trpc.news.list.useQuery({
     category: (category || undefined) as "national" | "state" | "policy" | "school_choice" | "curriculum" | undefined,
     stateCode: stateCode || undefined,
     search: search || undefined,
-    limit: 60,
+    limit: 100,
   });
+  const { data: meta } = trpc.news.meta.useQuery();
 
   const items = data?.items ?? [];
-  const featured = !search && !category && !stateCode ? items[0] : undefined;
-  const rest = featured ? items.slice(1) : items;
+
+  /** Group the default (unfiltered) view into deterministic topic sections. */
+  const topicGroups = useMemo(() => {
+    if (isFiltered) return [];
+    return TOPIC_SECTIONS.map((section) => ({
+      ...section,
+      items: items.filter((i: any) => (i.topic ?? "general") === section.value).slice(0, PER_TOPIC_CAP),
+    })).filter((g) => g.items.length > 0);
+  }, [items, isFiltered]);
 
   useEffect(() => {
     document.title = "Christian Education News | FindChristianSchools.com";
@@ -83,7 +159,7 @@ export default function News() {
           "@type": "CollectionPage",
           name: "Christian Education News",
           url: "https://www.findchristianschools.com/news",
-          description: "Auto-updating news feed for Christian education: press releases, policy updates, and school choice news at state and national levels.",
+          description: "Daily-updating news for Christian education: school choice, policy, homeschooling, and funding news from trusted sources.",
         }}
       />
       <Navigation />
@@ -96,11 +172,14 @@ export default function News() {
               <h1 className="text-3xl md:text-4xl font-bold">Christian Education News</h1>
             </div>
             <p className="text-blue-100 text-lg max-w-2xl">
-              Press releases, policy updates, and school choice news for Christian educators,
-              homeschool parents, and school administrators. Updated automatically throughout the day.
+              School choice, policy, homeschooling, and funding news for Christian educators,
+              homeschool parents, and school administrators — updated daily from trusted sources.
             </p>
             <p className="text-blue-200 text-sm mt-3 max-w-2xl">
-              Headlines and summaries are gathered from trusted education sources — always read the full story at the original source.
+              Headlines and brief excerpts are provided by each source — always read the full story at the original source.
+              {meta?.lastUpdatedAt && (
+                <> Last updated {formatUpdated(meta.lastUpdatedAt)}.</>
+              )}
             </p>
           </div>
         </div>
@@ -160,78 +239,37 @@ export default function News() {
           ) : items.length === 0 ? (
             <div className="text-center py-16">
               <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg">No news found. Try a different filter — new stories arrive throughout the day.</p>
+              <p className="text-gray-500 text-lg">No news found. Try a different filter — new stories arrive with the daily update.</p>
             </div>
-          ) : (
+          ) : isFiltered ? (
             <>
-              {/* Featured */}
-              {featured && (
-                <Link href={`/news/${featured.slug}`}>
-                  <div className="mb-8 rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer bg-white">
-                    <div className="p-6 md:p-10">
-                      <div className="flex flex-wrap items-center gap-2 mb-3">
-                        <span className="text-xs font-semibold uppercase tracking-wide text-[#0055A4] bg-blue-100 px-3 py-1 rounded-full">
-                          Latest
-                        </span>
-                        <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-full">
-                          {CATEGORY_LABELS[featured.category] ?? featured.category}
-                        </span>
-                        {featured.stateCode && (
-                          <span className="text-xs text-gray-500 flex items-center gap-1">
-                            <MapPin className="w-3 h-3" /> {featured.stateCode}
-                          </span>
-                        )}
-                      </div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-[#002855] mb-3">
-                        {featured.title}
-                      </h2>
-                      {featured.summary && (
-                        <p className="text-gray-600 text-lg mb-4 line-clamp-3">{featured.summary}</p>
-                      )}
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="font-medium text-[#0055A4]">{featured.sourceName}</span>
-                        <span>{formatDate(featured.publishedAt)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              )}
-
-              {/* Grid */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {rest.map((item: any) => (
-                  <Link key={item.id} href={`/news/${item.slug}`}>
-                    <article className="rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden bg-white h-full flex flex-col">
-                      <div className="p-6 flex-1 flex flex-col">
-                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                          <span className="text-xs font-medium text-[#0055A4] bg-blue-50 px-2.5 py-1 rounded-full">
-                            {CATEGORY_LABELS[item.category] ?? item.category}
-                          </span>
-                          {item.stateCode && (
-                            <span className="text-xs text-gray-500 flex items-center gap-1">
-                              <MapPin className="w-3 h-3" /> {item.stateCode}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="text-lg font-bold text-[#002855] mb-2 line-clamp-2">
-                          {item.title}
-                        </h3>
-                        {item.summary && (
-                          <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-1">{item.summary}</p>
-                        )}
-                        <div className="flex items-center gap-3 text-xs text-gray-500 mt-auto pt-2">
-                          <span className="font-medium text-[#0055A4]">{item.sourceName}</span>
-                          <span>{formatDate(item.publishedAt)}</span>
-                        </div>
-                      </div>
-                    </article>
-                  </Link>
+                {items.map((item: any) => (
+                  <NewsCard key={item.id} item={item} />
                 ))}
               </div>
-
               <p className="text-center text-xs text-gray-400 mt-10 flex items-center justify-center gap-1">
                 <ExternalLink className="w-3 h-3" />
-                Summaries are provided by each source — click any story to read the full article on the original site.
+                Excerpts are provided by each source — click any story for a summary and the link to the full article.
+              </p>
+            </>
+          ) : (
+            <>
+              {topicGroups.map((group) => (
+                <section key={group.value} className="mb-12">
+                  <h2 className="text-xl md:text-2xl font-bold text-[#002855] mb-5 pb-2 border-b-2 border-[#6EBE44]/40">
+                    {group.label}
+                  </h2>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {group.items.map((item: any) => (
+                      <NewsCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                </section>
+              ))}
+              <p className="text-center text-xs text-gray-400 mt-2 flex items-center justify-center gap-1">
+                <ExternalLink className="w-3 h-3" />
+                Excerpts are provided by each source — click any story for a summary and the link to the full article.
               </p>
             </>
           )}

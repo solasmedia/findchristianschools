@@ -5,7 +5,7 @@ import { trackEvent } from "@/lib/analytics";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Globe, GraduationCap, Users, BookOpen, Shield, Star, ExternalLink, Briefcase, Calendar, Image, MessageSquare, Map, AlertTriangle, CheckCircle, FileText, Info, Lock, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, Phone, Globe, GraduationCap, Users, BookOpen, Shield, Star, ExternalLink, Briefcase, Calendar, Image, MessageSquare, Map, AlertTriangle, CheckCircle, FileText, Info, Lock, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { ShareButton } from "@/components/ShareButton";
 import { SaveSchoolButton } from "@/components/SaveSchoolButton";
@@ -37,6 +37,12 @@ export default function SchoolProfile() {
   const ncesAssociations: string[] = (() => {
     try { return ncesFacts?.associations ? JSON.parse(ncesFacts.associations) : []; } catch { return []; }
   })();
+  // Nearby schools for the "More Christian Schools Near …" rail at the
+  // bottom of the profile — same-city first, then nearest by distance.
+  const { data: nearbySchools } = trpc.schools.getNearby.useQuery(
+    { schoolId: school?.id || 0, limit: 6 },
+    { enabled: !!school?.id }
+  );
   // Dynamic SEO meta tags
   useEffect(() => {
     if (school) {
@@ -99,10 +105,24 @@ export default function SchoolProfile() {
   };
 
   const listingStatus = (school as any).listingStatus;
+  const citySlug = school.city.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
+
+      {/* Breadcrumbs — match the server-injected BreadcrumbList JSON-LD */}
+      <nav aria-label="Breadcrumb" className="bg-white border-b border-gray-100">
+        <div className="container py-2.5 flex items-center gap-1.5 text-xs text-gray-500 overflow-x-auto whitespace-nowrap">
+          <Link href="/" className="hover:text-[#0055A4]">Home</Link>
+          <ChevronRight className="w-3 h-3 shrink-0 text-gray-300" />
+          <Link href={`/state/${school.stateCode}`} className="hover:text-[#0055A4]">Christian Schools in {school.state}</Link>
+          <ChevronRight className="w-3 h-3 shrink-0 text-gray-300" />
+          <Link href={`/city/${school.stateCode}/${citySlug}`} className="hover:text-[#0055A4]">{school.city}</Link>
+          <ChevronRight className="w-3 h-3 shrink-0 text-gray-300" />
+          <span className="text-[#002855] font-medium" aria-current="page">{school.name}</span>
+        </div>
+      </nav>
 
       {/* Schema.org JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg).replace(/</g, "\u003c") }} />
@@ -711,6 +731,31 @@ export default function SchoolProfile() {
               </div>
             </div>
           </div>
+
+          {/* Nearby schools — same city first, then nearest by distance */}
+          {nearbySchools && nearbySchools.length > 0 && (
+            <div className="mt-8 bg-white rounded-xl border border-gray-100 p-6">
+              <h2 className="text-lg font-semibold text-[#002855] mb-4">More Christian Schools Near {school.city}</h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {nearbySchools.map((n) => (
+                  <Link key={n.id} href={`/school/${n.slug}`} className="block p-4 rounded-lg border border-gray-100 hover:border-[#0055A4]/30 hover:shadow-sm transition-all">
+                    <h3 className="font-medium text-[#002855] text-sm">{n.name}</h3>
+                    <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 shrink-0" /> {n.city}, {n.stateCode}
+                      {n.gradeStart && n.gradeEnd ? ` · Grades ${n.gradeStart}–${n.gradeEnd}` : ""}
+                    </p>
+                    {n.distanceMiles != null && n.distanceMiles <= 100 && (
+                      <p className="text-xs text-gray-400 mt-0.5">{n.distanceMiles < 1.5 ? "About 1 mile away" : `About ${Math.round(n.distanceMiles)} miles away`}</p>
+                    )}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                <Link href={`/city/${school.stateCode}/${citySlug}`} className="text-[#0055A4] hover:underline">All Christian schools in {school.city}</Link>
+                <Link href={`/state/${school.stateCode}`} className="text-[#0055A4] hover:underline">Browse Christian schools across {school.state}</Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

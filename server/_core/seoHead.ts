@@ -1155,8 +1155,9 @@ export async function resolveSeoContent(
 
       const contactBits: string[] = [];
       if (school.address) {
+        const zipPart = school.zip ? ` ${escapeHtml(String(school.zip))}` : "";
         contactBits.push(
-          `<p>${escapeHtml(String(school.address))}<br>${escapeHtml(String(school.city))}, ${escapeHtml(String(school.stateCode))} ${escapeHtml(String(school.zip || ""))}</p>`
+          `<p>${escapeHtml(String(school.address))}<br>${escapeHtml(String(school.city))}, ${escapeHtml(String(school.stateCode))}${zipPart}</p>`
         );
       }
       if (school.phone) {

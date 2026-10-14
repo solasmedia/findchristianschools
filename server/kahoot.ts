@@ -15,6 +15,9 @@
 import type { Express, Request, Response } from "express";
 import { deflateRawSync } from "node:zlib";
 import {
+  LIVE_MODULES,
+  MODULES,
+  finalTestQuestions,
   getModuleByNumber,
   type QuizQuestion,
 } from "../shared/thinkClearlyCourse";
@@ -183,6 +186,32 @@ function buildKahootXlsx(questions: QuizQuestion[]): Buffer {
 /* --- routes ---------------------------------------------------------- */
 
 export function registerKahootRoutes(app: Express) {
+  // Teacher file for the on-site final test: the same 12 questions (the
+  // first quiz question from each module, in module order). Served only
+  // once the whole course is live, matching the on-site unlock rule.
+  app.get(
+    "/api/kahoot/think-clearly-final-test.xlsx",
+    (_req: Request, res: Response) => {
+      if (LIVE_MODULES.length !== MODULES.length) {
+        res
+          .status(404)
+          .json({ error: "The final test file is available when the full course is live." });
+        return;
+      }
+      const questions = finalTestQuestions().map((item) => item.question);
+      const buf = buildKahootXlsx(questions);
+      res
+        .status(200)
+        .setHeader("Content-Type", XLSX_CONTENT_TYPE)
+        .setHeader(
+          "Content-Disposition",
+          'attachment; filename="think-clearly-final-test-kahoot.xlsx"'
+        )
+        .setHeader("Content-Length", String(buf.length))
+        .send(buf);
+    }
+  );
+
   app.get(
     "/api/kahoot/think-clearly-module-:num.xlsx",
     (req: Request, res: Response) => {

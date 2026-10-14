@@ -98,9 +98,8 @@ export default function ThinkClearlyModule() {
             </div>
             <h2 className="text-2xl font-bold text-[#002855] mb-3">This module is on its way</h2>
             <p className="text-gray-600 max-w-md mx-auto mb-6">
-              The Think Clearly course is being released module by module. Module 1, Ask Better
-              Questions, is ready now — the rest are in the works and will appear here as they are
-              finished.
+              This module is not live yet. The modules that are ready are waiting on the course
+              page — start with Module 1, Ask Better Questions, and work through them in order.
             </p>
             <Link
               href="/think-clearly/ask-better-questions"

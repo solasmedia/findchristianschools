@@ -9,7 +9,7 @@ import { notifyOwner } from "./_core/notification";
 import { notifyAdminOfSubmission, notifyCoursePosted, notifyEventPosted, notifySchoolOfInquiry } from "./_core/emailNotifications";
 import { checkRateLimit, getRateLimitKey, RATE_LIMITS } from "./rateLimit";
 import {
-  searchSchools, getSchoolBySlug, getSchoolById, getSchoolNcesFacts, getSchoolsByState, getFeaturedSchools, getNewestSchools,
+  searchSchools, getSchoolBySlug, getSchoolById, getSchoolNcesFacts, getNearbySchools, getSchoolsByState, getFeaturedSchools, getNewestSchools,
   createSchoolInquiry, getSchoolInquiries, updateSchoolInquiry, deleteSchoolInquiry,
   getResources, getJobs, getJobsBySchool, searchJobs, submitJob, getPendingJobs, getAllJobsAdmin, getEvents, getImpactMetrics, getDonationStats,
   createSchool, updateSchool, deleteSchool,
@@ -396,6 +396,7 @@ export const appRouter = router({
     })).query(({ input }) => searchSchools(input)),
     getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(({ input }) => getSchoolBySlug(input.slug)),
     getNcesFacts: publicProcedure.input(z.object({ schoolId: z.number() })).query(({ input }) => getSchoolNcesFacts(input.schoolId)),
+    getNearby: publicProcedure.input(z.object({ schoolId: z.number(), limit: z.number().min(1).max(12).optional() })).query(({ input }) => getNearbySchools(input.schoolId, input.limit ?? 6)),
     // Parent inquiry from a school profile ("Ask this school a question").
     // Always stored and always notified to the admin. It is additionally
     // emailed to the school itself only when the school has claimed its

@@ -13,9 +13,14 @@
  *                        ncesSchoolId via school_nces_facts LEFT JOIN).
  *   GET  /__geo/status   JSON coverage counts (total, withCoords, by
  *                        geocodeSource, legacy unverified, exact/nonExact).
- *   POST /__geo/import   Body: gzip(JSON [{s, la, lo, c, src}]). Confidence-
+ *   POST /__geo/import   Body: gzip(JSON [{i, la, lo, c, src}]). Confidence-
  *                        gated bulk UPDATE of latitude/longitude/
- *                        geocodeSource/geocodedAt keyed by schoolId.
+ *                        geocodeSource/geocodedAt keyed by the schools.id
+ *                        primary key. (The varchar schools.schoolId column is
+ *                        NULL for every production row — verified in the
+ *                        Phase 2 export — so the int PK is the only usable
+ *                        key. The master list's FCS-prefixed ids never landed
+ *                        in production.)
  *                        Gate ranks: EXACT(2) > NON_EXACT(1) > legacy
  *                        coordinate with no provenance(0) > none(-1). A row
  *                        is written only when the new rank is strictly
@@ -145,7 +150,7 @@ async function handleStatus(_req: Request, res: Response): Promise<void> {
 }
 
 type ImportRow = {
-  s: string;
+  i: number;
   la: number;
   lo: number;
   c: "EXACT" | "NON_EXACT";
@@ -184,8 +189,8 @@ async function handleImport(req: Request, res: Response): Promise<void> {
     for (const r of parsed) {
       if (
         r &&
-        typeof r.s === "string" &&
-        r.s.length > 0 &&
+        Number.isInteger(r.i) &&
+        r.i > 0 &&
         Number.isFinite(r.la) &&
         Number.isFinite(r.lo) &&
         Math.abs(r.la) <= 90 &&
@@ -216,17 +221,17 @@ async function handleImport(req: Request, res: Response): Promise<void> {
     const CHUNK = 400;
     for (let i = 0; i < valid.length; i += CHUNK) {
       const chunk = valid.slice(i, i + CHUNK);
-      const ids = chunk.map((r) => `'${esc(r.s)}'`).join(",");
+      const ids = chunk.map((r) => String(r.i)).join(",");
       const [existing] = await conn.execute(
-        `SELECT schoolId, latitude, geocodeSource FROM schools WHERE schoolId IN (${ids})`
+        `SELECT id, latitude, geocodeSource FROM schools WHERE id IN (${ids})`
       );
-      const byId = new Map<string, { latitude: unknown; geocodeSource: string | null }>();
-      for (const row of existing as { schoolId: string; latitude: unknown; geocodeSource: string | null }[]) {
-        byId.set(String(row.schoolId), row);
+      const byId = new Map<number, { latitude: unknown; geocodeSource: string | null }>();
+      for (const row of existing as { id: number; latitude: unknown; geocodeSource: string | null }[]) {
+        byId.set(Number(row.id), row);
       }
       const toWrite: ImportRow[] = [];
       for (const r of chunk) {
-        const cur = byId.get(r.s);
+        const cur = byId.get(r.i);
         if (!cur) {
           missing++;
           continue;
@@ -242,8 +247,8 @@ async function handleImport(req: Request, res: Response): Promise<void> {
       const sourceOf = (r: ImportRow) =>
         `${r.src}:${r.c === "EXACT" ? "exact" : "nonexact"}`;
       const caseOf = (pick: (r: ImportRow) => string) =>
-        "CASE schoolId " +
-        toWrite.map((r) => `WHEN '${esc(r.s)}' THEN ${pick(r)}`).join(" ") +
+        "CASE id " +
+        toWrite.map((r) => `WHEN ${r.i} THEN ${pick(r)}`).join(" ") +
         " END";
       const stmt =
         "UPDATE schools SET " +
@@ -251,7 +256,7 @@ async function handleImport(req: Request, res: Response): Promise<void> {
         `longitude = ${caseOf((r) => r.lo.toFixed(7))}, ` +
         `geocodeSource = ${caseOf((r) => `'${esc(sourceOf(r))}'`)}, ` +
         "geocodedAt = NOW() " +
-        `WHERE schoolId IN (${toWrite.map((r) => `'${esc(r.s)}'`).join(",")})`;
+        `WHERE id IN (${toWrite.map((r) => String(r.i)).join(",")})`;
       await conn.execute(stmt);
       updated += toWrite.length;
       updatedExact += toWrite.filter((r) => r.c === "EXACT").length;

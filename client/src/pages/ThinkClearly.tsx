@@ -297,7 +297,7 @@ export default function ThinkClearly() {
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-[#002855]">The 12 modules</h2>
               <p className="text-gray-500 text-sm mt-1">
-                The course is being released module by module. Module 1 is ready now.
+                All 12 modules are ready now — work through them in order, then take the final test.
               </p>
             </div>
           </div>
@@ -432,9 +432,21 @@ export default function ThinkClearly() {
               </a>
             ))}
           </div>
+          {LIVE_MODULES.length === MODULES.length && (
+            <div className="flex flex-wrap gap-3 mt-4">
+              <a
+                href="/api/kahoot/think-clearly-final-test.xlsx"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-amber-500 text-white font-semibold text-sm hover:bg-amber-600 transition min-h-[48px]"
+              >
+                <Download className="w-4 h-4" />
+                Kahoot file — Final Test (one question from every module)
+              </a>
+            </div>
+          )}
           <p className="text-sm text-gray-500 mt-4">
-            A teacher file for the final test arrives when the full course is complete.
-            Files are standard Kahoot spreadsheet imports (.xlsx); no account with us is needed.
+            The final test file contains the same 12 questions as the on-site final test —
+            the first quiz question from each module. Files are standard Kahoot spreadsheet
+            imports (.xlsx); no account with us is needed.
           </p>
         </section>
 

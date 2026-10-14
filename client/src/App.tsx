@@ -23,6 +23,9 @@ import NewsArticle from "./pages/NewsArticle";
 import TravelEd from "./pages/TravelEd";
 import ClassicalSchools from "./pages/ClassicalSchools";
 import AccreditationReadiness from "./pages/AccreditationReadiness";
+import ThinkClearly from "./pages/ThinkClearly";
+import ThinkClearlyModule from "./pages/ThinkClearlyModule";
+import ThinkClearlyFinalTest from "./pages/ThinkClearlyFinalTest";
 import BookClub from "./pages/BookClub";
 import Videos from "./pages/Videos";
 import Newsletter from "./pages/Newsletter";
@@ -146,6 +149,9 @@ function Router() {
       <Route path="/traveled" component={TravelEd} />
       <Route path="/classical-christian-schools" component={ClassicalSchools} />
       <Route path="/accreditation-readiness" component={AccreditationReadiness} />
+      <Route path="/think-clearly" component={ThinkClearly} />
+      <Route path="/think-clearly/final-test" component={ThinkClearlyFinalTest} />
+      <Route path="/think-clearly/:slug" component={ThinkClearlyModule} />
       <Route path="/book-club" component={BookClub} />
       {/* <Route path="/videos" component={Videos} /> - Hidden for now */}
       <Route path="/newsletter" component={Newsletter} />

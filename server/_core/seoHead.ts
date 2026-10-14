@@ -369,13 +369,28 @@ export async function resolveMeta(match: RouteMatch, canonicalPath: string): Pro
       };
     }
     if (match.kind === "school") {
-      const { getSchoolBySlug } = await import("../db");
-      const school = await getSchoolBySlug(match.slug);
-      if (!school) return null;
-      const loc = [school.city, school.state].filter(Boolean).join(", ");
+      const data = await getSchoolSeoData(match.slug);
+      if (!data) return null;
+      const { school, facts } = data;
+      // schools.state is inconsistent in the data (full name on some rows,
+      // code on others) — always render the full name from the state code.
+      const stateName = US_STATE_NAMES[school.stateCode] || school.state;
+      const loc = [school.city, stateName].filter(Boolean).join(", ");
+      const grades =
+        school.gradeStart && school.gradeEnd
+          ? ` (${school.gradeStart}–${school.gradeEnd})`
+          : "";
+      const gradesSentence =
+        school.gradeStart && school.gradeEnd
+          ? ` serving grades ${school.gradeStart}–${school.gradeEnd}`
+          : "";
+      const enrollSentence =
+        facts?.totalEnrollment != null
+          ? ` Enrollment: ${Number(facts.totalEnrollment).toLocaleString()} students.`
+          : "";
       return {
-        title: `${school.name} - Christian School in ${loc} | FindChristianSchools.com`,
-        description: `${school.name} is a Christian school in ${loc}${school.denomination ? ` (${school.denomination})` : ""}. View details, contact info, and more.`,
+        title: `${school.name}${grades} - Christian School in ${loc} | FindChristianSchools.com`,
+        description: `${school.name} is a Christian school in ${loc}${school.denomination ? ` (${school.denomination})` : ""}${gradesSentence}.${enrollSentence} View school facts, contact details, and more Christian schools near ${school.city}.`,
         canonical,
         ogType: "article",
       };
@@ -574,6 +589,47 @@ async function getStateSchoolsCached(code: string): Promise<any[]> {
 
 function citySlugOf(city: string): string {
   return city.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+// Per-school SEO payload (school row + NCES facts + nearby schools), shared
+// by resolveMeta and resolveSeoContent so a profile request costs one set of
+// queries per slug per TTL instead of repeating lookups in both resolvers.
+// Same in-memory pattern as the state list cache above.
+interface SchoolSeoData {
+  school: any;
+  facts: any | null;
+  nearby: any[];
+}
+const schoolSeoCache = new Map<string, { at: number; data: SchoolSeoData }>();
+const SCHOOL_SEO_TTL = 10 * 60 * 1000;
+async function getSchoolSeoData(slug: string): Promise<SchoolSeoData | null> {
+  const hit = schoolSeoCache.get(slug);
+  if (hit && Date.now() - hit.at < SCHOOL_SEO_TTL) return hit.data;
+  const { getSchoolBySlug, getSchoolNcesFacts, getNearbySchools } = await import("../db");
+  const school: any = await getSchoolBySlug(slug);
+  if (!school) return null;
+  let facts: any = null;
+  try {
+    facts = await getSchoolNcesFacts(school.id);
+  } catch {
+    facts = null; // facts are depth, never a reason to fail the page
+  }
+  let nearby: any[] = [];
+  try {
+    nearby = await getNearbySchools(school.id, 6);
+  } catch {
+    nearby = [];
+  }
+  const data: SchoolSeoData = { school, facts, nearby };
+  schoolSeoCache.set(slug, { at: Date.now(), data });
+  // Bound growth: a crawler sweeping all 9,186 profiles shouldn't hold the
+  // whole directory in memory. Oldest-inserted entries evict first.
+  while (schoolSeoCache.size > 500) {
+    const oldest = schoolSeoCache.keys().next().value;
+    if (!oldest) break;
+    schoolSeoCache.delete(oldest);
+  }
+  return data;
 }
 
 /**
@@ -997,18 +1053,21 @@ export async function resolveSeoContent(
     }
 
     if (match.kind === "school") {
-      const { getSchoolBySlug } = await import("../db");
-      const school: any = await getSchoolBySlug(match.slug);
-      if (!school) return {};
+      const data = await getSchoolSeoData(match.slug);
+      if (!data) return {};
+      const { school, facts, nearby } = data;
       const url = `${SITE_URL}/school/${school.slug}`;
       const stateName = US_STATE_NAMES[school.stateCode] || school.state;
-      const loc = [school.city, school.state].filter(Boolean).join(", ");
+      const loc = [school.city, stateName].filter(Boolean).join(", ");
+      const cityUrl = `${SITE_URL}/city/${school.stateCode}/${citySlugOf(String(school.city))}`;
+      const stateUrl = `${SITE_URL}/state/${school.stateCode}`;
       const grades =
         school.gradeStart && school.gradeEnd
           ? ` Grades ${school.gradeStart}–${school.gradeEnd}.`
           : "";
       const denom = school.denomination ? ` ${school.denomination}.` : "";
-      const desc = school.description ? stripText(String(school.description)) : "";
+      // Body copy gets more of the real description than the meta tag does.
+      const desc = school.description ? stripText(String(school.description), 1200) : "";
       const lat = Number(school.latitude);
       const lng = Number(school.longitude);
       const schoolLd: Record<string, unknown> = {
@@ -1033,17 +1092,113 @@ export async function resolveSeoContent(
       }
       if (school.phone) schoolLd.telephone = school.phone;
       if (school.website) schoolLd.sameAs = school.website;
+      if (school.logoUrl) schoolLd.logo = String(school.logoUrl);
+      if (school.coverImageUrl) schoolLd.image = String(school.coverImageUrl);
       if (desc) schoolLd.description = desc;
       const crumbs = breadcrumbJsonLd([
         { name: "Home", url: `${SITE_URL}/` },
-        { name: `Christian Schools in ${stateName}`, url: `${SITE_URL}/state/${school.stateCode}` },
+        { name: `Christian Schools in ${stateName}`, url: stateUrl },
+        { name: `Christian Schools in ${school.city}, ${school.stateCode}`, url: cityUrl },
         { name: school.name, url },
       ]);
+
+      // --- Crawler-visible body blocks. Every fact below is one the public
+      // profile itself renders; a missing value omits its block, never a
+      // placeholder. ---
+      const factRows: string[] = [];
+      if (facts?.totalEnrollment != null) {
+        factRows.push(
+          `<dt>Total Enrollment</dt><dd>${Number(facts.totalEnrollment).toLocaleString()}</dd>`
+        );
+      }
+      if (facts?.fteTeachers != null) {
+        factRows.push(`<dt>Teachers (FTE)</dt><dd>${Number(facts.fteTeachers)}</dd>`);
+      }
+      if (facts?.studentTeacherRatio != null) {
+        factRows.push(
+          `<dt>Student-Teacher Ratio</dt><dd>${Number(facts.studentTeacherRatio).toFixed(1)} : 1</dd>`
+        );
+      }
+      if (facts?.religiousOrientation) {
+        factRows.push(
+          `<dt>Religious Orientation</dt><dd>${escapeHtml(String(facts.religiousOrientation))}</dd>`
+        );
+      }
+      if (facts?.schoolTypology) {
+        factRows.push(
+          `<dt>School Type</dt><dd>${escapeHtml(String(facts.schoolTypology))}</dd>`
+        );
+      }
+      if (facts?.associations) {
+        try {
+          const assoc = JSON.parse(String(facts.associations));
+          if (Array.isArray(assoc) && assoc.length) {
+            factRows.push(
+              `<dt>Association Memberships</dt><dd>${escapeHtml(assoc.join(", "))}</dd>`
+            );
+          }
+        } catch {
+          // malformed associations JSON — omit the row, never guess
+        }
+      }
+      if (school.accreditation) {
+        factRows.push(
+          `<dt>Accreditation</dt><dd>${escapeHtml(String(school.accreditation))}</dd>`
+        );
+      }
+      const factsHtml = factRows.length
+        ? `<h2>School Facts</h2><dl>${factRows.join("")}</dl>` +
+          (facts?.sourceName
+            ? `<p>Source: ${escapeHtml(String(facts.sourceName))}</p>`
+            : "")
+        : "";
+
+      const contactBits: string[] = [];
+      if (school.address) {
+        contactBits.push(
+          `<p>${escapeHtml(String(school.address))}<br>${escapeHtml(String(school.city))}, ${escapeHtml(String(school.stateCode))} ${escapeHtml(String(school.zip || ""))}</p>`
+        );
+      }
+      if (school.phone) {
+        contactBits.push(`<p>Phone: ${escapeHtml(String(school.phone))}</p>`);
+      }
+      if (school.website) {
+        contactBits.push(
+          `<p>Website: <a href="${escapeHtml(String(school.website))}">${escapeHtml(String(school.website))}</a></p>`
+        );
+      }
+      const contactHtml = contactBits.length
+        ? `<h2>Address &amp; Contact</h2>${contactBits.join("")}`
+        : "";
+
+      const nearbyItems = (nearby as any[])
+        .map((n) => {
+          const nGrades =
+            n.gradeStart && n.gradeEnd ? ` · Grades ${n.gradeStart}–${n.gradeEnd}` : "";
+          const d = n.distanceMiles != null ? Number(n.distanceMiles) : null;
+          const dist =
+            d != null && d <= 100
+              ? d < 1.5
+                ? " · about 1 mile away"
+                : ` · about ${Math.round(d)} miles away`
+              : "";
+          return `<li><a href="${SITE_URL}/school/${escapeHtml(String(n.slug))}">${escapeHtml(String(n.name))}</a> — ${escapeHtml(String(n.city))}, ${escapeHtml(String(n.stateCode))}${escapeHtml(nGrades)}${dist}</li>`;
+        })
+        .join("");
+      const nearbyHtml = nearbyItems
+        ? `<h2>More Christian Schools Near ${escapeHtml(String(school.city))}</h2><ul>${nearbyItems}</ul>`
+        : "";
+
       const bodyHtml =
-        `<main><h1>${escapeHtml(school.name)}</h1>` +
+        `<main>` +
+        `<nav aria-label="Breadcrumb"><p><a href="${SITE_URL}/">Home</a> › <a href="${stateUrl}">Christian Schools in ${escapeHtml(stateName)}</a> › <a href="${cityUrl}">Christian Schools in ${escapeHtml(String(school.city))}, ${escapeHtml(String(school.stateCode))}</a> › ${escapeHtml(school.name)}</p></nav>` +
+        `<h1>${escapeHtml(school.name)}</h1>` +
         `<p>${escapeHtml(school.name)} is a Christian school in ${escapeHtml(loc)}.${escapeHtml(grades)}${escapeHtml(denom)}</p>` +
         (desc ? `<p>${escapeHtml(desc)}</p>` : "") +
-        `<p><a href="${SITE_URL}/state/${school.stateCode}">More Christian schools in ${escapeHtml(stateName)}</a></p></main>`;
+        factsHtml +
+        contactHtml +
+        nearbyHtml +
+        `<p><a href="${cityUrl}">All Christian schools in ${escapeHtml(String(school.city))}, ${escapeHtml(String(school.stateCode))}</a> · <a href="${stateUrl}">More Christian schools in ${escapeHtml(stateName)}</a></p></main>`;
       return { jsonLd: [schoolLd, crumbs], bodyHtml };
     }
 

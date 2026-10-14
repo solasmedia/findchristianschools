@@ -74,7 +74,8 @@ export default function PrivacyPolicy() {
               <ul className="list-disc pl-6 space-y-2 text-gray-700">
                 <li><strong>Stripe:</strong> Payment processing for donations and premium listings. Stripe collects and processes payment information according to their <a href="https://stripe.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[#0055A4] hover:underline">Privacy Policy</a>.</li>
                 <li><strong>Google Analytics:</strong> Website traffic analysis and user behavior tracking. Google Analytics uses cookies to collect anonymized data.</li>
-                <li><strong>Manus Platform:</strong> Hosting, authentication, and infrastructure services. Manus collects technical data necessary to operate the platform.</li>
+                <li><strong>Railway:</strong> Website hosting and infrastructure services. Railway processes technical data necessary to operate the platform.</li>
+                <li><strong>Resend:</strong> Email delivery for our website forms and notifications. Resend processes the details you submit through our forms so your message can be delivered to us.</li>
               </ul>
               <p className="text-gray-700 leading-relaxed mt-4">
                 These third parties may have their own privacy policies governing their use of your information. We encourage you to review their policies.

@@ -211,15 +211,15 @@ export default function ThinkClearly() {
               </p>
             )}
           </div>
-          <div className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-none">
+          <div className="mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none">
             {heroSrc ? (
               <img
                 src={heroSrc}
                 alt="A student thinking in a school hallway, Bible under his arm"
-                className="rounded-3xl shadow-2xl w-full object-cover aspect-[2/3]"
+                className="rounded-3xl shadow-2xl w-full object-cover aspect-[3/2]"
               />
             ) : (
-              <div className="rounded-3xl bg-white/10 w-full aspect-[2/3]" aria-hidden="true" />
+              <div className="rounded-3xl bg-white/10 w-full aspect-[3/2]" aria-hidden="true" />
             )}
           </div>
         </div>

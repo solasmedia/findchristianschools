@@ -122,7 +122,7 @@ export default function PrivacyPolicy() {
                 <li><strong>Newsletter Subscribers:</strong> Retained until you unsubscribe</li>
               </ul>
               <p className="text-gray-700 leading-relaxed mt-4">
-                You may request deletion of your personal information at any time by contacting privacy@findchristianschools.com, subject to legal retention requirements.
+                You may request deletion of your personal information at any time through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a>, subject to legal retention requirements.
               </p>
             </section>
 
@@ -146,7 +146,7 @@ export default function PrivacyPolicy() {
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-[#002855]">Children's Privacy (COPPA)</h2>
               <p className="text-gray-700 leading-relaxed">
-                FindChristianSchools.com is not intended for children under 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected information from a child under 13, we will delete such information immediately. Parents who believe their child has provided information to us should contact privacy@findchristianschools.com.
+                FindChristianSchools.com is not intended for children under 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected information from a child under 13, we will delete such information immediately. Parents who believe their child has provided information to us should contact us through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a>.
               </p>
             </section>
 
@@ -163,7 +163,7 @@ export default function PrivacyPolicy() {
                 <li>Data portability (receive your data in a portable format)</li>
               </ul>
               <p className="text-gray-700 leading-relaxed mt-4">
-                To exercise these rights, contact privacy@findchristianschools.com. We will respond to your request within 30 days.
+                To exercise these rights, contact us through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a>. We will respond to your request within 30 days.
               </p>
             </section>
 
@@ -173,7 +173,7 @@ export default function PrivacyPolicy() {
                 <strong>GDPR (European Users):</strong> If you are located in the European Union, you have additional rights under the General Data Protection Regulation, including the right to withdraw consent and the right to lodge a complaint with your local data protection authority.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                <strong>CCPA (California Users):</strong> If you are a California resident, you have the right to know what personal information is collected, the right to delete personal information, and the right to opt-out of the sale of personal information. We do not sell your personal information. To exercise these rights, contact privacy@findchristianschools.com.
+                <strong>CCPA (California Users):</strong> If you are a California resident, you have the right to know what personal information is collected, the right to delete personal information, and the right to opt-out of the sale of personal information. We do not sell your personal information. To exercise these rights, contact us through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a>.
               </p>
               <p className="text-gray-700 leading-relaxed">
                 <strong>California "Do Not Track":</strong> We do not respond to Do Not Track signals, but you can control tracking through browser settings and opt-out mechanisms.
@@ -202,14 +202,14 @@ export default function PrivacyPolicy() {
                   <Mail className="w-5 h-5 text-[#0055A4]" />
                   <div>
                     <p className="font-semibold text-[#002855]">Privacy</p>
-                    <p className="text-sm text-gray-600">privacy@findchristianschools.com</p>
+                    <p className="text-sm text-gray-600"><a href="/contact" className="text-[#0055A4] hover:underline">Contact us through our contact form</a></p>
                   </div>
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200 flex items-center gap-3">
                   <Mail className="w-5 h-5 text-[#0055A4]" />
                   <div>
                     <p className="font-semibold text-[#002855]">Support</p>
-                    <p className="text-sm text-gray-600">support@findchristianschools.com</p>
+                    <p className="text-sm text-gray-600"><a href="/contact" className="text-[#0055A4] hover:underline">Contact us through our contact form</a></p>
                   </div>
                 </div>
               </div>

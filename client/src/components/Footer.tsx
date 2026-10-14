@@ -49,6 +49,7 @@ export default function Footer() {
             <h4 className="text-sm font-semibold uppercase tracking-wider text-[#6EBE44] mb-4">Resources</h4>
             <ul className="space-y-2">
               <li><Link href="/resources" className="text-sm text-blue-200 hover:text-white transition-colors">Homeschool Resources</Link></li>
+              <li><Link href="/teacher-toolkit" className="text-sm text-blue-200 hover:text-white transition-colors">Teacher Toolkit</Link></li>
               <li><Link href="/colleges" className="text-sm text-blue-200 hover:text-white transition-colors">Christian Colleges</Link></li>
               <li><Link href="/enrichment" className="text-sm text-blue-200 hover:text-white transition-colors">Enrichment & Activities</Link></li>
               <li><Link href="/enrichment/submit" className="text-sm text-blue-200 hover:text-white transition-colors">List Your Program</Link></li>

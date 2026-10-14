@@ -51,8 +51,9 @@ const MODULE_ICONS: Record<number, typeof HelpCircle> = {
   12: Cross,
 };
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1200&auto=format&fit=crop";
+/* The hub hero photo (student in a school hallway) ships as a base64 data
+   URI in @/data/heroImage and is loaded lazily in the component below, so
+   the ~130 KB payload only ever lands on this page. */
 
 /* Ebook waitlist — uses the same newsletter subscribe flow as the rest of
    the site. The devotional is in the works; the copy says so plainly. */
@@ -120,6 +121,17 @@ function EbookWaitlistForm() {
 
 export default function ThinkClearly() {
   const [completed, setCompleted] = useState<Record<string, boolean>>({});
+  const [heroSrc, setHeroSrc] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    import("@/data/heroImage").then((m) => {
+      if (active) setHeroSrc(m.THINK_CLEARLY_HERO_SRC);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     document.title =
@@ -199,12 +211,16 @@ export default function ThinkClearly() {
               </p>
             )}
           </div>
-          <div className="hidden lg:block">
-            <img
-              src={HERO_IMAGE}
-              alt="A student thinking and writing at a desk"
-              className="rounded-3xl shadow-2xl w-full object-cover aspect-[4/3]"
-            />
+          <div className="mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-none">
+            {heroSrc ? (
+              <img
+                src={heroSrc}
+                alt="A student thinking in a school hallway, Bible under his arm"
+                className="rounded-3xl shadow-2xl w-full object-cover aspect-[2/3]"
+              />
+            ) : (
+              <div className="rounded-3xl bg-white/10 w-full aspect-[2/3]" aria-hidden="true" />
+            )}
           </div>
         </div>
       </section>

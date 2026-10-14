@@ -567,13 +567,23 @@ export async function getNearbySchools(
       .forEach(({ s }) => push(s));
   }
 
-  // 3) Fallback fill: same county first, then the rest of the state
+  // 3) Fallback fill: same county first, then the rest of the state —
+  // ordered by distance whenever coordinates allow (the sort is stable,
+  // so schools without coordinates keep premium/name order).
   if (picked.length < limit) {
     const stateRows = await getSchoolsByState(self.stateCode);
-    if (self.county) {
-      stateRows.filter((s: any) => s.county === self.county).forEach(push);
-    }
-    stateRows.forEach(push);
+    const sorted = [...stateRows].sort((a: any, b: any) => {
+      const countyA = self.county && a.county === self.county ? 0 : 1;
+      const countyB = self.county && b.county === self.county ? 0 : 1;
+      if (countyA !== countyB) return countyA - countyB;
+      const dA = distanceFor(a);
+      const dB = distanceFor(b);
+      if (dA == null && dB == null) return 0;
+      if (dA == null) return 1;
+      if (dB == null) return -1;
+      return dA - dB;
+    });
+    sorted.forEach(push);
   }
 
   return picked.slice(0, limit);

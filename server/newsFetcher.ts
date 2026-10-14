@@ -1,23 +1,85 @@
 /**
  * Christian education news aggregation.
  *
- * Fetches the verified RSS/Atom feeds listed in news-sources.md, deduplicates
- * by original article URL, and stores neutral summaries (the feed's own
- * description, truncated) in the `news_items` table. Every stored item links
- * back to the original article — we never republish full content.
+ * Fetches the verified RSS/Atom feeds on the curated allowlist below,
+ * deduplicates by original article URL, and stores publisher-provided
+ * excerpts (the feed's own description, truncated) in the `news_items`
+ * table. Every stored item links back to the original article — we never
+ * republish full content.
  *
- * Auto-update: `refreshNewsIfStale()` (defined in server/db.ts) is called on
- * every /news page load and triggers this fetcher in the background when the
- * last successful run is older than 12 hours. No cron needed.
+ * CONTENT RULE (zero AI-generated news, by construction): this pipeline
+ * contains NO language model and no generative step of any kind. Titles,
+ * summaries, dates, and URLs are stored and displayed exactly as the
+ * publisher's feed provides them. Relevance, topic, and faith-flag
+ * decisions are deterministic keyword matching only (see the keyword
+ * sets below). Nothing here writes, rewrites, or paraphrases news copy.
+ *
+ * FAITH-ALIGNMENT GUARDRAIL: sources sit on a curated allowlist (the
+ * site owner holds final veto over the list). On top of that, a
+ * deterministic flag-word screen (FLAG_TERMS) holds any item whose
+ * framing may be hostile to Christian schooling, religious liberty, or
+ * parental rights in education OUT of the public feed: it is stored
+ * with reviewStatus = 'held' and isActive = false, appears in the
+ * admin review queue (Admin -> News Review), and is named in the ingest
+ * run report. A human approves or rejects every held item. Items that
+ * pass appear automatically.
+ *
+ * FEED HEALTH: every run reports per-feed status (responded / items
+ * yielded / inserted / held / error). A feed that fails, goes silent,
+ * or starts yielding nothing is visible in the run report the same day
+ * so a defaced or abandoned source gets caught fast.
+ *
+ * THUMBNAILS: taken only from (a) the feed's own media fields
+ * (media:thumbnail / media:content / image enclosure), or (b) the
+ * article page's og:image, fetched at ingest and stored as a URL.
+ * Items with neither render a neutral on-brand placeholder client-side.
+ * Images are never generated and never substituted with stock photos.
+ *
+ * RETENTION: items older than 90 days are pruned at the end of each run.
+ *
+ * Auto-update: a Muse cron POSTs daily to the protected endpoint
+ * /api/cron/news-refresh (see server/newsRefresh.ts), and
+ * `refreshNewsIfStale()` (server/db.ts) tops up on /news page loads when
+ * the last successful run is older than 12 hours. If feeds fail, the
+ * site keeps showing the last good items with their real dates.
  */
 import Parser from "rss-parser";
 import { getDb } from "./db";
 import { newsItems, newsFetchLog } from "../drizzle/schema";
 import { sql } from "drizzle-orm";
 
-const parser = new Parser({ timeout: 20000 });
+const parser = new Parser({
+  timeout: 20000,
+  headers: { "User-Agent": "Mozilla/5.0 (compatible; FCSNewsBot/1.0)" },
+  customFields: {
+    item: [
+      ["media:thumbnail", "mediaThumbnail"],
+      ["media:content", "mediaContent"],
+      ["media:group", "mediaGroup"],
+    ],
+  },
+});
 
 export type NewsCategory = "national" | "state" | "policy" | "school_choice" | "curriculum";
+
+export type NewsTopic =
+  | "school_choice_policy"
+  | "christian_schools"
+  | "homeschooling"
+  | "funding_tax_credit"
+  | "accreditation"
+  | "faith_culture"
+  | "general";
+
+export const NEWS_TOPICS: { value: NewsTopic; label: string }[] = [
+  { value: "school_choice_policy", label: "School Choice & Policy" },
+  { value: "christian_schools", label: "Christian Schools" },
+  { value: "homeschooling", label: "Homeschooling" },
+  { value: "funding_tax_credit", label: "Funding & the Tax Credit" },
+  { value: "accreditation", label: "Accreditation & Standards" },
+  { value: "faith_culture", label: "Faith & Culture in Education" },
+  { value: "general", label: "More Education News" },
+];
 
 interface NewsFeedConfig {
   name: string;
@@ -53,6 +115,92 @@ const CURRICULUM_KEYWORDS = [
   "curriculum", "textbook", "lesson plan", "reading program", "math curriculum", "phonics",
 ];
 
+/**
+ * Deterministic topic buckets for the /news page, derived from the same
+ * keyword-matching approach as the relevance filter. First match wins,
+ * most specific buckets first. Anything unmatched lands in "general".
+ */
+const TOPIC_KEYWORDS: { topic: NewsTopic; keywords: string[] }[] = [
+  {
+    topic: "accreditation",
+    keywords: [
+      "accredit", "academic standards", "state standards", "assessment",
+      "accountability", "teacher certification", "licensure", "accreditation",
+    ],
+  },
+  {
+    topic: "funding_tax_credit",
+    keywords: [
+      "tax credit", "tax-credit", "federal scholarship tax credit", "529 plan",
+      "treasury", "irs ", "appropriation", "funding formula", "education funding",
+      "school funding", "federal funding", "per-pupil funding",
+    ],
+  },
+  {
+    topic: "homeschooling",
+    keywords: [
+      "homeschool", "home school", "homeschooler", "home education",
+      "homeschooling", "home-educated",
+    ],
+  },
+  {
+    topic: "school_choice_policy",
+    keywords: [
+      ...SCHOOL_CHOICE_KEYWORDS,
+      "charter school", "parental rights", "education bill", "school board",
+      "open enrollment", "magnet school", "education policy", "governor signs",
+      "supreme court", "department of education",
+    ],
+  },
+  {
+    topic: "christian_schools",
+    keywords: [
+      "christian school", "christian academy", "catholic school", "private school",
+      "religious school", "faith-based school", "lutheran school", "acsi",
+      "christian college", "christian education", "biblical worldview",
+    ],
+  },
+  {
+    topic: "faith_culture",
+    keywords: [
+      "religious liberty", "religious freedom", "first amendment", "title ix",
+      "school prayer", "faith and education", "worldview", "church and state",
+    ],
+  },
+];
+
+/**
+ * Faith-alignment flag screen (deterministic). An item whose title or
+ * summary contains any of these terms is HELD for human review instead
+ * of auto-publishing: the phrasing signals coverage that may frame
+ * Christian schooling, religious liberty, or parental rights hostilely,
+ * and that judgment stays human. This is a review trigger, not a ban —
+ * an editor can approve a held item in Admin -> News Review.
+ */
+export const FLAG_TERMS = [
+  "indoctrinat",
+  "christian nationalis",
+  "religious extremist",
+  "religious extremism",
+  "theocratic",
+  "theocracy",
+  "bible-thumping",
+  "bible thumping",
+  "religious right",
+  "anti-lgbtq",
+  "anti-gay",
+  "book ban",
+  "banned books",
+  "extremist curriculum",
+  "white christian",
+  "cult",
+];
+
+export function flagScreen(title: string, summary: string): string[] {
+  const text = `${title} ${summary}`.toLowerCase();
+  return FLAG_TERMS.filter((t) => text.includes(t));
+}
+
 const STATE_NAMES: Record<string, string> = {
   alabama: "AL", alaska: "AK", arizona: "AZ", arkansas: "AR", california: "CA",
   colorado: "CO", connecticut: "CT", delaware: "DE", florida: "FL", georgia: "GA",
@@ -67,10 +215,18 @@ const STATE_NAMES: Record<string, string> = {
   wisconsin: "WI", wyoming: "WY", "district of columbia": "DC",
 };
 
+/**
+ * Curated source allowlist — every feed verified live before inclusion.
+ * The site owner holds final veto over this list. Dropped after
+ * verification attempts (Oct 2026): U.S. Dept. of Education and IRS
+ * (their servers refuse automated feed fetches), Education Week (no
+ * public RSS endpoint), ACSI (no public RSS feed published).
+ */
 export const NEWS_FEEDS: NewsFeedConfig[] = [
   { name: "EdChoice", url: "https://www.edchoice.org/feed/", defaultCategory: "school_choice", maxItems: 15 },
   { name: "Herzog Foundation", url: "https://herzogfoundation.com/feed/", defaultCategory: "national", maxItems: 15 },
   { name: "ExcelinEd", url: "https://excelined.org/feed/", defaultCategory: "policy", maxItems: 15 },
+  { name: "Step Up For Students", url: "https://www.stepupforstudents.org/feed/", defaultCategory: "school_choice", maxItems: 10 },
   { name: "Chalkbeat", url: "https://www.chalkbeat.org/arc/outboundfeeds/rss/", defaultCategory: "national", maxItems: 15 },
   { name: "The 74", url: "https://www.the74million.org/feed/", defaultCategory: "national", maxItems: 15 },
   { name: "Christian Post", url: "https://www.christianpost.com/rss/", defaultCategory: "national", filterKeywords: EDUCATION_KEYWORDS, maxItems: 30 },
@@ -94,15 +250,16 @@ export function plainText(html: string | undefined): string {
 }
 
 /**
- * Neutral 2-3 sentence summary from the feed's own description.
- * No editorializing — just the source's text, truncated at a word boundary.
+ * Publisher-provided excerpt only — the feed's own description text,
+ * truncated at a word boundary to at most ~200 characters. Never
+ * rewritten, never extended, never paraphrased (see content rule above).
  */
 export function makeSummary(description: string): string {
   const text = plainText(description);
-  if (text.length <= 220) return text;
-  const cut = text.slice(0, 220);
+  if (text.length <= 200) return text;
+  const cut = text.slice(0, 200);
   const lastSpace = cut.lastIndexOf(" ");
-  return (lastSpace > 120 ? cut.slice(0, lastSpace) : cut).trim() + "…";
+  return (lastSpace > 110 ? cut.slice(0, lastSpace) : cut).trim() + "…";
 }
 
 export function slugify(title: string, url: string): string {
@@ -147,17 +304,126 @@ export function classifyCategory(title: string, summary: string, fallback: NewsC
   return fallback;
 }
 
+export function classifyTopic(title: string, summary: string): NewsTopic {
+  const text = `${title} ${summary}`;
+  for (const bucket of TOPIC_KEYWORDS) {
+    if (matchesAny(text, bucket.keywords)) return bucket.topic;
+  }
+  return "general";
+}
+
+/** Pull an image URL out of a `media:*` element (rss-parser custom field shape). */
+function mediaUrl(node: unknown): string | null {
+  if (!node || typeof node !== "object") return null;
+  const attrs = (node as { $?: Record<string, string> }).$;
+  const url = attrs?.url;
+  if (!url || !/^https?:\/\//i.test(url)) return null;
+  const medium = (attrs?.medium || "").toLowerCase();
+  const type = (attrs?.type || "").toLowerCase();
+  if (medium && medium !== "image") return null;
+  if (type && !type.startsWith("image/")) return null;
+  return url;
+}
+
+/**
+ * Thumbnail source order: (a) the feed's own media fields / image
+ * enclosure; (b) null here — the og:image fallback runs at insert time
+ * in fetchOgImage() for items the feed gave no image for.
+ */
 export function extractImageUrl(item: Parser.Item): string | null {
+  const anyItem = item as unknown as Record<string, unknown>;
+  const thumb = mediaUrl(anyItem.mediaThumbnail);
+  if (thumb) return thumb;
+  const content = mediaUrl(anyItem.mediaContent);
+  if (content) return content;
+  const group = anyItem.mediaGroup as Record<string, unknown> | undefined;
+  if (group) {
+    const gThumb = mediaUrl(group["media:thumbnail"]);
+    if (gThumb) return gThumb;
+    const gContent = group["media:content"];
+    const first = Array.isArray(gContent) ? gContent[0] : gContent;
+    const gUrl = mediaUrl(first);
+    if (gUrl) return gUrl;
+  }
   const enc = (item as { enclosure?: { url?: string; type?: string } }).enclosure;
   if (enc?.url && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(enc.url)) return enc.url;
   return null;
 }
 
+const OG_IMAGE_BUDGET_PER_RUN = 24;
+
+/**
+ * Fallback thumbnail: fetch the article page and read its og:image /
+ * twitter:image meta (the publisher's own chosen preview image).
+ * Stores the URL only — the image itself is never copied or altered.
+ */
+export async function fetchOgImage(articleUrl: string): Promise<string | null> {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    const res = await fetch(articleUrl, {
+      signal: ctrl.signal,
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; FCSNewsBot/1.0)" },
+      redirect: "follow",
+    });
+    clearTimeout(timer);
+    if (!res.ok) return null;
+    const reader = res.body?.getReader();
+    if (!reader) return null;
+    let html = "";
+    const decoder = new TextDecoder();
+    while (html.length < 262144) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      html += decoder.decode(value, { stream: true });
+      if (/<\/head>/i.test(html)) break;
+    }
+    reader.cancel().catch(() => {});
+    const patterns = [
+      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+      /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+      /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+    ];
+    for (const re of patterns) {
+      const m = html.match(re);
+      if (m?.[1]) {
+        const url = m[1].replace(/&amp;/g, "&").trim();
+        if (/^https?:\/\//i.test(url)) return url.slice(0, 512);
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export interface HeldItem {
+  title: string;
+  sourceName: string;
+  sourceUrl: string;
+  flags: string[];
+}
+
 export interface FetchResult {
   feed: string;
+  /** Items the feed returned (before site-side filtering). */
   fetched: number;
+  /** New items published automatically this run. */
   inserted: number;
+  /** New items held for human review by the flag screen this run. */
+  held: number;
   error?: string;
+}
+
+export interface NewsRunReport {
+  results: FetchResult[];
+  heldItems: HeldItem[];
+  totalFetched: number;
+  totalInserted: number;
+  totalHeld: number;
+  pruned: number;
+  /** Feeds that errored or yielded zero items — the same-day warning list. */
+  unhealthyFeeds: string[];
 }
 
 /** Insert parsed feed items for one feed config. Shared by URL and string parsing. */
@@ -165,10 +431,13 @@ async function storeFeedItems(
   db: NonNullable<Awaited<ReturnType<typeof getDb>>>,
   existing: Set<string>,
   feed: NewsFeedConfig,
-  items: Parser.Item[]
-): Promise<{ fetched: number; inserted: number }> {
+  items: Parser.Item[],
+  ogBudget: { remaining: number }
+): Promise<{ fetched: number; inserted: number; held: number; heldItems: HeldItem[] }> {
   const sliced = items.slice(0, feed.maxItems ?? 15);
   let inserted = 0;
+  let held = 0;
+  const heldItems: HeldItem[] = [];
   for (const item of sliced) {
     const link = (item.link || "").trim();
     const title = (item.title || "").trim();
@@ -179,11 +448,23 @@ async function storeFeedItems(
     if (feed.filterKeywords && !matchesAny(`${title} ${summaryText}`, feed.filterKeywords)) continue;
 
     const category = classifyCategory(title, summaryText, feed.defaultCategory);
+    const topic = classifyTopic(title, summaryText);
     const stateCode = feed.stateCode || detectStateCode(title, summaryText);
 
     const pubDate = item.isoDate || item.pubDate;
     const publishedAt = pubDate ? new Date(pubDate) : new Date();
     if (isNaN(publishedAt.getTime())) continue;
+
+    // Faith-alignment flag screen: held items are stored inactive for a
+    // human decision, never auto-published.
+    const flags = flagScreen(title, summaryText);
+    const isHeld = flags.length > 0;
+
+    let imageUrl = extractImageUrl(item);
+    if (!imageUrl && !isHeld && ogBudget.remaining > 0) {
+      ogBudget.remaining--;
+      imageUrl = await fetchOgImage(link);
+    }
 
     try {
       await db.insert(newsItems).values({
@@ -193,13 +474,21 @@ async function storeFeedItems(
         sourceUrl: link,
         summary: summaryText || null,
         category,
+        topic,
         stateCode,
         publishedAt,
-        imageUrl: extractImageUrl(item),
-        isActive: true,
+        imageUrl,
+        isActive: !isHeld,
+        reviewStatus: isHeld ? "held" : "published",
+        holdReason: isHeld ? `Flag terms: ${flags.join(", ")}` : null,
       });
       existing.add(link);
-      inserted++;
+      if (isHeld) {
+        held++;
+        heldItems.push({ title: title.slice(0, 255), sourceName: feed.name, sourceUrl: link, flags });
+      } else {
+        inserted++;
+      }
     } catch (e: unknown) {
       // Duplicate slug/url race — skip quietly
       if (!(e instanceof Error && /Duplicate entry/i.test(e.message))) {
@@ -207,7 +496,7 @@ async function storeFeedItems(
       }
     }
   }
-  return { fetched: sliced.length, inserted };
+  return { fetched: sliced.length, inserted, held, heldItems };
 }
 
 /**
@@ -217,7 +506,7 @@ async function storeFeedItems(
 export async function parseAndStoreFeedXml(
   feedName: string,
   xml: string
-): Promise<{ fetched: number; inserted: number }> {
+): Promise<{ fetched: number; inserted: number; held: number }> {
   const db = await getDb();
   if (!db) throw new Error("Database unavailable");
   const feed = NEWS_FEEDS.find((f) => f.name === feedName);
@@ -227,14 +516,22 @@ export async function parseAndStoreFeedXml(
     (await db.select({ sourceUrl: newsItems.sourceUrl }).from(newsItems).catch(() => []))
       .map((r) => r.sourceUrl)
   );
-  return storeFeedItems(db, existing, feed, parsed.items || []);
+  const { fetched, inserted, held } = await storeFeedItems(db, existing, feed, parsed.items || [], {
+    remaining: OG_IMAGE_BUDGET_PER_RUN,
+  });
+  return { fetched, inserted, held };
 }
 
+const RETENTION_DAYS = 90;
+
 /**
- * Fetch every configured feed, deduplicate by original URL, insert new items.
- * Safe to run concurrently — DB unique constraint on sourceUrl is the final guard.
+ * Fetch every configured feed, deduplicate by original URL, insert new
+ * items, hold flagged items for review, prune items older than 90 days.
+ * Safe to run concurrently — DB unique constraint on sourceUrl is the
+ * final guard. Returns the full run report (published / held / feed
+ * health) used by the daily cron and the admin refresh.
  */
-export async function fetchAllNewsFeeds(): Promise<FetchResult[]> {
+export async function fetchAllNewsFeeds(): Promise<NewsRunReport> {
   const db = await getDb();
   if (!db) throw new Error("Database unavailable");
 
@@ -247,8 +544,11 @@ export async function fetchAllNewsFeeds(): Promise<FetchResult[]> {
   }
 
   const results: FetchResult[] = [];
+  const heldItems: HeldItem[] = [];
+  const ogBudget = { remaining: OG_IMAGE_BUDGET_PER_RUN };
   let totalFetched = 0;
   let totalInserted = 0;
+  let totalHeld = 0;
 
   // Existing URLs for dedup (single query up front)
   const existing = new Set(
@@ -257,20 +557,39 @@ export async function fetchAllNewsFeeds(): Promise<FetchResult[]> {
   );
 
   for (const feed of NEWS_FEEDS) {
-    const result: FetchResult = { feed: feed.name, fetched: 0, inserted: 0 };
+    const result: FetchResult = { feed: feed.name, fetched: 0, inserted: 0, held: 0 };
     try {
       const parsed = await parser.parseURL(feed.url);
-      const { fetched, inserted } = await storeFeedItems(db, existing, feed, parsed.items || []);
-      result.fetched = fetched;
-      result.inserted = inserted;
-      totalFetched += fetched;
-      totalInserted += inserted;
+      const stored = await storeFeedItems(db, existing, feed, parsed.items || [], ogBudget);
+      result.fetched = stored.fetched;
+      result.inserted = stored.inserted;
+      result.held = stored.held;
+      heldItems.push(...stored.heldItems);
+      totalFetched += stored.fetched;
+      totalInserted += stored.inserted;
+      totalHeld += stored.held;
     } catch (e) {
       result.error = e instanceof Error ? e.message : String(e);
       console.error(`[news] feed failed (${feed.name}):`, result.error);
     }
     results.push(result);
   }
+
+  // Retention: keep the newest ~90 days only.
+  let pruned = 0;
+  try {
+    const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000);
+    const del = await db
+      .delete(newsItems)
+      .where(sql`${newsItems.publishedAt} < ${cutoff}`);
+    pruned = Number((del[0] as unknown as { affectedRows?: number }).affectedRows ?? 0) || 0;
+  } catch (e) {
+    console.error("[news] retention prune failed:", e);
+  }
+
+  const unhealthyFeeds = results
+    .filter((r) => r.error || r.fetched === 0)
+    .map((r) => (r.error ? `${r.feed} (error: ${r.error})` : `${r.feed} (yielded 0 items)`));
 
   if (logId) {
     await db
@@ -279,11 +598,14 @@ export async function fetchAllNewsFeeds(): Promise<FetchResult[]> {
         finishedAt: sql`NOW()`,
         itemsFetched: totalFetched,
         itemsInserted: totalInserted,
-        status: "success",
+        status: unhealthyFeeds.length === NEWS_FEEDS.length ? "error" : "success",
+        errorMessage: unhealthyFeeds.length
+          ? `Unhealthy feeds: ${unhealthyFeeds.join("; ")}`
+          : null,
       })
       .where(sql`${newsFetchLog.id} = ${logId}`)
       .catch(() => {});
   }
 
-  return results;
+  return { results, heldItems, totalFetched, totalInserted, totalHeld, pruned, unhealthyFeeds };
 }

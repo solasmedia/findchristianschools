@@ -8,6 +8,8 @@ import { Search, Shield, BookOpen, Globe, GraduationCap, Heart, Users, MapPin, C
 import { Link } from "wouter";
 import { VISION_DATA_URI } from "@/vision";
 import { JsonLd, homepageJsonLd } from "@/components/SeoJsonLd";
+import NewsThumb from "@/components/NewsThumb";
+import { Newspaper } from "lucide-react";
 
 const grades = [
   { value: "", label: "All Grades" },
@@ -36,6 +38,8 @@ export default function Home() {
 
   const { data: featured } = trpc.schools.featured.useQuery();
   const { data: newest } = trpc.schools.newest.useQuery();
+  // Homepage news strip: newest three items only — a taste of /news, never a firehose.
+  const { data: latestNews } = trpc.news.list.useQuery({ limit: 3 });
 
   useEffect(() => {
     document.title = "Find Christian Schools & Homeschool Resources Near You";
@@ -257,6 +261,53 @@ export default function Home() {
                   </div>
                 </Link>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Latest in Christian Education — auto-updated daily, max 3 items */}
+      {latestNews && latestNews.items.length > 0 && (
+        <section className="bg-white py-14 border-b border-gray-100">
+          <div className="container">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#0055A4]/10 flex items-center justify-center">
+                  <Newspaper className="w-5 h-5 text-[#0055A4]" />
+                </div>
+                <div>
+                  <h2 className="text-xl lg:text-2xl font-bold text-[#002855]">Latest in Christian Education</h2>
+                  <p className="text-sm text-gray-500">Updated daily from trusted sources</p>
+                </div>
+              </div>
+              <Link href="/news" className="hidden md:flex items-center gap-1 text-sm font-medium text-[#0055A4] hover:text-[#002855]">
+                All education news <ChevronRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {latestNews.items.map((item) => (
+                <Link key={item.id} href={`/news/${item.slug}`}>
+                  <div className="flex gap-4 bg-gray-50 hover:bg-blue-50/60 border border-gray-100 rounded-xl p-4 transition-colors group h-full">
+                    <NewsThumb src={item.imageUrl} alt="" className="w-24 h-20 rounded-lg shrink-0" />
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-semibold text-[#002855] group-hover:text-[#0055A4] transition-colors line-clamp-3 leading-snug">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-gray-500 mt-2">
+                        <span className="font-medium text-[#0055A4]">{item.sourceName}</span>
+                        {item.publishedAt && (
+                          <> · {new Date(item.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-5 md:hidden text-center">
+              <Link href="/news" className="inline-flex items-center gap-1 text-sm font-medium text-[#0055A4]">
+                All education news <ChevronRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </section>

@@ -148,7 +148,7 @@ export default function TermsOfService() {
             </p>
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 my-4">
               <p className="text-gray-700"><strong>DMCA Agent:</strong></p>
-              <p className="text-gray-700">Email: dmca@findchristianschools.com</p>
+              <p className="text-gray-700">Submit a notice through <a href="/contact" className="text-[#0055A4] hover:underline font-medium">our contact form</a> and title your message "DMCA Takedown Notice".</p>
               <p className="text-gray-700 text-sm mt-2">Please include: (1) your contact information, (2) description of the copyrighted work, (3) URL of the infringing content, (4) statement under penalty of perjury that you own the copyright, and (5) your signature.</p>
             </div>
             <p className="text-gray-700">
@@ -183,9 +183,9 @@ export default function TermsOfService() {
               If you have any questions about these Terms of Service, please contact us:
             </p>
             <ul className="list-disc list-inside text-gray-700 space-y-1">
-              <li><strong>Legal:</strong> legal@findchristianschools.com</li>
-              <li><strong>Support:</strong> support@findchristianschools.com</li>
-              <li><strong>DMCA:</strong> dmca@findchristianschools.com</li>
+              <li><strong>Legal:</strong> through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a></li>
+              <li><strong>Support:</strong> through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a></li>
+              <li><strong>DMCA:</strong> through <a href="/contact" className="text-[#0055A4] hover:underline">our contact form</a></li>
             </ul>
           </section>
         </div>

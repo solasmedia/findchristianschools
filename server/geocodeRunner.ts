@@ -282,9 +282,49 @@ async function handleImport(req: Request, res: Response): Promise<void> {
   }
 }
 
+
+async function handleDiag(_req: Request, res: Response): Promise<void> {
+  let conn: mysql.Connection | null = null;
+  try {
+    const fs = await import("node:fs");
+    const path = await import("node:path");
+    const crypto = await import("node:crypto");
+    const dir = path.join(process.cwd(), "drizzle");
+    let listing: string[] = [];
+    let fileHash: string | null = null;
+    try {
+      listing = fs.readdirSync(dir).filter((f: string) => /^\d{4}_.*\.sql$/.test(f)).sort();
+      const p28 = path.join(dir, "0028_school_geocode.sql");
+      if (fs.existsSync(p28)) {
+        fileHash = crypto.createHash("sha256").update(fs.readFileSync(p28, "utf8")).digest("hex");
+      }
+    } catch (e) {
+      listing = ["ERR:" + String(e)];
+    }
+    conn = await connect();
+    const [mig] = await conn.execute("SELECT hash FROM __drizzle_migrations");
+    const hashes = (mig as { hash: string }[]).map((r) => r.hash);
+    const [cols] = await conn.execute("SHOW COLUMNS FROM schools LIKE 'geocode%'");
+    res.json({
+      cwd: process.cwd(),
+      migrationFiles: listing.length,
+      has0028: listing.includes("0028_school_geocode.sql"),
+      fileHash0028: fileHash,
+      hashRecorded: fileHash ? hashes.includes(fileHash) : null,
+      recordedHashes: hashes.length,
+      geocodeColumns: (cols as { Field: string }[]).map((c) => c.Field),
+    });
+  } catch (err) {
+    res.status(500).json({ error: String(err instanceof Error ? err.message : err) });
+  } finally {
+    if (conn) await conn.end().catch(() => {});
+  }
+}
+
 export function registerGeocodeRunnerRoutes(app: Express): void {
   app.get("/__geo/export", guard, handleExport);
   app.get("/__geo/status", guard, handleStatus);
+  app.get("/__geo/diag", guard, handleDiag);
   app.post(
     "/__geo/import",
     guard,

@@ -37,10 +37,6 @@ export default function SchoolProfile() {
   const ncesAssociations: string[] = (() => {
     try { return ncesFacts?.associations ? JSON.parse(ncesFacts.associations) : []; } catch { return []; }
   })();
-  const ncesGrades: Record<string, number> = (() => {
-    try { return ncesFacts?.gradeEnrollment ? JSON.parse(ncesFacts.gradeEnrollment) : {}; } catch { return {}; }
-  })();
-
   // Dynamic SEO meta tags
   useEffect(() => {
     if (school) {
@@ -282,14 +278,6 @@ export default function SchoolProfile() {
                           <span key={a} className="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-50 text-[#0055A4]">{a}</span>
                         ))}
                       </div>
-                    </div>
-                  )}
-                  {Object.keys(ncesGrades).length > 0 && (
-                    <div className="mt-4">
-                      <p className="text-gray-500 text-xs mb-1">Enrollment by Grade</p>
-                      <p className="text-sm text-[#002855]">
-                        {Object.entries(ncesGrades).map(([g, n]) => `${g}: ${n}`).join(" · ")}
-                      </p>
                     </div>
                   )}
                   <p className="text-xs text-gray-400 mt-4">

@@ -66,9 +66,6 @@ async function startServer() {
   // Daily news ingest — protected cron endpoint (see server/newsRefresh.ts)
   const { registerNewsRefreshRoute } = await import("../newsRefresh");
   registerNewsRefreshRoute(app);
-  // TEMP one-time geocode runner (Phase 2) — removed after the run
-  const { registerGeocodeRunnerRoutes } = await import("../geocodeRunner");
-  registerGeocodeRunnerRoutes(app);
   // SEO: sitemap.xml and robots.txt
   const { registerSeoRoutes } = await import("../seo");
   registerSeoRoutes(app);

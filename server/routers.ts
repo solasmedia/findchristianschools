@@ -41,7 +41,7 @@ import {
   logResourceDownload, getBlogStats, hasPurchasedResource, getBlogPostForPurchase,
   getNewsItems, getNewsItemBySlug, getRelatedNewsItems,
   getAllNewsItemsAdmin, updateNewsItem, deleteNewsItem, getNewsStats,
-  triggerNewsRefresh,
+  triggerNewsRefresh, getNewsMeta, getHeldNewsItems,
 } from "./db";
 import { createDonationCheckout } from "./stripe/checkout";
 import { promoRouter } from "./routers-promo";
@@ -858,8 +858,10 @@ export const appRouter = router({
     related: publicProcedure.input(z.object({
       itemId: z.number(), category: z.string(), limit: z.number().optional(),
     })).query(({ input }) => getRelatedNewsItems(input.itemId, input.category, input.limit)),
+    meta: publicProcedure.query(() => getNewsMeta()),
     // Admin
     listAll: adminProcedure.input(z.object({ limit: z.number().optional(), offset: z.number().optional() }).optional()).query(({ input }) => getAllNewsItemsAdmin(input || {})),
+    listHeld: adminProcedure.query(() => getHeldNewsItems()),
     stats: adminProcedure.query(() => getNewsStats()),
     refresh: adminProcedure.mutation(() => triggerNewsRefresh()),
     update: adminProcedure.input(z.object({
@@ -868,6 +870,9 @@ export const appRouter = router({
         title: z.string().min(1).max(255).optional(),
         summary: z.string().optional(),
         category: z.enum(["national", "state", "policy", "school_choice", "curriculum"]).optional(),
+        topic: z.enum(["school_choice_policy", "christian_schools", "homeschooling", "funding_tax_credit", "accreditation", "faith_culture", "general"]).optional(),
+        reviewStatus: z.enum(["published", "held"]).optional(),
+        holdReason: z.string().max(255).optional().nullable(),
         stateCode: z.string().max(2).optional().nullable(),
         isActive: z.boolean().optional(),
       }),

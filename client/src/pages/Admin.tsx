@@ -8,7 +8,7 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from "recharts";
 import EnrichmentAdmin from "./admin/EnrichmentAdmin";
-import { CoursesManager, EventsManager, JobsManager, SubmissionsQueue, ContactMessages, SiteInsights, BlogManager, ForumWaitlistManager } from "./admin/AdminManagers";
+import { CoursesManager, EventsManager, JobsManager, SubmissionsQueue, ContactMessages, SiteInsights, BlogManager, ForumWaitlistManager, NewsReviewManager } from "./admin/AdminManagers";
 
 export default function Admin() {
   const { user, loading } = useAuth();
@@ -53,6 +53,7 @@ export default function Admin() {
             <TabsTrigger value="events" className="text-xs md:text-sm py-2"><Calendar className="w-4 h-4 mr-1" /> Events</TabsTrigger>
             <TabsTrigger value="jobs" className="text-xs md:text-sm py-2"><Briefcase className="w-4 h-4 mr-1" /> Jobs</TabsTrigger>
             <TabsTrigger value="blog" className="text-xs md:text-sm py-2"><BookOpen className="w-4 h-4 mr-1" /> Blog</TabsTrigger>
+            <TabsTrigger value="newsreview" className="text-xs md:text-sm py-2"><AlertTriangle className="w-4 h-4 mr-1" /> News Review</TabsTrigger>
             <TabsTrigger value="messages" className="text-xs md:text-sm py-2"><Mail className="w-4 h-4 mr-1" /> Messages</TabsTrigger>
             <TabsTrigger value="insights" className="text-xs md:text-sm py-2"><TrendingUp className="w-4 h-4 mr-1" /> Insights</TabsTrigger>
             <TabsTrigger value="enrichment" className="text-xs md:text-sm py-2"><ShieldCheck className="w-4 h-4 mr-1" /> Enrichment</TabsTrigger>
@@ -74,6 +75,7 @@ export default function Admin() {
           <TabsContent value="events"><EventsManager /></TabsContent>
           <TabsContent value="jobs"><JobsManager /></TabsContent>
           <TabsContent value="blog"><BlogManager /></TabsContent>
+          <TabsContent value="newsreview"><NewsReviewManager /></TabsContent>
           <TabsContent value="messages"><ContactMessages /></TabsContent>
           <TabsContent value="insights"><SiteInsights /></TabsContent>
           <TabsContent value="enrichment"><EnrichmentAdmin /></TabsContent>

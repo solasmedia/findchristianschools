@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Check, X, Shield, Star, Heart, Loader2, CheckCircle, XCircle, Search } from "lucide-react";
 import { Link, useSearch } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { trackEvent } from "@/lib/analytics";
 import { toast } from "sonner";

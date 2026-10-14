@@ -2292,6 +2292,11 @@ export async function getNewsStats() {
  */
 export async function getNewsMeta() {
   const db = await conn();
+  // The two legs fail independently and are caught separately: a
+  // news_fetch_log problem must not zero out the active-item count
+  // (that masking is what hid the broken log table behind a
+  // plausible-looking { lastUpdatedAt: null, totalActive: 0 }).
+  let lastUpdatedAt: Date | null = null;
   try {
     const [last] = await db
       .select({ finishedAt: newsFetchLog.finishedAt })
@@ -2299,17 +2304,21 @@ export async function getNewsMeta() {
       .where(eq(newsFetchLog.status, "success"))
       .orderBy(desc(newsFetchLog.startedAt))
       .limit(1);
+    lastUpdatedAt = last?.finishedAt ?? null;
+  } catch (e) {
+    console.error("[news] getNewsMeta last-run read failed:", e);
+  }
+  let totalActive = 0;
+  try {
     const [active] = await db
       .select({ n: count() })
       .from(newsItems)
       .where(and(eq(newsItems.isActive, true), ne(newsItems.reviewStatus, "held")));
-    return {
-      lastUpdatedAt: last?.finishedAt ?? null,
-      totalActive: Number(active?.n ?? 0),
-    };
-  } catch {
-    return { lastUpdatedAt: null, totalActive: 0 };
+    totalActive = Number(active?.n ?? 0);
+  } catch (e) {
+    console.error("[news] getNewsMeta active-count read failed:", e);
   }
+  return { lastUpdatedAt, totalActive };
 }
 
 /** Admin review queue: items held by the deterministic flag screen. */

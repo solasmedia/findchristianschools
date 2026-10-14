@@ -199,7 +199,7 @@ export default function ThinkClearlyModule() {
                       </p>
                       {revealed[i] ? (
                         <p className="text-gray-700 bg-[#6EBE44]/10 border border-[#6EBE44]/25 rounded-xl px-4 py-3">
-                          <span className="font-bold text-[#5da83a]">One good question: </span>
+                          <span className="font-bold text-[#5da83a]">{mod.drill?.modelLabel ?? "One good question"}: </span>
                           {item.model}
                         </p>
                       ) : (

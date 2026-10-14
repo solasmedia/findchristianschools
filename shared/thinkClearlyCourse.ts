@@ -72,7 +72,7 @@ export const MODULES: CourseModule[] = [
       alt: "A student writing questions in a notebook",
     },
     intro:
-      "Before you can think clearly about anything — a headline, a hard subject, a fight with a friend — you have to know how to ask about it. This first module is about the skill every other module stands on: asking better questions.",
+      "Before you can think clearly about anything — a headline, a project, a big decision — you have to know how to ask about it. This first module is about the skill every other module stands on: asking better questions.",
     sections: [
       {
         heading: "The teacher who asked questions",
@@ -90,7 +90,7 @@ export const MODULES: CourseModule[] = [
         heading: "A brake and a steering wheel",
         paragraphs: [
           "A question does two jobs at once. It is a brake: it slows you down before you react, repeat, or rush in. And it is a steering wheel: it points your thinking at the part that actually matters.",
-          "Most wrong turns in thinking do not happen because people are unintelligent. They happen because people solve the first problem they see instead of the real one. Thirty seconds of asking beats thirty minutes of fixing the wrong problem.",
+          "Most wrong turns in thinking are not about intelligence at all. They happen because people solve the first problem they see instead of the real one. Thirty seconds of asking beats thirty minutes of fixing the wrong problem.",
           "So before you answer, argue, share, or decide, brake first. Ask: What is really going on here? What do I actually know? What am I assuming?",
         ],
         verse: {
@@ -102,7 +102,7 @@ export const MODULES: CourseModule[] = [
         heading: "Closed questions get yes or no. Open questions get truth.",
         paragraphs: [
           "A closed question can be answered with yes, no, or one word. It ends the conversation. An open question starts with what, how, or why — and it cannot be answered without real thought. It invites the truth out.",
-          "Neither kind is bad. Closed questions are fine for facts and times. But when something matters — a friendship, a decision, a claim somebody wants you to believe — open questions are the ones that get you somewhere true. Compare these:",
+          "Neither kind is bad. Closed questions are fine for facts and times. But when something matters — a project, a purchase, a claim somebody wants you to believe — open questions are the ones that get you somewhere true. Compare these:",
         ],
         examples: [
           {
@@ -111,14 +111,14 @@ export const MODULES: CourseModule[] = [
             open: "What is your plan for finishing the assignment, and what part is hardest?",
           },
           {
-            label: "A friendship",
-            closed: "Are you mad at me?",
-            open: "What happened this week that has been bothering you?",
+            label: "A group project",
+            closed: "Is the poster almost finished?",
+            open: "What parts are still missing, and what is our plan to finish them by Friday?",
           },
           {
             label: "A headline",
-            closed: "Is this story true?",
-            open: "What would I need to check before I believe this story?",
+            closed: "Did scientists really discover that?",
+            open: "What did the scientists actually find, and how did they test it?",
           },
         ],
       },
@@ -127,11 +127,11 @@ export const MODULES: CourseModule[] = [
         paragraphs: [
           "Here is a tool worth stealing for the rest of your life. When a question pops up that you cannot answer right now, do not drop it and do not let it derail you. Park it.",
           "Parking a question means writing it down — in a notebook, in your phone, on a sticky note — and deliberately coming back to it later. A parked question is not a dropped question. It is a question waiting for its turn.",
-          "This one habit will help you everywhere: in class, when a lesson raises something you do not understand yet; in an argument, when a side issue tries to hijack the real one; and in your faith, when a hard question about God needs time and honesty instead of a rushed answer.",
+          "This one habit will help you everywhere: in class, when a lesson raises something you do not understand yet; on a group project, when a side topic pulls the team away from the main job; and in your faith, when a hard question about God needs time and honesty instead of a rushed answer.",
         ],
         callout: {
           title: "Try it this week",
-          text: "Start a parking lot page in a notebook or your notes app. Every time a real question shows up — about school, the news, your friends, your faith — write it down instead of letting it float away. Bring one parked question to a parent, teacher, or pastor this week.",
+          text: "Start a parking lot page in a notebook or your notes app. Every time a real question shows up — about school, the news, a project, your faith — write it down instead of letting it float away. Bring one parked question to a parent, teacher, or pastor this week.",
         },
       },
     ],
@@ -141,19 +141,19 @@ export const MODULES: CourseModule[] = [
         "A statement can feel like a dead end. A question opens a way forward. Practice by turning each statement below into an open question — then check the model answer and compare. Yours does not have to match; it has to be open.",
       items: [
         {
-          statement: "“That teacher just doesn't like me.”",
+          statement: "“My science project is due on Friday.”",
           model:
-            "What have I actually seen happen — and what else could explain it besides the teacher not liking me?",
+            "What do I want my project to show, and what is my very first step today?",
         },
         {
-          statement: "“I'm just bad at math.”",
+          statement: "“I am saving up for a new bike.”",
           model:
-            "Which part of math trips me up first, and who could help me with that exact part?",
+            "How much do I need in total, what can I set aside each week, and what could I do to earn the rest?",
         },
         {
-          statement: "“That video proved everybody was lying.”",
+          statement: "“We won the game by a single point.”",
           model:
-            "What did the video actually show, what did it leave out, and who made it?",
+            "Which play made the biggest difference, and what could we practice before the next game?",
         },
       ],
     },
@@ -177,7 +177,7 @@ export const MODULES: CourseModule[] = [
           "Did you finish your homework?",
           "Is the test on Friday?",
           "What part of this assignment is hardest?",
-          "Do you agree with her?",
+          "Do we have practice today?",
         ],
         correct: 3,
         explanation:
@@ -185,16 +185,17 @@ export const MODULES: CourseModule[] = [
         timeLimit: 20,
       },
       {
-        question: "A friend says, “The test was unfair.” What is the best follow-up question?",
+        question:
+          "Your teammate says after the game, “That was close!” What is the best follow-up question?",
         answers: [
-          "Why do you always complain?",
-          "What made it feel unfair to you?",
-          "Did everyone fail it?",
-          "Who wrote the test?",
+          "Who scored the most points?",
+          "What moment turned the game in our favor?",
+          "Did we nearly lose it?",
+          "Was the other team any good?",
         ],
         correct: 2,
         explanation:
-          "“What made it feel unfair?” opens the real story instead of judging or settling for yes or no.",
+          "“What moment turned the game in our favor?” digs into what actually happened instead of settling for yes or no.",
         timeLimit: 20,
       },
       {

@@ -9,6 +9,7 @@ import { GraduationCap, MapPin, BookOpen, Scale, Award, ChevronRight, ExternalLi
 import { Link } from "wouter";
 import InviteSchoolCard from "@/components/InviteSchoolCard";
 import SchoolChoiceBlock from "@/components/SchoolChoiceBlock";
+import NewsThumb from "@/components/NewsThumb";
 import { getProgramsByState } from "@shared/schoolChoicePrograms";
 
 // Federal Scholarship Tax Credit participating states.
@@ -193,6 +194,10 @@ export default function StateHub() {
   const { data: schoolData, isLoading } = trpc.schools.getByState.useQuery({ stateCode }, { enabled: !!stateCode });
   const { data: resourceData } = trpc.resources.list.useQuery({ state: stateName, limit: 10 }, { enabled: !!stateName });
   const { data: eventData } = trpc.events.list.useQuery({ state: stateName, limit: 5 }, { enabled: !!stateName });
+  // State-tagged news: items are tagged only when the publisher's own text
+  // names the state explicitly (exact-name match server-side), so this
+  // section simply does not render for states without clearly-tagged news.
+  const { data: stateNews } = trpc.news.list.useQuery({ stateCode, limit: 3 }, { enabled: !!stateCode });
   const filteredSchools = schoolData?.filter((s: any) => !cityFilter || s.city?.toLowerCase().includes(cityFilter.toLowerCase()));
   
   // Show skeleton count while loading to prevent blank values
@@ -599,6 +604,32 @@ export default function StateHub() {
                       </a>
                     )}
                   </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Education News in this State (only renders when items are explicitly state-tagged) */}
+          {stateNews?.items && stateNews.items.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-[#002855] mb-4">Education News in {stateName}</h2>
+              <div className="space-y-3">
+                {stateNews.items.map((item) => (
+                  <Link key={item.id} href={`/news/${item.slug}`}>
+                    <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                      <NewsThumb src={item.imageUrl} alt="" className="w-20 h-14 rounded-lg shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-medium text-[#002855] line-clamp-2">{item.title}</h4>
+                        <p className="text-xs text-gray-500 mt-1">
+                          <span className="font-medium text-[#0055A4]">{item.sourceName}</span>
+                          {item.publishedAt && (
+                            <> · {new Date(item.publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</>
+                          )}
+                        </p>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-gray-300 shrink-0" />
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>

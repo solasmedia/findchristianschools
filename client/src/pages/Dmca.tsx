@@ -69,15 +69,11 @@ export default function Dmca() {
                 is complete, please direct all copyright notices to:
               </p>
               <p className="text-sm mt-2">
-                Email:{" "}
-                <a
-                  href="mailto:legal@findchristianschools.com"
-                  className="text-[#0055A4] hover:underline"
-                >
-                  legal@findchristianschools.com
-                </a>
-                <br />
-                Subject line: "DMCA Takedown Notice"
+                Submit your notice through{" "}
+                <a href="/contact" className="text-[#0055A4] hover:underline">
+                  our contact form
+                </a>{" "}
+                and title your message "DMCA Takedown Notice".
               </p>
             </div>
           </section>

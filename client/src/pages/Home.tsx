@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Search, Shield, BookOpen, Globe, GraduationCap, Heart, Users, MapPin, ChevronRight, ChevronDown, Star, Calendar, Briefcase, BookMarked, PenLine, CalendarDays, HandHeart, Sparkles, DollarSign, CheckCircle2 } from "lucide-react";
+import { Search, Shield, BookOpen, Globe, GraduationCap, Heart, Users, MapPin, ChevronRight, ChevronDown, Star, Calendar, Briefcase, BookMarked, PenLine, CalendarDays, HandHeart, Sparkles, DollarSign, CheckCircle2, Wrench, Mail, AlertCircle } from "lucide-react";
 import { Link } from "wouter";
 import { VISION_DATA_URI } from "@/vision";
 import { JsonLd, homepageJsonLd } from "@/components/SeoJsonLd";
@@ -29,6 +29,72 @@ const programTypes = [
   { value: "course", label: "Homeschool Curriculums" },
   { value: "class", label: "Class" },
 ];
+
+/* Devotional waitlist — replicates the Think Clearly hub's EbookWaitlistForm
+   wiring exactly (same newsletter.subscribe mutation, same userType) so
+   homepage signups land in the same list. The hub component is not exported,
+   so it is reproduced here rather than imported. */
+function DevotionalWaitlistForm() {
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+
+  const subscribe = trpc.newsletter.subscribe.useMutation({
+    onSuccess: () => setDone(true),
+    onError: (e) => setError(e.message || "Something went wrong. Please try again."),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    subscribe.mutate({ email, userType: "parent" });
+  };
+
+  if (done) {
+    return (
+      <div className="flex items-start gap-3 bg-[#6EBE44]/10 border border-[#6EBE44]/30 rounded-xl p-5 max-w-lg">
+        <CheckCircle2 className="w-5 h-5 text-[#5da83a] flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="font-semibold text-[#002855] text-sm">You're on the list.</p>
+          <p className="text-sm text-gray-600">
+            We'll email you when the Thinking Clearly family devotional is ready.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-lg">
+      <div className="flex flex-col sm:flex-row gap-3">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your email address"
+          className="flex-1 px-5 py-3 rounded-full border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#0055A4] min-h-[48px]"
+          disabled={subscribe.isPending}
+        />
+        <button
+          type="submit"
+          disabled={subscribe.isPending}
+          className="bg-[#0055A4] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#003d7a] transition disabled:opacity-60 text-sm whitespace-nowrap min-h-[48px]"
+        >
+          {subscribe.isPending ? "Joining…" : "Join the list"}
+        </button>
+      </div>
+      {error && (
+        <p className="text-sm text-red-600 mt-3 flex items-center gap-1.5">
+          <AlertCircle className="w-4 h-4" /> {error}
+        </p>
+      )}
+    </form>
+  );
+}
 
 export default function Home() {
   const [, navigate] = useLocation();
@@ -147,6 +213,120 @@ export default function Home() {
                 <p className="text-xs text-gray-500">{badge.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Free Course & Teacher Tools — the site's strongest free assets, up high */}
+      <section className="bg-white py-14 border-b border-gray-100">
+        <div className="container">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <h2 className="text-2xl lg:text-3xl font-bold text-[#002855] mb-3">Free Course &amp; Teacher Tools</h2>
+            <p className="text-gray-600">
+              A free critical thinking course for grades 8&ndash;12, and free planning tools for
+              teachers and homeschool parents. No cost and no account &mdash; just open them and start.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {/* Think Clearly course */}
+            <div className="bg-white rounded-3xl border-2 border-[#0055A4]/15 shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col">
+              <div className="bg-[#0055A4] px-7 pt-7 pb-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <GraduationCap className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-[#FFC72C] text-xs font-bold uppercase tracking-widest">Free Course &middot; Grades 8&ndash;12</p>
+                </div>
+                <h3 className="text-white text-2xl font-bold leading-tight">Think Clearly</h3>
+                <p className="text-blue-100 text-sm mt-1">Critical thinking, taught from a biblical worldview</p>
+              </div>
+              <div className="p-7 flex flex-col flex-1">
+                <p className="text-gray-600 text-sm leading-relaxed mb-5">
+                  Twelve short modules that teach students to ask better questions, check sources,
+                  and weigh claims before they share them &mdash; each one grounded in Scripture.
+                </p>
+                <ul className="space-y-2 mb-6">
+                  {[
+                    "12 modules, about 10 minutes each",
+                    "Quizzes in every module, plus a final test",
+                    "Printable certificate when you pass",
+                    "Teachers: Kahoot files for every module, ready to run live in class",
+                  ].map(item => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                      <CheckCircle2 className="w-4 h-4 text-[#0055A4] shrink-0 mt-0.5" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/think-clearly" className="mt-auto">
+                  <Button className="w-full bg-[#0055A4] hover:bg-[#002855] text-white font-bold py-3 text-base border-0 shadow-md transition-all">
+                    Start the Free Course <ChevronRight className="w-5 h-5 ml-1" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Teacher Toolkit */}
+            <div className="bg-white rounded-3xl border-2 border-[#6EBE44]/25 shadow-md hover:shadow-xl transition-shadow overflow-hidden flex flex-col">
+              <div className="bg-[#6EBE44] px-7 pt-7 pb-5">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                    <Wrench className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-white text-xs font-bold uppercase tracking-widest">Free Tools &middot; No Account Needed</p>
+                </div>
+                <h3 className="text-white text-2xl font-bold leading-tight">Teacher Toolkit</h3>
+                <p className="text-green-50 text-sm mt-1">Nine classroom tools that give you time back</p>
+              </div>
+              <div className="p-7 flex flex-col flex-1">
+                <p className="text-gray-600 text-sm leading-relaxed mb-5">
+                  A dashboard of practical tools for Christian school teachers and homeschool
+                  parents &mdash; plan lessons, build worksheets, and make practice pages in minutes.
+                </p>
+                <ul className="space-y-2 mb-6">
+                  {[
+                    "Lesson Plan Builder — plan a whole week in one sitting",
+                    "Worksheet Generator with answer keys",
+                    "Bible Verse Maker & Flashcard Maker",
+                    "Math, spelling, handwriting, vocabulary & reading practice",
+                  ].map(item => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                      <CheckCircle2 className="w-4 h-4 text-[#6EBE44] shrink-0 mt-0.5" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/teacher-toolkit" className="mt-auto">
+                  <Button className="w-full bg-[#6EBE44] hover:bg-[#5aa838] text-white font-bold py-3 text-base border-0 shadow-md transition-all">
+                    Open the Free Toolkit <ChevronRight className="w-5 h-5 ml-1" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Devotional waitlist — same signup as the Think Clearly hub */}
+          <div className="max-w-5xl mx-auto mt-6 grid lg:grid-cols-[auto,1fr] gap-6 items-start bg-blue-50/60 border border-blue-100 rounded-3xl p-7 sm:p-10">
+            <div className="w-14 h-14 rounded-2xl bg-[#6EBE44] flex items-center justify-center">
+              <BookOpen className="w-7 h-7 text-white" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-3 mb-2">
+                <h3 className="text-2xl font-bold text-[#002855]">
+                  Thinking Clearly: a 12-week family devotional
+                </h3>
+                <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#FFC72C]/25 text-[#002855] uppercase tracking-wide">In the works</span>
+              </div>
+              <p className="text-gray-700 leading-relaxed max-w-2xl mb-5">
+                We&apos;re turning this course into a family devotional &mdash; one short reading a week for
+                twelve weeks, with a verse, a story, and questions to talk through together at the
+                table. It&apos;s in the works now. Join the list and be first to get it when it&apos;s ready.
+              </p>
+              <DevotionalWaitlistForm />
+              <p className="text-xs text-gray-400 mt-3 inline-flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5" /> One email when it&apos;s ready. No spam, ever.
+              </p>
+            </div>
           </div>
         </div>
       </section>

@@ -1663,3 +1663,107 @@ export function ForumWaitlistManager() {
     </div>
   );
 }
+
+/**
+ * News Review — the human side of the news flag screen.
+ * Items held by the deterministic flag screen (server/newsFetcher.ts)
+ * land here inactive. Approve publishes them as-is (publisher's own
+ * headline and excerpt); Reject deletes them. Also shows ingest health:
+ * totals, last run, and a manual "Run ingest now" trigger.
+ */
+export function NewsReviewManager() {
+  const { data: held, refetch: refetchHeld } = trpc.news.listHeld.useQuery();
+  const { data: stats, refetch: refetchStats } = trpc.news.stats.useQuery();
+  const update = trpc.news.update.useMutation({
+    onSuccess: () => { toast.success("Item published"); refetchHeld(); refetchStats(); },
+    onError: (e) => toast.error(e.message),
+  });
+  const remove = trpc.news.delete.useMutation({
+    onSuccess: () => { toast.success("Item rejected and removed"); refetchHeld(); refetchStats(); },
+    onError: (e) => toast.error(e.message),
+  });
+  const refresh = trpc.news.refresh.useMutation({
+    onSuccess: (r: any) => {
+      toast.success(`Ingest done: ${r?.totalInserted ?? 0} published, ${r?.totalHeld ?? 0} held`);
+      refetchHeld(); refetchStats();
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
+  const lastFetch: any = stats?.lastFetch;
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-xl border border-gray-100 p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="text-lg font-bold text-[#002855]">News Ingest</h3>
+            <p className="text-sm text-gray-500 mt-1">
+              {stats ? `${stats.totalItems} items stored · ${stats.heldItems} held for review` : "Loading…"}
+              {lastFetch?.finishedAt && (
+                <> · Last run {new Date(lastFetch.finishedAt).toLocaleString("en-US")} — {lastFetch.itemsInserted} published</>
+              )}
+            </p>
+            {lastFetch?.errorMessage && (
+              <p className="text-sm text-amber-600 mt-1 flex items-center gap-1">
+                <AlertTriangle className="w-4 h-4" /> {lastFetch.errorMessage}
+              </p>
+            )}
+          </div>
+          <Button onClick={() => refresh.mutate()} disabled={refresh.isPending} className="bg-[#0055A4] hover:bg-[#002855] text-white border-0">
+            {refresh.isPending ? "Running…" : "Run ingest now"}
+          </Button>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-lg font-bold text-[#002855] mb-3">Held for review ({held?.length ?? 0})</h3>
+        {!held || held.length === 0 ? (
+          <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-500">
+            Nothing held. Items the flag screen catches will appear here for a human decision.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {held.map((item: any) => (
+              <div key={item.id} className="bg-white rounded-xl border border-amber-200 p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-[#002855]">{item.title}</p>
+                    {item.summary && <p className="text-sm text-gray-600 mt-1 line-clamp-2">{item.summary}</p>}
+                    <p className="text-xs text-gray-500 mt-2">
+                      <span className="font-medium text-[#0055A4]">{item.sourceName}</span>
+                      {item.publishedAt && <> · {new Date(item.publishedAt).toLocaleDateString("en-US")}</>}
+                      {" · "}Held: {item.holdReason || "flag screen"}
+                    </p>
+                    <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-[#0055A4] hover:underline break-all">
+                      {item.sourceUrl}
+                    </a>
+                  </div>
+                  <div className="flex gap-2 shrink-0">
+                    <Button
+                      size="sm"
+                      className="bg-[#6EBE44] hover:bg-[#5aa838] text-white border-0"
+                      disabled={update.isPending}
+                      onClick={() => update.mutate({ id: item.id, data: { reviewStatus: "published", isActive: true, holdReason: null } })}
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" /> Approve
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-red-600 border-red-200 hover:bg-red-50"
+                      disabled={remove.isPending}
+                      onClick={() => remove.mutate({ id: item.id })}
+                    >
+                      <XCircle className="w-4 h-4 mr-1" /> Reject
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

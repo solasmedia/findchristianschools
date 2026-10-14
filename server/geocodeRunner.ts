@@ -1,5 +1,5 @@
 /**
- * TEMPORARY one-time geocode runner — FindChristianSchools Phase 2 (2026-10-14).
+ * TEMPORARY one-time geocode runner — FindChristianSchools Phase 2 (2026-10-14). v3.1
  *
  * DELETE THIS FILE (and its 3-line hook in server/_core/index.ts) as soon as
  * the Phase 2 geocode run is verified. It exists only because this job needs

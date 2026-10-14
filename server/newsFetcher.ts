@@ -424,6 +424,8 @@ export interface NewsRunReport {
   pruned: number;
   /** Feeds that errored or yielded zero items — the same-day warning list. */
   unhealthyFeeds: string[];
+  /** Set when writing this run's news_fetch_log row failed. Log failures must surface here, never vanish. */
+  logError?: string;
 }
 
 /** Insert parsed feed items for one feed config. Shared by URL and string parsing. */
@@ -536,10 +538,15 @@ export async function fetchAllNewsFeeds(): Promise<NewsRunReport> {
   if (!db) throw new Error("Database unavailable");
 
   let logId: number | null = null;
+  let logError: string | undefined;
   try {
     const logResult = await db.insert(newsFetchLog).values({ status: "running" });
     logId = Number((logResult[0] as unknown as { insertId: number }).insertId) || null;
-  } catch {
+  } catch (e) {
+    // Never swallow this: a broken news_fetch_log silently disables the
+    // /news "Last updated" line (news.meta) and the staleness check.
+    logError = `news_fetch_log insert failed: ${e instanceof Error ? e.message : String(e)}`;
+    console.error(`[news] ${logError}`);
     logId = null;
   }
 
@@ -592,20 +599,25 @@ export async function fetchAllNewsFeeds(): Promise<NewsRunReport> {
     .map((r) => (r.error ? `${r.feed} (error: ${r.error})` : `${r.feed} (yielded 0 items)`));
 
   if (logId) {
-    await db
-      .update(newsFetchLog)
-      .set({
-        finishedAt: sql`NOW()`,
-        itemsFetched: totalFetched,
-        itemsInserted: totalInserted,
-        status: unhealthyFeeds.length === NEWS_FEEDS.length ? "error" : "success",
-        errorMessage: unhealthyFeeds.length
-          ? `Unhealthy feeds: ${unhealthyFeeds.join("; ")}`
-          : null,
-      })
-      .where(sql`${newsFetchLog.id} = ${logId}`)
-      .catch(() => {});
+    try {
+      await db
+        .update(newsFetchLog)
+        .set({
+          finishedAt: sql`NOW()`,
+          itemsFetched: totalFetched,
+          itemsInserted: totalInserted,
+          status: unhealthyFeeds.length === NEWS_FEEDS.length ? "error" : "success",
+          errorMessage: unhealthyFeeds.length
+            ? `Unhealthy feeds: ${unhealthyFeeds.join("; ")}`
+            : null,
+        })
+        .where(sql`${newsFetchLog.id} = ${logId}`);
+    } catch (e) {
+      const msg = `news_fetch_log update failed: ${e instanceof Error ? e.message : String(e)}`;
+      logError = logError ? `${logError}; ${msg}` : msg;
+      console.error(`[news] ${msg}`);
+    }
   }
 
-  return { results, heldItems, totalFetched, totalInserted, totalHeld, pruned, unhealthyFeeds };
+  return { results, heldItems, totalFetched, totalInserted, totalHeld, pruned, unhealthyFeeds, logError };
 }

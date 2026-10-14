@@ -1,5 +1,3 @@
-import { invokeLLM } from "./llm";
-
 /**
  * Where every form-submission notification goes. Configurable via the
  * NOTIFICATION_EMAIL env var; defaults to the site's only real mailbox.
@@ -11,14 +9,9 @@ const NOTIFICATION_FROM =
   process.env.NOTIFICATION_FROM ??
   "FindChristianSchools <notifications@findchristianschools.com>";
 
-// Email transports, in priority order. The codebase historically sent mail
-// through the Manus Forge API (BUILT_IN_FORGE_API_URL / BUILT_IN_FORGE_API_KEY);
-// those credentials are Manus-era and are not present in the current Railway
-// deployment, so no mail actually flows until the owner configures a provider.
-// Preferred: a Resend API key (RESEND_API_KEY) — one env var, sent over HTTPS.
+// Email transport: a Resend API key (RESEND_API_KEY) — one env var, sent
+// over HTTPS.
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const FORGE_API_URL = process.env.BUILT_IN_FORGE_API_URL;
-const FORGE_API_KEY = process.env.BUILT_IN_FORGE_API_KEY;
 
 export async function sendEmail(to: string | string[], subject: string, htmlBody: string) {
   if (!to || !subject || !htmlBody) return false;
@@ -46,22 +39,6 @@ export async function sendEmail(to: string | string[], subject: string, htmlBody
       if (!response.ok) {
         console.error("[Email] Resend send failed:", response.status, await response.text().catch(() => ""));
       }
-      return response.ok;
-    }
-
-    if (FORGE_API_URL && FORGE_API_KEY) {
-      const response = await fetch(`${FORGE_API_URL}/email/send`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${FORGE_API_KEY}`,
-        },
-        body: JSON.stringify({
-          to: validRecipients,
-          subject,
-          html: htmlBody,
-        }),
-      });
       return response.ok;
     }
 

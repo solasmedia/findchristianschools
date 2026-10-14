@@ -192,6 +192,38 @@ export default function TeacherResources() {
           )}
         </section>
 
+        {/* Think Clearly — free critical thinking course for grades 8–12, with Kahoot files */}
+        {!searching && (
+          <section id="think-clearly" className="mb-14 scroll-mt-24">
+            <div className="rounded-3xl overflow-hidden border-2 border-[#0055A4]/15 grid md:grid-cols-2 bg-white">
+              <img
+                src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1200&auto=format&fit=crop"
+                alt="A student thinking and writing at a desk"
+                className="w-full h-48 md:h-full object-cover"
+                loading="lazy"
+              />
+              <div className="p-6 sm:p-8">
+                <span className="inline-block bg-[#6EBE44] text-white text-xs font-bold px-3 py-1 rounded-full mb-3">
+                  NEW · FREE COURSE
+                </span>
+                <h3 className="text-2xl font-bold text-[#002855] mb-2">Think Clearly — for your students</h3>
+                <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-5">
+                  A free 12-module critical thinking course for grades 8–12, taught from a
+                  Christian worldview. Ten minutes a module, no student sign-up, a quiz at the
+                  end of each one — and ready-made Kahoot files so you can run every quiz live
+                  in your classroom.
+                </p>
+                <Link
+                  href="/think-clearly"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#0055A4] text-white font-semibold text-sm hover:bg-[#003d7a] transition min-h-[48px]"
+                >
+                  Explore the course <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Teacher blog with live topic counts */}
         <section id="blog" className="mb-14 scroll-mt-24">
           <HubSectionHeader

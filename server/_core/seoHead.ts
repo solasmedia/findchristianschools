@@ -31,6 +31,12 @@ const STATIC_ROUTES = new Set([
   "/teacher-resources", "/federal-tax-credit",
   "/classical-christian-schools", "/accreditation-readiness", "/book-club", "/newsletter",
   "/think-clearly", "/think-clearly/ask-better-questions", "/think-clearly/final-test",
+  "/think-clearly/facts-opinions-and-everything-between", "/think-clearly/check-the-source",
+  "/think-clearly/claim-it-prove-it", "/think-clearly/ask-why-five-times",
+  "/think-clearly/plan-try-check-fix", "/think-clearly/first-things-first",
+  "/think-clearly/number-your-days", "/think-clearly/a-place-for-everything",
+  "/think-clearly/dont-let-feelings-drive", "/think-clearly/spot-the-trick",
+  "/think-clearly/think-like-jesus",
   "/enrichment", "/enrichment/submit", "/lister-terms",
   "/enrichment/tutors", "/enrichment/classes", "/enrichment/sports",
   "/enrichment/camps", "/enrichment/youth-groups", "/enrichment/music-arts",
@@ -147,6 +153,50 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/think-clearly/ask-better-questions": {
     title: "Ask Better Questions — Think Clearly, Module 1 | FindChristianSchools.com",
     description: "Thinking starts with a question, not an answer. Module 1 of the free Think Clearly course: open vs closed questions, the Parking Lot, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/facts-opinions-and-everything-between": {
+    title: "Facts, Opinions, and Everything Between — Think Clearly, Module 2 | FindChristianSchools.com",
+    description: "Sort what can be proven from what is merely believed. Module 2 of the free Think Clearly course: the Bereans' example, clue words, a sorting drill, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/check-the-source": {
+    title: "Check the Source Before You Share It — Think Clearly, Module 3 | FindChristianSchools.com",
+    description: "Who is telling you this — and why? Module 3 of the free Think Clearly course: three questions for any source, the screenshot problem, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/claim-it-prove-it": {
+    title: "Claim It? Prove It — Think Clearly, Module 4 | FindChristianSchools.com",
+    description: "Every claim needs evidence — learn to ask for it. Module 4 of the free Think Clearly course: spotting claims, weighing evidence, why together is not because, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/ask-why-five-times": {
+    title: "Ask Why Five Times — Think Clearly, Module 5 | FindChristianSchools.com",
+    description: "Keep asking why until you reach the root of a problem. Module 5 of the free Think Clearly course: a worked why-chain on a bike that keeps getting flats, a drill, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/plan-try-check-fix": {
+    title: "Plan It, Try It, Check It, Fix It — Think Clearly, Module 6 | FindChristianSchools.com",
+    description: "A simple loop for getting better at anything. Module 6 of the free Think Clearly course: a lemonade stand worked example, a paper-airplane drill, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/first-things-first": {
+    title: "First Things First — Think Clearly, Module 7 | FindChristianSchools.com",
+    description: "Sort your problems by what matters and what it takes. Module 7 of the free Think Clearly course: Jethro's counsel to Moses, the four boxes, a sorting drill, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/number-your-days": {
+    title: "Number Your Days — Think Clearly, Module 8 | FindChristianSchools.com",
+    description: "See where your time goes, then spend tomorrow on purpose. Module 8 of the free Think Clearly course: Psalm 90:12, a one-day time log, the kind swap, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/a-place-for-everything": {
+    title: "A Place for Everything — Think Clearly, Module 9 | FindChristianSchools.com",
+    description: "Organization is a thinking tool, not a personality trait. Module 9 of the free Think Clearly course: Joseph's warehouses, the four moves for building a system, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/dont-let-feelings-drive": {
+    title: "Don't Let Feelings Drive — Think Clearly, Module 10 | FindChristianSchools.com",
+    description: "Feelings are information, not instructions. Module 10 of the free Think Clearly course: the pause routine — stop, breathe, check, choose — practiced on headlines, offers, and game calls. About 10 minutes.",
+  },
+  "/think-clearly/spot-the-trick": {
+    title: "Spot the Trick — Think Clearly, Module 11 | FindChristianSchools.com",
+    description: "Crooked arguments and bent numbers, named and disarmed. Module 11 of the free Think Clearly course: the straw man, cherry-picked numbers, the either/or squeeze, and a 5-question quiz. About 10 minutes.",
+  },
+  "/think-clearly/think-like-jesus": {
+    title: "Think Like Jesus — Think Clearly, Module 12 | FindChristianSchools.com",
+    description: "Truth with humility: the whole toolbox, used the way he used it. Module 12 of the free Think Clearly course: check yourself first, then run one full case — fixing the school fun-run — start to finish. About 10 minutes.",
   },
   "/think-clearly/final-test": {
     title: "Think Clearly Final Test & Certificate | FindChristianSchools.com",

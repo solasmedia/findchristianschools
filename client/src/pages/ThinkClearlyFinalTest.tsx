@@ -124,10 +124,9 @@ export default function ThinkClearlyFinalTest() {
             <p className="text-gray-600 max-w-lg mx-auto mb-4 leading-relaxed">
               {!allModulesLive ? (
                 <>
-                  The course is still being built: {liveCount} of {totalModules} modules{" "}
-                  {liveCount === 1 ? "is" : "are"} available so far, and the final test arrives
-                  with the full course. Module 1, Ask Better Questions, is ready now — start
-                  there, and your progress on this device will count when the rest opens.
+                  Only {liveCount} of {totalModules} modules are live so far, and the final
+                  test needs the whole course. Finish every module as it opens, and the test
+                  unlocks on this device.
                 </>
               ) : (
                 <>

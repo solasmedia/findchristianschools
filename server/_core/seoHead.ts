@@ -700,7 +700,20 @@ export async function resolveSeoContent(
         };
         const desc = item.summary ? stripText(String(item.summary)) : "";
         if (desc) article.description = desc;
-        if (item.imageUrl) article.image = [String(item.imageUrl)];
+        // Rights rule (Dave, 2026-10-15): never a publisher image —
+        // the story's own generated topic illustration on our domain.
+        const NEWS_ART_FILES: Record<string, string> = {
+          school_choice_policy: "school-choice-policy.jpg",
+          christian_schools: "christian-schools.jpg",
+          homeschooling: "homeschooling.jpg",
+          funding_tax_credit: "funding-tax-credit.jpg",
+          accreditation: "accreditation.jpg",
+          faith_culture: "faith-culture.jpg",
+          general: "general.jpg",
+        };
+        article.image = [
+          `${SITE_URL}/news-art/${NEWS_ART_FILES[String(item.topic || "general")] ?? "general.jpg"}`,
+        ];
         const published = isoDate(item.publishedAt) || isoDate(item.fetchedAt);
         if (published) article.datePublished = published;
         const crumbs = breadcrumbJsonLd([

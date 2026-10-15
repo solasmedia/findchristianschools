@@ -43,7 +43,7 @@ export default function Colleges() {
   }), [searchQuery, searchState, searchZip, offset]);
 
   const { data, isLoading } = trpc.colleges.search.useQuery(searchInput);
-  const { data: stateCounts } = trpc.colleges.countsByState.useQuery();
+  const { data: stateCounts, isLoading: countsLoading } = trpc.colleges.countsByState.useQuery();
 
   const colleges = data || [];
   const hasMore = colleges.length === PAGE_SIZE;
@@ -74,7 +74,11 @@ export default function Colleges() {
             Find a Christian College
           </h1>
           <p className="text-blue-100 mb-4">
-            Found <span className="font-bold text-white">{totalCount}</span> Christian colleges & universities
+            {countsLoading || !stateCounts ? (
+              "Loading colleges…"
+            ) : (
+              <>Found <span className="font-bold text-white">{totalCount}</span> Christian colleges & universities</>
+            )}
           </p>
 
           {/* Search bar */}

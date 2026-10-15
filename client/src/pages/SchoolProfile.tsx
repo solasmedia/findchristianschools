@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Globe, GraduationCap, Users, BookOpen, Shield, Star, ExternalLink, Briefcase, Calendar, Image, MessageSquare, Map, AlertTriangle, CheckCircle, FileText, Info, Lock, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { ShareButton } from "@/components/ShareButton";
-import { SaveSchoolButton } from "@/components/SaveSchoolButton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
@@ -189,7 +188,6 @@ export default function SchoolProfile() {
               )}
               <div className="flex items-center gap-3 mt-3">
                 <ShareButton title={school.name} className="text-blue-200 hover:text-white" />
-                <SaveSchoolButton schoolId={school.id} size="md" />
               </div>
             </div>
           </div>

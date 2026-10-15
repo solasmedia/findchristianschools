@@ -110,7 +110,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div>
               <p className="text-sm font-semibold text-white mb-1">The Christian Ed Weekly</p>
-              <p className="text-xs text-blue-300">Education news, teacher tips & free resources — every Thursday.</p>
+              <p className="text-xs text-blue-300">Education news, teacher tips & free resources.</p>
             </div>
             <a
               href="/newsletter"

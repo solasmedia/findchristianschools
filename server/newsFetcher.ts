@@ -29,11 +29,12 @@
  * or starts yielding nothing is visible in the run report the same day
  * so a defaced or abandoned source gets caught fast.
  *
- * THUMBNAILS: taken only from (a) the feed's own media fields
- * (media:thumbnail / media:content / image enclosure), or (b) the
- * article page's og:image, fetched at ingest and stored as a URL.
- * Items with neither render a neutral on-brand placeholder client-side.
- * Images are never generated and never substituted with stock photos.
+ * THUMBNAILS (rights rule, Dave 2026-10-15): we never store or display
+ * publisher images — we have no rights to them. Every news card uses
+ * our own generated topic illustration (client/public/news-art/,
+ * chosen by the item's topic; see client/src/components/NewsThumb.tsx).
+ * imageUrl therefore stays NULL in the database, and each refresh
+ * clears any publisher URLs stored before this rule.
  *
  * RETENTION: items older than 90 days are pruned at the end of each run.
  *
@@ -312,91 +313,6 @@ export function classifyTopic(title: string, summary: string): NewsTopic {
   return "general";
 }
 
-/** Pull an image URL out of a `media:*` element (rss-parser custom field shape). */
-function mediaUrl(node: unknown): string | null {
-  if (!node || typeof node !== "object") return null;
-  const attrs = (node as { $?: Record<string, string> }).$;
-  const url = attrs?.url;
-  if (!url || !/^https?:\/\//i.test(url)) return null;
-  const medium = (attrs?.medium || "").toLowerCase();
-  const type = (attrs?.type || "").toLowerCase();
-  if (medium && medium !== "image") return null;
-  if (type && !type.startsWith("image/")) return null;
-  return url;
-}
-
-/**
- * Thumbnail source order: (a) the feed's own media fields / image
- * enclosure; (b) null here — the og:image fallback runs at insert time
- * in fetchOgImage() for items the feed gave no image for.
- */
-export function extractImageUrl(item: Parser.Item): string | null {
-  const anyItem = item as unknown as Record<string, unknown>;
-  const thumb = mediaUrl(anyItem.mediaThumbnail);
-  if (thumb) return thumb;
-  const content = mediaUrl(anyItem.mediaContent);
-  if (content) return content;
-  const group = anyItem.mediaGroup as Record<string, unknown> | undefined;
-  if (group) {
-    const gThumb = mediaUrl(group["media:thumbnail"]);
-    if (gThumb) return gThumb;
-    const gContent = group["media:content"];
-    const first = Array.isArray(gContent) ? gContent[0] : gContent;
-    const gUrl = mediaUrl(first);
-    if (gUrl) return gUrl;
-  }
-  const enc = (item as { enclosure?: { url?: string; type?: string } }).enclosure;
-  if (enc?.url && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(enc.url)) return enc.url;
-  return null;
-}
-
-const OG_IMAGE_BUDGET_PER_RUN = 24;
-
-/**
- * Fallback thumbnail: fetch the article page and read its og:image /
- * twitter:image meta (the publisher's own chosen preview image).
- * Stores the URL only — the image itself is never copied or altered.
- */
-export async function fetchOgImage(articleUrl: string): Promise<string | null> {
-  try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 6000);
-    const res = await fetch(articleUrl, {
-      signal: ctrl.signal,
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; FCSNewsBot/1.0)" },
-      redirect: "follow",
-    });
-    clearTimeout(timer);
-    if (!res.ok) return null;
-    const reader = res.body?.getReader();
-    if (!reader) return null;
-    let html = "";
-    const decoder = new TextDecoder();
-    while (html.length < 262144) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      html += decoder.decode(value, { stream: true });
-      if (/<\/head>/i.test(html)) break;
-    }
-    reader.cancel().catch(() => {});
-    const patterns = [
-      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
-      /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
-      /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
-    ];
-    for (const re of patterns) {
-      const m = html.match(re);
-      if (m?.[1]) {
-        const url = m[1].replace(/&amp;/g, "&").trim();
-        if (/^https?:\/\//i.test(url)) return url.slice(0, 512);
-      }
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
-
 export interface HeldItem {
   title: string;
   sourceName: string;
@@ -433,8 +349,7 @@ async function storeFeedItems(
   db: NonNullable<Awaited<ReturnType<typeof getDb>>>,
   existing: Set<string>,
   feed: NewsFeedConfig,
-  items: Parser.Item[],
-  ogBudget: { remaining: number }
+  items: Parser.Item[]
 ): Promise<{ fetched: number; inserted: number; held: number; heldItems: HeldItem[] }> {
   const sliced = items.slice(0, feed.maxItems ?? 15);
   let inserted = 0;
@@ -462,11 +377,10 @@ async function storeFeedItems(
     const flags = flagScreen(title, summaryText);
     const isHeld = flags.length > 0;
 
-    let imageUrl = extractImageUrl(item);
-    if (!imageUrl && !isHeld && ogBudget.remaining > 0) {
-      ogBudget.remaining--;
-      imageUrl = await fetchOgImage(link);
-    }
+    // Rights rule (Dave, 2026-10-15): publisher images are never stored
+    // or displayed. Cards render our own generated topic illustration
+    // client-side, so imageUrl stays null.
+    const imageUrl: string | null = null;
 
     try {
       await db.insert(newsItems).values({
@@ -518,9 +432,7 @@ export async function parseAndStoreFeedXml(
     (await db.select({ sourceUrl: newsItems.sourceUrl }).from(newsItems).catch(() => []))
       .map((r) => r.sourceUrl)
   );
-  const { fetched, inserted, held } = await storeFeedItems(db, existing, feed, parsed.items || [], {
-    remaining: OG_IMAGE_BUDGET_PER_RUN,
-  });
+  const { fetched, inserted, held } = await storeFeedItems(db, existing, feed, parsed.items || []);
   return { fetched, inserted, held };
 }
 
@@ -552,7 +464,6 @@ export async function fetchAllNewsFeeds(): Promise<NewsRunReport> {
 
   const results: FetchResult[] = [];
   const heldItems: HeldItem[] = [];
-  const ogBudget = { remaining: OG_IMAGE_BUDGET_PER_RUN };
   let totalFetched = 0;
   let totalInserted = 0;
   let totalHeld = 0;
@@ -567,7 +478,7 @@ export async function fetchAllNewsFeeds(): Promise<NewsRunReport> {
     const result: FetchResult = { feed: feed.name, fetched: 0, inserted: 0, held: 0 };
     try {
       const parsed = await parser.parseURL(feed.url);
-      const stored = await storeFeedItems(db, existing, feed, parsed.items || [], ogBudget);
+      const stored = await storeFeedItems(db, existing, feed, parsed.items || []);
       result.fetched = stored.fetched;
       result.inserted = stored.inserted;
       result.held = stored.held;
@@ -592,6 +503,18 @@ export async function fetchAllNewsFeeds(): Promise<NewsRunReport> {
     pruned = Number((del[0] as unknown as { affectedRows?: number }).affectedRows ?? 0) || 0;
   } catch (e) {
     console.error("[news] retention prune failed:", e);
+  }
+
+  // Rights rule (Dave, 2026-10-15): clear any publisher image URLs
+  // stored before the rule. Idempotent — a no-op once the table is
+  // clean, because ingest no longer writes imageUrl.
+  try {
+    await db
+      .update(newsItems)
+      .set({ imageUrl: null })
+      .where(sql`${newsItems.imageUrl} IS NOT NULL`);
+  } catch (e) {
+    console.error("[news] imageUrl clear-out failed:", e);
   }
 
   const unhealthyFeeds = results

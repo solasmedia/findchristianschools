@@ -86,7 +86,7 @@ function NewsCard({ item }: { item: any }) {
     <Link href={`/news/${item.slug}`}>
       <article className="rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden bg-white h-full flex flex-col">
         <NewsThumb
-          src={item.imageUrl}
+          topic={item.topic}
           alt=""
           className="w-full aspect-[16/9] shrink-0"
         />

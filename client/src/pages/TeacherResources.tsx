@@ -361,11 +361,11 @@ export default function TeacherResources() {
             </div>
             <h3 className="text-xl font-bold text-white mb-2">Get New Resources Every Week</h3>
             <p className="text-blue-100/80 text-sm mb-6 max-w-md mx-auto">
-              Join The Christian Ed Weekly — teacher tips, new printables, and education news in your inbox every Thursday.
+              Join The Christian Ed Weekly — teacher tips, new printables, and education news in your inbox.
             </p>
             {subscribed ? (
               <p className="inline-flex items-center gap-2 bg-[#6EBE44] text-white font-semibold px-6 py-3 rounded-full">
-                <Check className="w-5 h-5" /> You're in — see you Thursday.
+                <Check className="w-5 h-5" /> You're in!
               </p>
             ) : (
               <form

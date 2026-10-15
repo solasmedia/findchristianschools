@@ -42,14 +42,6 @@ const navItems: NavItem[] = [
     ],
   },
   { href: "/states", label: "States" },
-  {
-    href: "/events",
-    label: "Events",
-    children: [
-      { href: "/events", label: "All Events" },
-      { href: "/races", label: "Christian Races" },
-    ],
-  },
   { href: "/lesson-planner", label: "Lesson Plan Builder" },
   {
     href: "/teacher-toolkit",
@@ -66,10 +58,12 @@ const navItems: NavItem[] = [
     children: [
       { href: "/resources", label: "Resource Hub" },
       { href: "/jobs", label: "Jobs" },
+      { href: "/events", label: "Events" },
+      { href: "/races", label: "Christian Races" },
       { href: "/blog", label: "Teacher Blog" },
       { href: "/teacher-resources", label: "Teacher Resources" },
       { href: "/think-clearly", label: "Think Clearly Course" },
-      { href: "/book-club", label: "Book Club" },
+      // { href: "/book-club", label: "Book Club" }, // Hidden for now (Dave, 2026-10-15)
       { href: "/traveled", label: "TravelED" },
       { href: "/federal-tax-credit", label: "Scholarship Tax Credit" },
       { href: "/accreditation-readiness", label: "Accreditation Readiness" },

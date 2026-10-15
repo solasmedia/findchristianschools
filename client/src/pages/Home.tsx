@@ -468,7 +468,7 @@ export default function Home() {
               {latestNews.items.map((item) => (
                 <Link key={item.id} href={`/news/${item.slug}`}>
                   <div className="flex gap-4 bg-gray-50 hover:bg-blue-50/60 border border-gray-100 rounded-xl p-4 transition-colors group h-full">
-                    <NewsThumb src={item.imageUrl} alt="" className="w-24 h-20 rounded-lg shrink-0" />
+                    <NewsThumb topic={item.topic} alt="" className="w-24 h-20 rounded-lg shrink-0" />
                     <div className="min-w-0">
                       <h3 className="text-sm font-semibold text-[#002855] group-hover:text-[#0055A4] transition-colors line-clamp-3 leading-snug">
                         {item.title}

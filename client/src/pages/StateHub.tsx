@@ -617,7 +617,7 @@ export default function StateHub() {
                 {stateNews.items.map((item) => (
                   <Link key={item.id} href={`/news/${item.slug}`}>
                     <div className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
-                      <NewsThumb src={item.imageUrl} alt="" className="w-20 h-14 rounded-lg shrink-0" />
+                      <NewsThumb topic={item.topic} alt="" className="w-20 h-14 rounded-lg shrink-0" />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-medium text-[#002855] line-clamp-2">{item.title}</h4>
                         <p className="text-xs text-gray-500 mt-1">

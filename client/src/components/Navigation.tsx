@@ -42,7 +42,6 @@ const navItems: NavItem[] = [
     ],
   },
   { href: "/states", label: "States" },
-  { href: "/jobs", label: "Jobs" },
   {
     href: "/events",
     label: "Events",
@@ -53,14 +52,22 @@ const navItems: NavItem[] = [
   },
   { href: "/lesson-planner", label: "Lesson Plan Builder" },
   {
+    href: "/teacher-toolkit",
+    label: "Toolkits",
+    children: [
+      { href: "/teacher-toolkit", label: "Teacher Toolkit" },
+      { href: "/homeschool-hub", label: "Homeschool Toolkit" },
+    ],
+  },
+  { href: "/news", label: "News" },
+  {
     href: "/resources",
     label: "Resources",
     children: [
       { href: "/resources", label: "Resource Hub" },
+      { href: "/jobs", label: "Jobs" },
       { href: "/blog", label: "Teacher Blog" },
-      { href: "/news", label: "Education News" },
       { href: "/teacher-resources", label: "Teacher Resources" },
-      { href: "/teacher-toolkit", label: "Teacher Toolkit" },
       { href: "/think-clearly", label: "Think Clearly Course" },
       { href: "/book-club", label: "Book Club" },
       { href: "/traveled", label: "TravelED" },
@@ -95,7 +102,7 @@ function DropdownNav({ item, location }: { item: NavItem; location: string }) {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className={`flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${
+        className={`flex items-center gap-1 px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors whitespace-nowrap flex-shrink-0 ${
           isActive
             ? "text-[#0055A4] bg-blue-50"
             : "text-[#002855] hover:text-[#0055A4] hover:bg-gray-50"
@@ -164,7 +171,7 @@ export default function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-2.5 py-1.5 text-sm font-medium rounded-full transition-colors whitespace-nowrap flex-shrink-0 ${
+                  className={`px-2 py-1.5 text-sm font-medium rounded-full transition-colors whitespace-nowrap flex-shrink-0 ${
                     location === item.href || location.startsWith(item.href + "/")
                       ? "text-[#0055A4] bg-blue-50"
                       : "text-[#002855] hover:text-[#0055A4] hover:bg-gray-50"

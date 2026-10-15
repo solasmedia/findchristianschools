@@ -75,7 +75,7 @@ export default function NewsletterPopup() {
             </div>
             <h3 className="text-xl font-bold text-[#002855] mb-2">You're in!</h3>
             <p className="text-sm text-gray-600">
-              Watch your inbox every Thursday for The Christian Ed Weekly.
+              Watch your inbox for The Christian Ed Weekly.
             </p>
             <button
               onClick={() => dismiss()}
@@ -94,7 +94,7 @@ export default function NewsletterPopup() {
             </h3>
             <p className="text-sm text-gray-600 mb-1">
               Join <strong>The Christian Ed Weekly</strong> — education news, teacher tips,
-              and new free resources every Thursday.
+              and new free resources.
             </p>
             <p className="text-xs text-gray-400 mb-6">Free forever. Unsubscribe anytime.</p>
 
